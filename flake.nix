@@ -3,7 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
 
     cmp-buffer = {
@@ -68,53 +71,59 @@
     };
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    flake-utils,
-    ...
-  } @ inputs: let
-    systems = [
-      "aarch64-darwin"
-      "aarch64-linux"
-      "x86_64-darwin"
-      "x86_64-linux"
-    ];
-  in
-    flake-utils.lib.eachSystem systems (system: let
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [
-          inputs.neovim-nightly-overlay.overlay
-          (final: prev: {
-            neovim = prev.wrapNeovimUnstable prev.neovim-unwrapped {
-              luaRcContent = builtins.readFile ./init.lua;
-              packpathDirs.myNeovimPackages = {
-                start = with prev.vimPlugins;
-                  [nvim-treesitter.withAllGrammars]
-                  ++ builtins.attrValues (builtins.mapAttrs (pname: src:
-                    prev.vimUtils.buildVimPlugin {
-                      inherit pname src;
-                      version = src.lastModifiedDate;
-                    }) (builtins.removeAttrs inputs ["self" "nixpkgs" "flake-utils"]));
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} ({config, ...}: {
+      systems = [
+        "aarch64-darwin"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "x86_64-linux"
+      ];
+
+      # flake.overlays.default = inputs.neovim-nightly-overlay.overlay;
+
+      perSystem = {
+        config,
+        lib,
+        system,
+        inputs',
+        pkgs,
+        ...
+      }: {
+        _module.args.pkgs = import inputs.nixpkgs {
+          inherit system;
+          overlays = [
+            inputs.neovim-nightly-overlay.overlay
+            (final: prev: {
+              neovim = prev.wrapNeovimUnstable prev.neovim-unwrapped {
+                luaRcContent = builtins.readFile ./init.lua;
+                packpathDirs.myNeovimPackages = {
+                  start = with prev.vimPlugins;
+                    [nvim-treesitter.withAllGrammars]
+                    ++ builtins.attrValues (builtins.mapAttrs (pname: src:
+                      prev.vimUtils.buildVimPlugin {
+                        inherit pname src;
+                        version = src.lastModifiedDate;
+                      }) (builtins.removeAttrs inputs ["self" "nixpkgs" "flake-utils"]));
+                };
+                viAlias = true;
+                vimAlias = true;
+                withPython3 = false;
               };
-              viAlias = true;
-              vimAlias = true;
-              withPython3 = false;
-            };
-          })
-        ];
-      };
-    in {
-      packages = rec {
-        default = nvim;
-        nvim = pkgs.neovim;
-      };
-      devShells = {
-        default = pkgs.mkShell {
+            })
+          ];
+        };
+
+        packages = {
+          default = config.packages.nvim;
+          nvim = pkgs.neovim;
+        };
+
+        devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             lua-language-server
             nil
+            alejandra
             stylua
           ];
         };
