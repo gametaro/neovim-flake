@@ -7,7 +7,10 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
-    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    neovim = {
+      url = "github:neovim/neovim?dir=contrib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     cmp-buffer = {
       url = "github:hrsh7th/cmp-buffer";
@@ -72,7 +75,7 @@
   };
 
   outputs = inputs:
-    inputs.flake-parts.lib.mkFlake {inherit inputs;} ({config, ...}: {
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
       systems = [
         "aarch64-darwin"
         "aarch64-linux"
@@ -80,53 +83,42 @@
         "x86_64-linux"
       ];
 
-      # flake.overlays.default = inputs.neovim-nightly-overlay.overlay;
-
       perSystem = {
         config,
-        lib,
-        system,
         inputs',
         pkgs,
         ...
-      }: {
-        _module.args.pkgs = import inputs.nixpkgs {
-          inherit system;
-          overlays = [
-            inputs.neovim-nightly-overlay.overlay
-            (final: prev: {
-              neovim = prev.wrapNeovimUnstable prev.neovim-unwrapped {
-                luaRcContent = builtins.readFile ./init.lua;
-                packpathDirs.myNeovimPackages = {
-                  start = with prev.vimPlugins;
-                    [nvim-treesitter.withAllGrammars]
-                    ++ builtins.attrValues (builtins.mapAttrs (pname: src:
-                      prev.vimUtils.buildVimPlugin {
-                        inherit pname src;
-                        version = src.lastModifiedDate;
-                      }) (builtins.removeAttrs inputs ["self" "nixpkgs" "flake-utils"]));
-                };
-                viAlias = true;
-                vimAlias = true;
-                withPython3 = false;
-              };
-            })
-          ];
+      }: let
+        nvim = pkgs.wrapNeovimUnstable inputs'.neovim.packages.neovim {
+          luaRcContent = builtins.readFile ./init.lua;
+          packpathDirs.myNeovimPackages = {
+            start = with pkgs.vimPlugins;
+              [nvim-treesitter.withAllGrammars]
+              ++ builtins.attrValues (builtins.mapAttrs (pname: src:
+                pkgs.vimUtils.buildVimPlugin {
+                  inherit pname src;
+                  version = src.lastModifiedDate;
+                }) (builtins.removeAttrs inputs ["self" "nixpkgs" "flake-utils"]));
+          };
+          viAlias = true;
+          vimAlias = true;
+          withPython3 = false;
         };
-
+      in {
         packages = {
+          inherit nvim;
           default = config.packages.nvim;
-          nvim = pkgs.neovim;
         };
 
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
+            alejandra
             lua-language-server
             nil
-            alejandra
+            statix
             stylua
           ];
         };
       };
-    });
+    };
 }
