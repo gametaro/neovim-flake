@@ -1087,6 +1087,7 @@ function M.plugins()
   require('lint').linters_by_ft = {
     gitcommit = { 'gitlint' },
     markdown = { 'markdownlint' },
+    nix = { 'statix' },
     yaml = { 'actionlint' },
     zsh = { 'zsh' },
   }

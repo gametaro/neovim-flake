@@ -7,6 +7,11 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
+    pre-commit-hooks-nix = {
+      url = "github:cachix/pre-commit-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     neovim = {
       url = "github:neovim/neovim?dir=contrib";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -76,6 +81,10 @@
 
   outputs = inputs:
     inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+      imports = [
+        inputs.pre-commit-hooks-nix.flakeModule
+      ];
+
       systems = [
         "aarch64-darwin"
         "aarch64-linux"
@@ -110,14 +119,31 @@
           default = config.packages.nvim;
         };
 
-        devShells.default = pkgs.mkShell {
+        pre-commit = {
+          settings = {
+            hooks = {
+              actionlint.enable = true;
+              alejandra.enable = true;
+              lua-ls.enable = true;
+              nil.enable = true;
+              statix.enable = true;
+              stylua.enable = true;
+              yamllint.enable = true;
+            };
+          };
+        };
+
+        devShells.default = pkgs.mkShellNoCC {
           buildInputs = with pkgs; [
+            actionlint
             alejandra
             lua-language-server
             nil
             statix
             stylua
+            yaml-language-server
           ];
+          inherit (config.pre-commit.devShell) shellHook;
         };
       };
     };
