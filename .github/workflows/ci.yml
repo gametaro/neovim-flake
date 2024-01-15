@@ -1,0 +1,24 @@
+name: "Build"
+on:
+  pull_request:
+  push:
+jobs:
+  tests:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v22
+      - uses: cachix/cachix-action@v12
+        with:
+          name: gametaro-neovim-flake
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+      - run: nix flake check
+      - run: |
+          nix build --json \
+            | jq -r '.[].outputs | to_entries[].value' \
+            | cachix push gametaro-neovim-flake
+      - run: nix develop --profile dev -c true
+      - run: cachix push gametaro-neovim-flake dev
