@@ -129,7 +129,7 @@
             hooks = {
               actionlint.enable = true;
               alejandra.enable = true;
-              lua-ls.enable = true;
+              lua-ls.enable = false;
               nil.enable = true;
               statix.enable = true;
               stylua.enable = true;
