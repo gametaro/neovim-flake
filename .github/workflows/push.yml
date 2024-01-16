@@ -1,0 +1,23 @@
+name: Push
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - flake.lock
+jobs:
+  cache:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v20
+      - uses: cachix/cachix-action@v12
+        with:
+          name: myneovim
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+      - run: |
+          nix build --impure github:srid/devour-flake \
+            -L --no-link --print-out-paths \
+            --override-input flake . \
+            | xargs cat \
+            | cachix push myneovim

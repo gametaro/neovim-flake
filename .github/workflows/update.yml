@@ -1,0 +1,19 @@
+name: Update
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 0 * * *
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v22
+      - name: Update flake.lock and Create PR
+        uses: DeterminateSystems/update-flake-lock@v20
+        id: update
+      - name: Merge PR
+        shell: bash
+        run: gh pr merge --auto --rebase "$PR_ID"
+        env:
+          PR_ID: ${{ steps.update.outputs.pull-request-number }}
