@@ -143,8 +143,8 @@
           };
         };
 
-        devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [
+        devshells.default = {
+          packages = with pkgs; [
             actionlint
             alejandra
             lua-language-server
@@ -153,7 +153,10 @@
             stylua
             yaml-language-server
           ];
-          inherit (config.pre-commit.devShell) shellHook;
+          devshell = {
+            motd = "";
+            startup.pre-commit.text = "${config.pre-commit.installationScript}";
+          };
         };
       };
     };
