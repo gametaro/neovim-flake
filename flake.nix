@@ -2,8 +2,8 @@
   description = "My Neovim flake";
 
   nixConfig = {
-    extra-substituters = "https://gametaro-neovim-flake.cachix.org";
-    extra-trusted-public-keys = "gametaro-neovim-flake.cachix.org-1:RN96eQV1gq1GL4tvIMNdBWztFnPcaO+9T5ah0I4O0Oo=";
+    extra-substituters = "https://myneovim.cachix.org";
+    extra-trusted-public-keys = "myneovim.cachix.org-1:RN96eQV1gq1GL4tvIMNdBWztFnPcaO+9T5ah0I4O0Oo=";
   };
 
   inputs = {
