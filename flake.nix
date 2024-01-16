@@ -97,7 +97,7 @@
 
       systems = [
         # "aarch64-darwin"
-        # "aarch64-linux"
+        "aarch64-linux"
         # "x86_64-darwin"
         "x86_64-linux"
       ];
@@ -108,16 +108,25 @@
         pkgs,
         ...
       }: let
+        plugins = builtins.attrValues (builtins.mapAttrs (pname: src:
+          pkgs.vimUtils.buildVimPlugin {
+            inherit pname src;
+            version = src.lastModifiedDate;
+          }) (builtins.removeAttrs inputs [
+          "devshell"
+          "flake-utils"
+          "neovim"
+          "nixpkgs"
+          "pre-commit-hooks-nix"
+          "self"
+        ]));
+
         nvim = pkgs.wrapNeovimUnstable inputs'.neovim.packages.neovim {
           luaRcContent = builtins.readFile ./init.lua;
           packpathDirs.myNeovimPackages = {
             start = with pkgs.vimPlugins;
               [nvim-treesitter.withAllGrammars]
-              ++ builtins.attrValues (builtins.mapAttrs (pname: src:
-                pkgs.vimUtils.buildVimPlugin {
-                  inherit pname src;
-                  version = src.lastModifiedDate;
-                }) (builtins.removeAttrs inputs ["self" "nixpkgs" "flake-utils"]));
+              ++ plugins;
           };
           viAlias = true;
           vimAlias = true;
