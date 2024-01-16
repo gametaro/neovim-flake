@@ -16,4 +16,5 @@ jobs:
         shell: bash
         run: gh pr merge --auto --rebase "$PR_ID"
         env:
+          GH_TOKEN: ${{ github.token }}
           PR_ID: ${{ steps.update.outputs.pull-request-number }}

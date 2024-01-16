@@ -17,7 +17,6 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - run: |
           nix build --impure github:srid/devour-flake \
-            -L --no-link --print-out-paths \
-            --override-input flake . \
+            -L --no-link --print-out-paths --override-input flake . \
             | xargs cat \
             | cachix push myneovim
