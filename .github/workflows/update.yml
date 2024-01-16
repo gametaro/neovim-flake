@@ -22,7 +22,7 @@ jobs:
           token: ${{ secrets.PAT }}
       - name: Merge PR
         shell: bash
-        run: gh pr merge --auto "$PR_ID"
+        run: gh pr merge --auto --squash "$PR_ID"
         env:
           GH_TOKEN: ${{ secrets.PAT }}
           PR_ID: ${{ steps.update.outputs.pull-request-number }}
