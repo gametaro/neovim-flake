@@ -143,6 +143,7 @@
             hooks = {
               actionlint.enable = true;
               alejandra.enable = true;
+              editorconfig-checker.enable = true;
               lua-ls.enable = false;
               nil.enable = true;
               statix.enable = true;
@@ -156,6 +157,7 @@
           packages = with pkgs; [
             actionlint
             alejandra
+            editorconfig-checker
             lua-language-server
             nil
             statix
