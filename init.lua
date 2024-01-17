@@ -72,10 +72,10 @@ function M.keymap()
   vim.keymap.set('c', '<c-p>', '<up>')
   vim.keymap.set('c', '<m-b>', '<s-left>')
   vim.keymap.set('c', '<m-f>', '<s-right>')
-  vim.keymap.set('n', '<m-h>', '<c-w>h', { desc = 'Go to right window' })
-  vim.keymap.set('n', '<m-j>', '<c-w>j', { desc = 'Go to left window' })
-  vim.keymap.set('n', '<m-k>', '<c-w>k', { desc = 'Go to down window' })
-  vim.keymap.set('n', '<m-l>', '<c-w>l', { desc = 'Go to up window' })
+  vim.keymap.set('n', '<m-h>', '<c-w>h')
+  vim.keymap.set('n', '<m-j>', '<c-w>j')
+  vim.keymap.set('n', '<m-k>', '<c-w>k')
+  vim.keymap.set('n', '<m-l>', '<c-w>l')
   vim.keymap.set('n', '<c-t>', '')
   vim.keymap.set('n', '<c-t>c', '<cmd>tabclose<cr>')
   vim.keymap.set('n', '<c-t>f', '<cmd>tabfirst<cr>')
@@ -100,26 +100,26 @@ function M.keymap()
     { expr = true, desc = 'Moves cursor to line start or first non-blank character' }
   )
 
-  vim.keymap.set('n', '\\c', '<cmd>setlocal cul! cul?<cr>', { desc = 'Toggle cursorline' })
-  vim.keymap.set('n', '\\f', '<cmd>setlocal fen! fen?<cr>', { desc = 'Toggle fold' })
-  vim.keymap.set('n', '\\l', '<cmd>setlocal list! list?<cr>', { desc = 'Toggle list' })
-  vim.keymap.set('n', '\\n', '<cmd>setlocal nu! nu?<cr>', { desc = 'Toggle number' })
-  vim.keymap.set('n', '\\N', '<cmd>setlocal rnu! rnu?<cr>', { desc = 'Toggle relativenumber' })
-  vim.keymap.set('n', '\\w', '<cmd>setlocal wrap! wrap?<cr>', { desc = 'Toggle wrap' })
+  vim.keymap.set('n', '\\c', '<cmd>setlocal cul! cul?<cr>')
+  vim.keymap.set('n', '\\f', '<cmd>setlocal fen! fen?<cr>')
+  vim.keymap.set('n', '\\l', '<cmd>setlocal list! list?<cr>')
+  vim.keymap.set('n', '\\n', '<cmd>setlocal nu! nu?<cr>')
+  vim.keymap.set('n', '\\N', '<cmd>setlocal rnu! rnu?<cr>')
+  vim.keymap.set('n', '\\w', '<cmd>setlocal wrap! wrap?<cr>')
   vim.keymap.set('n', '\\d', function()
     if vim.diagnostic.is_disabled(0) then
       vim.diagnostic.enable(0)
     else
       vim.diagnostic.disable(0)
     end
-  end, { desc = 'Toggle diagnostic' })
+  end)
   vim.keymap.set('n', '\\i', function()
     if vim.lsp.inlay_hint.is_enabled(0) then
       vim.lsp.inlay_hint.enable(0, false)
     else
       vim.lsp.inlay_hint.enable(0, true)
     end
-  end, { desc = 'Toggle inlay hints' })
+  end)
 
   vim.keymap.set(
     { 'i', 's' },
@@ -158,7 +158,7 @@ function M.keymap()
 
     vim.cmd.terminal()
     terminals[cwd][count] = vim.api.nvim_get_current_buf()
-  end, { desc = 'Open terminal' })
+  end)
 end
 
 function M.autocmd()
@@ -777,7 +777,7 @@ function M.quickfix()
   local org_opts = {}
   local qflist = {}
 
-  local prevwin_opts = {
+  local win_opts = {
     number = true,
     cursorline = true,
   }
@@ -787,7 +787,7 @@ function M.quickfix()
     local buf = vim.api.nvim_win_get_buf(win)
     ---@type vim.fn.winsaveview.ret
     local view = vim.api.nvim_win_call(win, vim.fn.winsaveview)
-    vim.iter(prevwin_opts):each(function(k) org_opts[k] = vim.wo[win][k] end)
+    vim.iter(win_opts):each(function(k) org_opts[k] = vim.wo[win][k] end)
     return win, buf, view
   end
 
@@ -803,7 +803,7 @@ function M.quickfix()
         vim.api.nvim_win_set_buf(win, buf)
         vim.api.nvim_win_set_cursor(win, { item.lnum, item.col })
         vim.api.nvim_win_call(win, function() vim.cmd.normal({ 'zzzv', bang = true }) end)
-        vim.iter(prevwin_opts):each(function(k, v) vim.wo[win][k] = v end)
+        vim.iter(win_opts):each(function(k, v) vim.wo[win][k] = v end)
       end
     end
   end
@@ -835,7 +835,7 @@ function M.quickfix()
         group = group,
         buffer = 0,
         callback = function(a)
-          local opts = a.event == 'WinEnter' and prevwin_opts or org_opts
+          local opts = a.event == 'WinEnter' and win_opts or org_opts
           vim.iter(opts):each(function(k, v) vim.wo[prev_win][k] = v end)
         end,
       })
@@ -896,16 +896,16 @@ function M.plugins()
   vim.keymap.set('n', '<c-p>', function()
     local ok = pcall(require('telescope.builtin').git_files)
     if not ok then require('telescope.builtin').find_files() end
-  end, { desc = 'Find files' })
-  vim.keymap.set('n', '<c-b>', '<cmd>Telescope buffers<cr>', { desc = 'Buffers' })
-  vim.keymap.set('n', '<c-g>', '<cmd>Telescope live_grep<cr>', { desc = 'Grep' })
-  vim.keymap.set('n', '<c-h>', '<cmd>Telescope help_tags<cr>', { desc = 'Help' })
-  vim.keymap.set('n', '<c-n>', '<cmd>Telescope oldfiles<cr>', { desc = 'Oldfiles' })
+  end)
+  vim.keymap.set('n', '<c-b>', '<cmd>Telescope buffers<cr>')
+  vim.keymap.set('n', '<c-g>', '<cmd>Telescope live_grep<cr>')
+  vim.keymap.set('n', '<c-h>', '<cmd>Telescope help_tags<cr>')
+  vim.keymap.set('n', '<c-n>', '<cmd>Telescope oldfiles<cr>')
 
-  vim.keymap.set('n', '<leader>gC', '<cmd>Telescope git_bcommits<cr>', { desc = 'Git bcommits' })
-  vim.keymap.set('x', '<leader>gC', '<cmd>Telescope git_bcommits_range<cr>', { desc = 'Git bcommits range' })
-  vim.keymap.set('n', '<leader>gc', '<cmd>Telescope git_commits<cr>', { desc = 'Git commits' })
-  vim.keymap.set('n', '<leader>gs', '<cmd>Telescope git_status<cr>', { desc = 'Git status' })
+  vim.keymap.set('n', '<leader>gC', '<cmd>Telescope git_bcommits<cr>')
+  vim.keymap.set('x', '<leader>gC', '<cmd>Telescope git_bcommits_range<cr>')
+  vim.keymap.set('n', '<leader>gc', '<cmd>Telescope git_commits<cr>')
+  vim.keymap.set('n', '<leader>gs', '<cmd>Telescope git_status<cr>')
 
   require('telescope').setup({
     pickers = {
@@ -937,7 +937,6 @@ function M.plugins()
         vim.keymap.set(mode, lhs, rhs, opts)
       end
 
-      -- Navigation
       map('n', ']c', function()
         if vim.wo.diff then
           return ']c'
@@ -945,7 +944,7 @@ function M.plugins()
           vim.schedule(function() gs.next_hunk({ greedy = false }) end)
           return '<Ignore>'
         end
-      end, { expr = true, desc = 'Next hunk' })
+      end, { expr = true })
       map('n', '[c', function()
         if vim.wo.diff then
           return '[c'
@@ -953,36 +952,25 @@ function M.plugins()
           vim.schedule(function() gs.prev_hunk({ greedy = false }) end)
           return '<Ignore>'
         end
-      end, { expr = true, desc = 'Previous hunk' })
-      -- Actions
+      end, { expr = true })
       map('n', '<leader>hs', gs.stage_hunk, { desc = 'Stage hunk' })
       map('n', '<leader>hr', gs.reset_hunk, { desc = 'Reset hunk' })
-      map(
-        'x',
-        '<leader>hs',
-        function() gs.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end,
-        { desc = 'Stage hunk' }
-      )
-      map(
-        'x',
-        '<leader>hr',
-        function() gs.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end,
-        { desc = 'Reset hunk' }
-      )
-      map('n', '<leader>hS', gs.stage_buffer, { desc = 'Stage buffer' })
-      map('n', '<leader>hu', gs.undo_stage_hunk, { desc = 'Undo stage hunk' })
-      map('n', '<leader>hR', gs.reset_buffer, { desc = 'Reset buffer' })
-      map('n', '<leader>hp', gs.preview_hunk_inline, { desc = 'Preview hunk' })
-      map('n', '<leader>hb', function() gs.blame_line({ full = true }) end, { desc = 'Blame line' })
-      map('n', '<leader>hd', gs.diffthis, { desc = 'Diffthis' })
-      map('n', '<leader>hD', function() gs.diffthis('~') end, { desc = 'Diffthis ~' })
-      map('n', '<leader>hq', gs.setqflist, { desc = 'Quickfix' })
-      map('n', '<leader>hQ', function() gs.setqflist('all') end, { desc = 'Quickfix' })
-      map('n', '<leader>hl', gs.setloclist, { desc = 'Location List' })
-      map('n', '\\hb', gs.toggle_current_line_blame, { desc = 'Toggle line blame' })
-      map('n', '\\hd', gs.toggle_deleted, { desc = 'Toggle deleted' })
-      map('n', '\\hw', gs.toggle_word_diff, { desc = 'Toggle word diff' })
-      map({ 'o', 'x' }, 'ih', ':<c-u>Gitsigns select_hunk<cr>', { silent = true, desc = 'Hunk' })
+      map('x', '<leader>hs', function() gs.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end)
+      map('x', '<leader>hr', function() gs.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end)
+      map('n', '<leader>hS', gs.stage_buffer)
+      map('n', '<leader>hu', gs.undo_stage_hunk)
+      map('n', '<leader>hR', gs.reset_buffer)
+      map('n', '<leader>hp', gs.preview_hunk_inline)
+      map('n', '<leader>hb', function() gs.blame_line({ full = true }) end)
+      map('n', '<leader>hd', gs.diffthis)
+      map('n', '<leader>hD', function() gs.diffthis('~') end)
+      map('n', '<leader>hq', gs.setqflist)
+      map('n', '<leader>hQ', function() gs.setqflist('all') end)
+      map('n', '<leader>hl', gs.setloclist)
+      map('n', '\\hb', gs.toggle_current_line_blame)
+      map('n', '\\hd', gs.toggle_deleted)
+      map('n', '\\hw', gs.toggle_word_diff)
+      map({ 'o', 'x' }, 'ih', ':<c-u>Gitsigns select_hunk<cr>', { silent = true })
     end,
   })
 
@@ -992,7 +980,6 @@ function M.plugins()
   })
 
   local cmp = require('cmp')
-
   cmp.setup({
     confirmation = { default_behavior = 'replace' },
     experimental = { ghost_text = true },
@@ -1018,7 +1005,9 @@ function M.plugins()
     options = { ignore_blank_line = true },
   })
 
-  require('mini.operators').setup()
+  require('mini.operators').setup({
+    exchange = { prefix = '' },
+  })
 
   require('mini.surround').setup({
     mappings = {
@@ -1032,11 +1021,11 @@ function M.plugins()
     },
   })
 
-  require('mini.pairs').setup({
-    modes = { insert = true, command = true, terminal = true },
-  })
-  local function map_bs(lhs, rhs) vim.keymap.set({ 'i', 't' }, lhs, rhs, { expr = true, replace_keycodes = false }) end
-  map_bs('<c-h>', 'v:lua.MiniPairs.bs()')
+  -- require('mini.pairs').setup({
+  --   modes = { insert = true, command = true, terminal = true },
+  -- })
+  -- local function map_bs(lhs, rhs) vim.keymap.set({ 'i', 't' }, lhs, rhs, { expr = true, replace_keycodes = false }) end
+  -- map_bs('<c-h>', 'v:lua.MiniPairs.bs()')
 
   require('mini.ai').setup({
     custom_textobjects = {
@@ -1095,23 +1084,22 @@ function M.plugins()
     callback = function() require('lint').try_lint() end,
   })
 
-  require('flash').setup({
+  local flash = require('flash')
+  flash.setup({
     highlight = { backdrop = false },
     modes = {
       char = {
-        char = {
-          keys = { 'f', 'F' },
-        },
+        keys = { 'f', 'F' },
         highlight = { backdrop = false },
       },
     },
   })
 
-  vim.keymap.set({ 'n', 'x', 'o' }, 's', function() require('flash').jump() end, { desc = 'Flash' })
-  vim.keymap.set({ 'n', 'x', 'o' }, 'S', function() require('flash').treesitter() end, { desc = 'Flash Treesitter' })
-  vim.keymap.set('o', 'r', function() require('flash').remote() end, { desc = 'Remote Flash' })
-  vim.keymap.set({ 'o', 'x' }, 'R', function() require('flash').treesitter_search() end, { desc = 'Treesitter Search' })
-  vim.keymap.set({ 'c' }, '<c-s>', function() require('flash').toggle() end, { desc = 'toggle flash search' })
+  vim.keymap.set({ 'n', 'x', 'o' }, 's', flash.jump)
+  vim.keymap.set({ 'n', 'x', 'o' }, 'S', flash.treesitter)
+  vim.keymap.set('o', 'r', flash.remote)
+  vim.keymap.set({ 'o', 'x' }, 'R', flash.treesitter_search)
+  vim.keymap.set({ 'c' }, '<c-s>', flash.toggle)
   vim.api.nvim_set_hl(0, 'FlashLabel', { bg = 'NvimDarkBlue' })
 end
 
@@ -1119,6 +1107,7 @@ local function init()
   vim.loader.enable()
 
   vim.g.mapleader = ' '
+
   vim.g.loaded_matchit = 1
   vim.g.loaded_netrwPlugin = 1
   vim.g.loaded_rplugin = 1
