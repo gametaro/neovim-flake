@@ -1114,6 +1114,12 @@ local function init()
   vim.g.loaded_tohtml = 1
   vim.g.loaded_tutor = 1
 
+  vim.filetype.add({
+    filename = {
+      ['flake.lock'] = 'json',
+    },
+  })
+
   vim.iter(M):each(function(_, m)
     local ok, msg = pcall(m)
     if not ok then vim.notify(msg) end
