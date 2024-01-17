@@ -140,11 +140,11 @@ function M.keymap()
     { expr = true }
   )
 
-  vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
-  vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous diagnostic' })
-  vim.keymap.set('n', '<leader>dK', vim.diagnostic.open_float, { desc = 'Float' })
-  vim.keymap.set('n', '<leader>dq', vim.diagnostic.setqflist, { desc = 'Quickfix' })
-  vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist, { desc = 'Location list' })
+  vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+  vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+  vim.keymap.set('n', '<leader>dK', vim.diagnostic.open_float)
+  vim.keymap.set('n', '<leader>dq', vim.diagnostic.setqflist)
+  vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist)
 
   vim.keymap.set('n', 't', function()
     local count = vim.v.count1
@@ -382,15 +382,15 @@ function M.lsp()
         vim.keymap.set(mode, lhs, rhs, opts)
       end
 
-      map('n', 'gd', vim.lsp.buf.definition, { desc = 'Go to definition' })
-      map('n', 'gD', vim.lsp.buf.declaration, { desc = 'Go to declaration' })
-      map('n', 'gR', vim.lsp.buf.references, { desc = 'References' })
-      map('n', 'gI', vim.lsp.buf.implementation, { desc = 'Go to implementation' })
-      map('i', '<c-s>', vim.lsp.buf.signature_help, { desc = 'Signature help' })
-      map('n', '<leader>cl', vim.lsp.codelens.run, { desc = 'Codelens' })
-      map('n', '<leader>cr', vim.lsp.buf.rename, { desc = 'Rename' })
-      map({ 'n', 'x' }, '<leader>ca', vim.lsp.buf.code_action, { desc = 'Code action' })
-      -- map({ 'n', 'x' }, '<m-f>', vim.lsp.buf.format, { desc = 'Format' })
+      map('n', 'gd', vim.lsp.buf.definition)
+      map('n', 'gD', vim.lsp.buf.declaration)
+      map('n', 'gR', vim.lsp.buf.references)
+      map('n', 'gI', vim.lsp.buf.implementation)
+      map('i', '<c-s>', vim.lsp.buf.signature_help)
+      map('n', '<leader>cl', vim.lsp.codelens.run)
+      map('n', '<leader>cr', vim.lsp.buf.rename)
+      map({ 'n', 'x' }, '<leader>ca', vim.lsp.buf.code_action)
+      -- map({ 'n', 'x' }, '<m-f>', vim.lsp.buf.format)
     end,
     desc = 'Attach to lsp server',
   })
@@ -429,7 +429,7 @@ function M.niceblock()
       gI = { v = '<c-v>0I', V = '<c-v>0o$I', ['\22'] = '0I' },
     })
     :each(function(k, v)
-      vim.keymap.set('x', k, function() return v[vim.api.nvim_get_mode().mode] end, { expr = true, desc = 'Niceblock' })
+      vim.keymap.set('x', k, function() return v[vim.api.nvim_get_mode().mode] end, { expr = true })
     end)
 end
 
@@ -502,8 +502,8 @@ function M.edge()
     vim.api.nvim_win_set_cursor(0, { target_line, current_col - 1 })
   end
 
-  vim.keymap.set({ 'n', 'x' }, ']e', function() jump(true) end, { desc = 'Next edge' })
-  vim.keymap.set({ 'n', 'x' }, '[e', function() jump(false) end, { desc = 'Previous edge' })
+  vim.keymap.set({ 'n', 'x' }, ']e', function() jump(true) end)
+  vim.keymap.set({ 'n', 'x' }, '[e', function() jump(false) end)
 end
 
 function M.bufjump()
@@ -527,8 +527,8 @@ function M.bufjump()
     end
   end
 
-  vim.keymap.set('n', '<m-i>', function() jump(true) end, { desc = 'Next buffer in jump list' })
-  vim.keymap.set('n', '<m-o>', function() jump(false) end, { desc = 'Previous buffer in jump list' })
+  vim.keymap.set('n', '<m-i>', function() jump(true) end)
+  vim.keymap.set('n', '<m-o>', function() jump(false) end)
 end
 
 function M.walkthrough()
@@ -554,8 +554,8 @@ function M.walkthrough()
     end
   end
 
-  vim.keymap.set('n', ']w', function() jump(true) end, { desc = 'Next file or directory' })
-  vim.keymap.set('n', '[w', function() jump(false) end, { desc = 'Previous file or directory' })
+  vim.keymap.set('n', ']w', function() jump(true) end)
+  vim.keymap.set('n', '[w', function() jump(false) end)
 end
 
 function M.fx()
@@ -921,10 +921,10 @@ function M.plugins()
     },
   })
 
-  vim.keymap.set('n', '<leader>gd', '<cmd>DiffviewOpen<cr>', { desc = 'File history' })
-  vim.keymap.set('n', '<leader>gf', '<cmd>DiffviewFileHistory %<cr>', { desc = 'Current file history' })
-  vim.keymap.set('n', '<leader>gF', '<cmd>DiffviewFileHistory<cr>', { desc = 'File history' })
-  vim.keymap.set('x', '<leader>gf', ":'<,'>DiffviewFileHistory<cr>", { desc = 'File history' })
+  vim.keymap.set('n', '<leader>gd', '<cmd>DiffviewOpen<cr>')
+  vim.keymap.set('n', '<leader>gf', '<cmd>DiffviewFileHistory %<cr>')
+  vim.keymap.set('n', '<leader>gF', '<cmd>DiffviewFileHistory<cr>')
+  vim.keymap.set('x', '<leader>gf', ":'<,'>DiffviewFileHistory<cr>")
   require('diffview').setup()
 
   require('gitsigns').setup({
@@ -953,8 +953,8 @@ function M.plugins()
           return '<Ignore>'
         end
       end, { expr = true })
-      map('n', '<leader>hs', gs.stage_hunk, { desc = 'Stage hunk' })
-      map('n', '<leader>hr', gs.reset_hunk, { desc = 'Reset hunk' })
+      map('n', '<leader>hs', gs.stage_hunk)
+      map('n', '<leader>hr', gs.reset_hunk)
       map('x', '<leader>hs', function() gs.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end)
       map('x', '<leader>hr', function() gs.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end)
       map('n', '<leader>hS', gs.stage_buffer)
