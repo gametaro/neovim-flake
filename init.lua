@@ -428,7 +428,7 @@ end
 function M.edge()
   local function is_blank(s) return string.match(s, '^%s*$') ~= nil end
 
-  local function is_part_of_block(lnum, col)
+  local function is_block(lnum, col)
     local char = utils.get_char_at(lnum, col)
     if is_blank(char) then
       local prev_char = col > 1 and utils.get_char_at(lnum, col - 1) or ' '
@@ -439,38 +439,37 @@ function M.edge()
   end
 
   local function jump(next)
-    local current_line = vim.fn.line('.')
-    local current_col = vim.fn.virtcol('.')
-    local total_lines = vim.fn.line('$')
+    local start_line = vim.fn.line('.')
+    local last_line = vim.fn.line('$')
+    local row = start_line
+    local col = vim.fn.virtcol('.')
     local step = next and 1 or -1
-    local target_line = current_line
 
-    local on_block = is_part_of_block(current_line, current_col)
-    local on_edge = is_part_of_block(current_line, current_col)
-      and not is_part_of_block(current_line + step, current_col)
+    local on_block = is_block(start_line, col)
+    local on_edge = on_block and not is_block(start_line + step, col)
 
-    for lnum = current_line + step, next and total_lines or 1, step do
+    for lnum = start_line + step, next and last_line or 1, step do
       if on_edge then
-        if is_part_of_block(lnum, current_col) then
-          target_line = lnum
+        if is_block(lnum, col) then
+          row = lnum
           break
         end
       else
         if on_block then
-          if not is_part_of_block(lnum, current_col) then
-            target_line = lnum - step
+          if not is_block(lnum, col) then
+            row = lnum - step
             break
           end
         else
-          if is_part_of_block(lnum, current_col) then
-            target_line = lnum
+          if is_block(lnum, col) then
+            row = lnum
             break
           end
         end
       end
     end
 
-    vim.api.nvim_win_set_cursor(0, { target_line, current_col - 1 })
+    vim.api.nvim_win_set_cursor(0, { row, col - 1 })
   end
 
   vim.keymap.set({ 'n', 'x' }, ']e', function() jump(true) end)
