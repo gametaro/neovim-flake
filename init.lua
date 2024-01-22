@@ -100,11 +100,11 @@ function M.keymap()
     { expr = true, desc = 'Moves cursor to line start or first non-blank character' }
   )
 
-  vim.keymap.set('n', '\\c', '<cmd>setlocal cul!<cr>')
-  vim.keymap.set('n', '\\f', '<cmd>setlocal fen!<cr>')
+  vim.keymap.set('n', '\\c', '<cmd>setlocal cursorline!<cr>')
+  vim.keymap.set('n', '\\f', '<cmd>setlocal foldenable!<cr>')
   vim.keymap.set('n', '\\l', '<cmd>setlocal list!<cr>')
-  vim.keymap.set('n', '\\n', '<cmd>setlocal nu!<cr>')
-  vim.keymap.set('n', '\\N', '<cmd>setlocal rnu!<cr>')
+  vim.keymap.set('n', '\\n', '<cmd>setlocal number!<cr>')
+  vim.keymap.set('n', '\\N', '<cmd>setlocal relativenumber!<cr>')
   vim.keymap.set('n', '\\w', '<cmd>setlocal wrap!<cr>')
   vim.keymap.set('n', '\\d', function()
     if vim.diagnostic.is_disabled(0) then
