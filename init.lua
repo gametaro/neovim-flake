@@ -50,6 +50,8 @@ function M.option()
   vim.o.jumpoptions = 'view'
   vim.o.sessionoptions = 'buffers,tabpages,folds'
   vim.o.shortmess = vim.o.shortmess .. 'IWcs'
+  vim.o.showcmd = false
+  vim.o.showmode = false
   vim.o.signcolumn = 'yes'
   vim.o.smartcase = true
   vim.o.smoothscroll = true
