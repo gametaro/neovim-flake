@@ -38,6 +38,7 @@ function M.option()
   vim.o.autowriteall = true
   vim.o.backup = true
   vim.opt.backupdir:remove('.')
+  vim.o.cmdheight = 0
   vim.o.completeopt = 'menu,menuone,noselect,popup'
   vim.o.confirm = true
   vim.o.diffopt = vim.o.diffopt .. ',algorithm:histogram,indent-heuristic,vertical,linematch:60'
