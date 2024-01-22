@@ -43,10 +43,10 @@ function M.option()
   vim.o.confirm = true
   vim.o.diffopt = vim.o.diffopt .. ',algorithm:histogram,indent-heuristic,vertical,linematch:60'
   vim.o.exrc = true
-  -- vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-  -- vim.o.foldlevelstart = 1
-  -- vim.o.foldmethod = 'expr'
-  -- vim.o.foldtext = 'v:lua.vim.treesitter.foldtext()'
+  vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+  vim.o.foldlevelstart = 1
+  vim.o.foldmethod = 'expr'
+  vim.o.foldtext = ''
   vim.o.ignorecase = true
   vim.o.jumpoptions = 'view'
   vim.o.sessionoptions = 'buffers,tabpages,folds'
