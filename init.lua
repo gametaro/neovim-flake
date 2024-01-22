@@ -902,7 +902,7 @@ function M.plugins()
   vim.keymap.set('n', '<leader>gf', '<cmd>DiffviewFileHistory %<cr>')
   vim.keymap.set('n', '<leader>gF', '<cmd>DiffviewFileHistory<cr>')
   vim.keymap.set('x', '<leader>gf', ":'<,'>DiffviewFileHistory<cr>")
-  require('diffview').setup()
+  require('diffview').setup({ use_icons = false })
 
   require('gitsigns').setup({
     on_attach = function(buffer)
