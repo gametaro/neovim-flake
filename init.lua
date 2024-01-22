@@ -197,15 +197,6 @@ function M.autocmd()
     desc = 'Resize window',
   })
 
-  -- vim.api.nvim_create_autocmd({ 'BufLeave', 'WinLeave', 'FocusLost' }, {
-  --   callback = function(a)
-  --     if vim.bo[a.buf].buftype == '' and vim.bo[a.buf].filetype ~= '' and vim.bo[a.buf].modifiable then
-  --       vim.cmd.update({ mods = { emsg_silent = true } })
-  --     end
-  --   end,
-  --   desc = 'Auto save',
-  -- })
-
   vim.api.nvim_create_autocmd({ 'BufEnter', 'VimEnter' }, {
     callback = function()
       local pwd = vim.fn.getcwd(-1, 0)
@@ -1022,12 +1013,6 @@ function M.plugins()
       update_n_lines = '',
     },
   })
-
-  -- require('mini.pairs').setup({
-  --   modes = { insert = true, command = true, terminal = true },
-  -- })
-  -- local function map_bs(lhs, rhs) vim.keymap.set({ 'i', 't' }, lhs, rhs, { expr = true, replace_keycodes = false }) end
-  -- map_bs('<c-h>', 'v:lua.MiniPairs.bs()')
 
   require('mini.ai').setup({
     custom_textobjects = {
