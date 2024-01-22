@@ -75,10 +75,6 @@ function M.keymap()
   vim.keymap.set('c', '<c-p>', '<up>')
   vim.keymap.set('c', '<m-b>', '<s-left>')
   vim.keymap.set('c', '<m-f>', '<s-right>')
-  vim.keymap.set('n', '<m-h>', '<c-w>h')
-  vim.keymap.set('n', '<m-j>', '<c-w>j')
-  vim.keymap.set('n', '<m-k>', '<c-w>k')
-  vim.keymap.set('n', '<m-l>', '<c-w>l')
   vim.keymap.set('n', '<c-t>', '')
   vim.keymap.set('n', '<c-t>c', '<cmd>tabclose<cr>')
   vim.keymap.set('n', '<c-t>f', '<cmd>tabfirst<cr>')
@@ -86,6 +82,7 @@ function M.keymap()
   vim.keymap.set('n', '<c-t>n', '<cmd>tabnew<cr>')
   vim.keymap.set('n', '<c-t>o', '<cmd>tabonly<cr>')
   vim.keymap.set('t', '<esc>', '<c-\\><c-n>')
+  vim.keymap.set('t', '<c-^>', '<c-\\><c-n><c-^>')
   vim.keymap.set(
     't',
     '<c-r>',
