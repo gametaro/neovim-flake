@@ -206,23 +206,6 @@ function M.autocmd()
     desc = 'Change directory to project root',
   })
 
-  vim.api.nvim_create_autocmd({ 'VimEnter', 'DirChanged' }, {
-    group = vim.api.nvim_create_augroup('dotenv', {}),
-    callback = function()
-      local file = vim.fs.find('.env', { type = 'file', upward = true, stop = vim.fs.dirname(vim.uv.cwd()) })[1]
-      if not file then return end
-
-      vim.iter(io.lines(file)):filter(function(line) return not vim.startswith(line, '#') end):each(function(line)
-        local key, value = line:match('([^=]+)=([^=]+)')
-        if key and value then
-          value = value:gsub('^["\']', ''):gsub('["\']$', '')
-          vim.env[key] = vim.trim(value)
-        end
-      end)
-    end,
-    desc = 'Load and set environment variables from the .env file',
-  })
-
   vim.api.nvim_create_autocmd('BufRead', {
     callback = function(a)
       vim.api.nvim_create_autocmd('BufWinEnter', {
