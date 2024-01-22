@@ -24,16 +24,6 @@ function utils.get_char_at(lnum, col)
   return vim.fn.strcharpart(vim.fn.strpart(line, col - 1), 0, 1)
 end
 
-function M.highlight()
-  ---@type table<string, vim.api.keyset.highlight>
-  local highlights = {
-    ['@attribute'] = { link = 'Label' },
-    ['@text.diff.add'] = { link = 'DiffAdd' },
-    ['@text.diff.delete'] = { link = 'DiffDelete' },
-  }
-  vim.iter(highlights):each(function(k, v) vim.api.nvim_set_hl(0, k, v) end)
-end
-
 function M.option()
   vim.o.autowriteall = true
   vim.o.backup = true
