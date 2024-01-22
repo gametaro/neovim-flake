@@ -49,6 +49,7 @@ function M.option()
   vim.o.foldtext = ''
   vim.o.ignorecase = true
   vim.o.jumpoptions = 'view'
+  vim.o.modeline = false
   vim.o.sessionoptions = 'buffers,tabpages,folds'
   vim.o.shortmess = vim.o.shortmess .. 'IWcs'
   vim.o.showcmd = false
