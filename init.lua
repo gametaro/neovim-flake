@@ -196,6 +196,12 @@ function M.autocmd()
     desc = 'Resize window',
   })
 
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = { 'gitcommit', 'markdown' },
+    callback = function(a) vim.wo[vim.fn.bufwinid(a.buf)][0].spell = true end,
+    desc = 'Enable spell',
+  })
+
   vim.api.nvim_create_autocmd({ 'BufEnter', 'VimEnter' }, {
     callback = function()
       local pwd = vim.fn.getcwd(-1, 0)
