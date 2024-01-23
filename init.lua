@@ -87,8 +87,14 @@ function M.keymap()
   vim.keymap.set(
     { 'n', 'x', 'o' },
     '0',
-    function() return vim.fn.virtcol('.') - 1 == vim.fn.indent('.') and '0' or '^' end,
-    { expr = true, desc = 'Moves cursor to line start or first non-blank character' }
+    function() return vim.fn.virtcol('.') == vim.fn.indent('.') + 1 and '0' or '^' end,
+    { expr = true, desc = 'To line start or first non-blank character' }
+  )
+  vim.keymap.set(
+    { 'n', 'x', 'o' },
+    '$',
+    function() return vim.fn.virtcol('.') == vim.fn.strdisplaywidth(vim.fn.getline('.'):match('.*%S')) and '$' or 'g_' end,
+    { expr = true, desc = 'To line end or last non-blank character' }
   )
 
   vim.keymap.set('n', '\\c', '<cmd>setlocal cursorline!<cr>')
