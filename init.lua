@@ -554,14 +554,6 @@ function M.fx()
       return { name = fullname, type = type }
     end, vim.fs.dir(path))
 
-    table.sort(files, function(a, b)
-      if a.type == b.type then
-        return a.name < b.name
-      else
-        return a.type == 'directory'
-      end
-    end)
-
     return vim.iter.map(function(file) return file.name end, files)
   end
 
@@ -574,9 +566,10 @@ function M.fx()
   end
 
   local function set_highlight(buf, line, row, type)
-    local hl_group = type_hl_group[type] or 'Normal'
+    local hl_group = type_hl_group[type]
+    local opts = { end_row = row, end_col = #line }
 
-    local opts = { end_row = row, end_col = #line, hl_group = hl_group }
+    if hl_group then opts.hl_group = hl_group end
     if type == 'link' then
       local link = vim.uv.fs_readlink(line)
       if link then
@@ -605,11 +598,12 @@ function M.fx()
     vim.wo[win][0].conceallevel = 2
     vim.wo[win][0].cursorline = true
     vim.wo[win][0].wrap = false
-    vim.opt_local.isfname:append('32')
+    -- FIXME: should live in ftplugin
+    -- vim.opt_local.isfname:append('32')
 
     vim.keymap.set('n', '<cr>', 'gf', { buffer = buf })
     vim.keymap.set('n', '<c-l>', '<cmd>edit .<cr>', { buffer = buf })
-    vim.keymap.set('n', '-', function() vim.cmd.edit('%:h') end, { buffer = buf })
+    vim.keymap.set('n', '-', '<cmd>edit %:p:h:h<cr>', { buffer = buf })
   end
 
   local function attach(buf, path)
