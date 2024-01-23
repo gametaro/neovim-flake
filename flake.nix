@@ -114,7 +114,7 @@
             version = src.lastModifiedDate;
           }) (builtins.removeAttrs inputs [
           "devshell"
-          "flake-utils"
+          "flake-parts"
           "neovim"
           "nixpkgs"
           "pre-commit-hooks-nix"
