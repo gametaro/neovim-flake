@@ -20,7 +20,7 @@ end
 
 function utils.get_char_at(lnum, col)
   local line = vim.fn.getline(lnum)
-  if col > vim.fn.strdisplaywidth(line) then return ' ' end
+  if col > vim.api.nvim_strwidth(line) then return ' ' end
   return vim.fn.strcharpart(vim.fn.strpart(line, col - 1), 0, 1)
 end
 
@@ -93,7 +93,7 @@ function M.keymap()
   vim.keymap.set(
     { 'n', 'x', 'o' },
     '$',
-    function() return vim.fn.virtcol('.') == vim.fn.strdisplaywidth(vim.fn.getline('.'):match('.*%S')) and '$' or 'g_' end,
+    function() return vim.fn.virtcol('.') == vim.api.nvim_strwidth(vim.fn.getline('.'):match('.*%S')) and '$' or 'g_' end,
     { expr = true, desc = 'To line end or last non-blank character' }
   )
 
