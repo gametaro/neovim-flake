@@ -198,7 +198,7 @@ function M.autocmd()
     desc = 'Enable spell',
   })
 
-  vim.api.nvim_create_autocmd({ 'BufEnter', 'VimEnter' }, {
+  vim.api.nvim_create_autocmd({ 'BufWinEnter', 'VimEnter' }, {
     callback = function()
       local pwd = vim.fn.getcwd(-1, 0)
       local root = utils.get_root()
