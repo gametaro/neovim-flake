@@ -353,6 +353,8 @@ function M.lsp()
       local client = vim.lsp.get_client_by_id(a.data.client_id)
       if not client then return end
 
+      client.server_capabilities.semanticTokensProvider = nil
+
       local function map(mode, lhs, rhs, opts)
         opts = opts or {}
         opts.buffer = a.buf
