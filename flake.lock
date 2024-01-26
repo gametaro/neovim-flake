@@ -331,6 +331,22 @@
         "type": "github"
       }
     },
+    "nvim-fx": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1706198700,
+        "narHash": "sha256-fZQ0tS5rYjVAiOKF7nZHhpidtxU14Ndp2hNRx3deHyE=",
+        "owner": "gametaro",
+        "repo": "nvim-fx",
+        "rev": "367e8a36da48165ff8a66d09564a94d17b87ca9e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gametaro",
+        "repo": "nvim-fx",
+        "type": "github"
+      }
+    },
     "nvim-lint": {
       "flake": false,
       "locked": {

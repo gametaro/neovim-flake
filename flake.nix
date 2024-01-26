@@ -86,6 +86,10 @@
       url = "github:tpope/vim-repeat";
       flake = false;
     };
+    nvim-fx = {
+      url = "github:gametaro/nvim-fx";
+      flake = false;
+    };
   };
 
   outputs = inputs:
