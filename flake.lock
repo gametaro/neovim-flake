@@ -269,11 +269,11 @@
       },
       "locked": {
         "dir": "contrib",
-        "lastModified": 1706292373,
-        "narHash": "sha256-jwk3WyY194aq4JL9vv+eb6ah/KCecuxETnR/fp9WWXE=",
+        "lastModified": 1706317250,
+        "narHash": "sha256-qwdgJDdnceQyeMRcLJhgtdPNtkKIlz84Bq0rGAr+tds=",
         "owner": "neovim",
         "repo": "neovim",
-        "rev": "a9df0c5ce6caa5e623c3140a80baf4b3c1ce07db",
+        "rev": "c2433589dca022a7f40cdcbd0cd1ad8aba6ee4a9",
         "type": "github"
       },
       "original": {
@@ -418,6 +418,7 @@
         "neovim": "neovim",
         "nixpkgs": "nixpkgs",
         "nvim-cmp": "nvim-cmp",
+        "nvim-fx": "nvim-fx",
         "nvim-lint": "nvim-lint",
         "plenary-nvim": "plenary-nvim",
         "pre-commit-hooks-nix": "pre-commit-hooks-nix",
