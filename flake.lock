@@ -269,17 +269,18 @@
       },
       "locked": {
         "dir": "contrib",
-        "lastModified": 1706317250,
-        "narHash": "sha256-qwdgJDdnceQyeMRcLJhgtdPNtkKIlz84Bq0rGAr+tds=",
+        "lastModified": 1706222365,
+        "narHash": "sha256-Wb7CoeLx2W1hOobe9jLsfdsZjfU0dhzrfNFa65iUHl8=",
         "owner": "neovim",
         "repo": "neovim",
-        "rev": "c2433589dca022a7f40cdcbd0cd1ad8aba6ee4a9",
+        "rev": "35a147fa77f28e3e9b5eaa217b5b383b59b6c9d2",
         "type": "github"
       },
       "original": {
         "dir": "contrib",
         "owner": "neovim",
         "repo": "neovim",
+        "rev": "35a147fa77f28e3e9b5eaa217b5b383b59b6c9d2",
         "type": "github"
       }
     },
@@ -363,6 +364,22 @@
         "type": "github"
       }
     },
+    "nvim-solo": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1706346150,
+        "narHash": "sha256-bfctdHXV2WqzX0z0tiH+OEPnNEdkdwhOfTEatlmMnb0=",
+        "owner": "gametaro",
+        "repo": "nvim-solo",
+        "rev": "daea76c94467bc11f1ddef68cf446c1ac97a8e45",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gametaro",
+        "repo": "nvim-solo",
+        "type": "github"
+      }
+    },
     "plenary-nvim": {
       "flake": false,
       "locked": {
@@ -420,6 +437,7 @@
         "nvim-cmp": "nvim-cmp",
         "nvim-fx": "nvim-fx",
         "nvim-lint": "nvim-lint",
+        "nvim-solo": "nvim-solo",
         "plenary-nvim": "plenary-nvim",
         "pre-commit-hooks-nix": "pre-commit-hooks-nix",
         "schemastore-nvim": "schemastore-nvim",

@@ -90,6 +90,10 @@
       url = "github:gametaro/nvim-fx";
       flake = false;
     };
+    nvim-solo = {
+      url = "github:gametaro/nvim-solo";
+      flake = false;
+    };
   };
 
   outputs = inputs:
