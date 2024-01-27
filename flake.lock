@@ -85,22 +85,6 @@
         "type": "github"
       }
     },
-    "diffview-nvim": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1700506468,
-        "narHash": "sha256-3EdnBUka9Rh5Brl6TWpN6GlD9z32mmY3Ip+wyiKob/8=",
-        "owner": "sindrets",
-        "repo": "diffview.nvim",
-        "rev": "3dc498c9777fe79156f3d32dddd483b8b3dbd95f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "sindrets",
-        "repo": "diffview.nvim",
-        "type": "github"
-      }
-    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -188,22 +172,6 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "flash-nvim": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1697529873,
-        "narHash": "sha256-j917u46PaOG6RmsKKoUQHuBMfXfGDD/uOBzDGhKlwTE=",
-        "owner": "folke",
-        "repo": "flash.nvim",
-        "rev": "48817af25f51c0590653bbc290866e4890fe1cbe",
-        "type": "github"
-      },
-      "original": {
-        "owner": "folke",
-        "repo": "flash.nvim",
         "type": "github"
       }
     },
@@ -316,22 +284,6 @@
         "type": "github"
       }
     },
-    "nvim-cmp": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1702541213,
-        "narHash": "sha256-BtAYRYn6m788zAq/mNnbAzAxp1TGf9QkRE0hSOp9sdc=",
-        "owner": "hrsh7th",
-        "repo": "nvim-cmp",
-        "rev": "538e37ba87284942c1d76ed38dd497e54e65b891",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hrsh7th",
-        "repo": "nvim-cmp",
-        "type": "github"
-      }
-    },
     "nvim-fx": {
       "flake": false,
       "locked": {
@@ -348,19 +300,19 @@
         "type": "github"
       }
     },
-    "nvim-lint": {
+    "nvim-quickview": {
       "flake": false,
       "locked": {
-        "lastModified": 1706124110,
-        "narHash": "sha256-5AvqCs02USgkKXRvFsTLqizglZjl0yKlTpg+iTIReh8=",
-        "owner": "mfussenegger",
-        "repo": "nvim-lint",
-        "rev": "8e5920f9ce9f24c283a2e64be5fe58d1d37d1744",
+        "lastModified": 1706405050,
+        "narHash": "sha256-GHNVqsoV3T+1KambX0fdrTB8UzgIoR8DmH1fyvj/MEM=",
+        "owner": "gametaro",
+        "repo": "nvim-quickview",
+        "rev": "88080b669785efb1c641eb655770429ece401365",
         "type": "github"
       },
       "original": {
-        "owner": "mfussenegger",
-        "repo": "nvim-lint",
+        "owner": "gametaro",
+        "repo": "nvim-quickview",
         "type": "github"
       }
     },
@@ -422,21 +374,12 @@
     },
     "root": {
       "inputs": {
-        "cmp-buffer": "cmp-buffer",
-        "cmp-nvim-lsp": "cmp-nvim-lsp",
-        "cmp-path": "cmp-path",
-        "conform-nvim": "conform-nvim",
         "devshell": "devshell",
-        "diffview-nvim": "diffview-nvim",
         "flake-parts": "flake-parts",
-        "flash-nvim": "flash-nvim",
-        "gitsigns-nvim": "gitsigns-nvim",
-        "mini-nvim": "mini-nvim",
         "neovim": "neovim",
         "nixpkgs": "nixpkgs",
-        "nvim-cmp": "nvim-cmp",
         "nvim-fx": "nvim-fx",
-        "nvim-lint": "nvim-lint",
+        "nvim-quickview": "nvim-quickview",
         "nvim-solo": "nvim-solo",
         "plenary-nvim": "plenary-nvim",
         "pre-commit-hooks-nix": "pre-commit-hooks-nix",

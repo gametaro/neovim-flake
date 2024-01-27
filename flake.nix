@@ -26,72 +26,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    cmp-buffer = {
-      url = "github:hrsh7th/cmp-buffer";
-      flake = false;
-    };
-    cmp-nvim-lsp = {
-      url = "github:hrsh7th/cmp-nvim-lsp";
-      flake = false;
-    };
-    cmp-path = {
-      url = "github:hrsh7th/cmp-path";
-      flake = false;
-    };
-    conform-nvim = {
-      url = "github:stevearc/conform.nvim";
-      flake = false;
-    };
-    diffview-nvim = {
-      url = "github:sindrets/diffview.nvim";
-      flake = false;
-    };
-    flash-nvim = {
-      url = "github:folke/flash.nvim";
-      flake = false;
-    };
-    gitsigns-nvim = {
-      url = "github:lewis6991/gitsigns.nvim";
-      flake = false;
-    };
-    mini-nvim = {
-      url = "github:echasnovski/mini.nvim";
-      flake = false;
-    };
-    nvim-cmp = {
-      url = "github:hrsh7th/nvim-cmp";
-      flake = false;
-    };
-    nvim-lint = {
-      url = "github:mfussenegger/nvim-lint";
-      flake = false;
-    };
-    plenary-nvim = {
-      url = "github:nvim-lua/plenary.nvim";
-      flake = false;
-    };
-    schemastore-nvim = {
-      url = "github:b0o/schemastore.nvim";
-      flake = false;
-    };
-    telescope-nvim = {
-      url = "github:nvim-telescope/telescope.nvim";
-      flake = false;
-    };
-    vim-illuminate = {
-      url = "github:RRethy/vim-illuminate";
-      flake = false;
-    };
-    vim-repeat = {
-      url = "github:tpope/vim-repeat";
-      flake = false;
-    };
     nvim-fx = {
       url = "github:gametaro/nvim-fx";
       flake = false;
     };
     nvim-solo = {
       url = "github:gametaro/nvim-solo";
+      flake = false;
+    };
+    nvim-quickview = {
+      url = "github:gametaro/nvim-quickview";
       flake = false;
     };
   };
@@ -120,25 +64,52 @@
           pkgs.vimUtils.buildVimPlugin {
             inherit pname src;
             version = src.lastModifiedDate;
-          }) (builtins.removeAttrs inputs [
-          "devshell"
-          "flake-parts"
-          "neovim"
-          "nixpkgs"
-          "pre-commit-hooks-nix"
-          "self"
-        ]));
+          }) {
+          inherit (inputs) nvim-fx;
+          inherit (inputs) nvim-solo;
+        });
+
+        extraPackages = with pkgs; [
+          actionlint
+          alejandra
+          lua-language-server
+          nil
+          nodePackages.bash-language-server
+          nodePackages.dockerfile-language-server-nodejs
+          shellcheck
+          shfmt
+          statix
+          stylua
+          vscode-langservers-extracted
+          yaml-language-server
+        ];
 
         nvim = pkgs.wrapNeovimUnstable inputs'.neovim.packages.neovim {
           luaRcContent = builtins.readFile ./init.lua;
           packpathDirs.myNeovimPackages = {
             start = with pkgs.vimPlugins;
-              [nvim-treesitter.withAllGrammars]
+              [
+                SchemaStore-nvim
+                cmp-buffer
+                cmp-nvim-lsp
+                conform-nvim
+                diffview-nvim
+                flash-nvim
+                gitsigns-nvim
+                mini-nvim
+                nvim-cmp
+                nvim-lint
+                nvim-treesitter.withAllGrammars
+                telescope-nvim
+                vim-illuminate
+                vim-repeat
+              ]
               ++ plugins;
           };
           viAlias = true;
           vimAlias = true;
           withPython3 = false;
+          wrapperArgs = ''--suffix PATH : "${pkgs.lib.makeBinPath extraPackages}"'';
         };
       in {
         packages = {
