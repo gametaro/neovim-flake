@@ -160,6 +160,25 @@ function M.keymap()
   end)
 end
 
+function M.diagnostic()
+  vim.diagnostic.config({
+    severity_sort = true,
+    signs = {
+      text = {
+        [1] = '●',
+        [2] = '●',
+        [3] = '●',
+        [4] = '●',
+      },
+    },
+    virtual_text = false,
+    float = {
+      header = '',
+      suffix = function(diag) return string.format(' (%s)', diag.code or ''), 'Comment' end,
+    },
+  })
+end
+
 function M.autocmd()
   vim.api.nvim_create_autocmd('TextYankPost', {
     callback = function() vim.highlight.on_yank() end,
