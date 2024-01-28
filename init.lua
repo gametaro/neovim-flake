@@ -1,6 +1,8 @@
 local M = {}
 local utils = {}
+---@type table<string, string>
 local roots = {}
+---@type table<string, table<integer, integer>>
 local terminals = vim.defaulttable(function() return {} end)
 
 ---@param names? string|string[]
