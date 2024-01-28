@@ -196,7 +196,7 @@ function M.autocmd()
 
   vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'gitcommit', 'markdown' },
-    callback = function(a) vim.wo[vim.fn.bufwinid(a.buf)][0].spell = true end,
+    callback = function() vim.wo[0][0].spell = true end,
     desc = 'Enable spell',
   })
 
