@@ -26,6 +26,11 @@ function utils.get_char_at(lnum, col)
   return vim.fn.strcharpart(vim.fn.strpart(line, col - 1), 0, 1)
 end
 
+function M.highlight()
+  vim.api.nvim_set_hl(0, '@variable.member', { default = true, link = 'Identifier' })
+  vim.api.nvim_set_hl(0, '@variable.parameter', { default = true, link = 'Identifier' })
+end
+
 function M.option()
   vim.o.autowriteall = true
   vim.o.backup = true
