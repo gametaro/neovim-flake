@@ -150,6 +150,9 @@ function M.keymap()
   vim.keymap.set('n', '<leader>dq', vim.diagnostic.setqflist)
   vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist)
 
+  vim.keymap.set('n', '<leader>i', '<cmd>Inspect<cr>')
+  vim.keymap.set('n', '<leader>I', '<cmd>Inspect!<cr>')
+
   vim.keymap.set('n', 't', function()
     local count = vim.v.count1
     local cwd = vim.fn.getcwd(-1, vim.api.nvim_tabpage_get_number(0))
