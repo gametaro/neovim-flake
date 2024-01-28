@@ -211,16 +211,17 @@ function M.autocmd()
 
   vim.api.nvim_create_autocmd('BufRead', {
     callback = function(a)
+      local buf = a.buf
       vim.api.nvim_create_autocmd('BufWinEnter', {
         once = true,
-        buffer = a.buf,
+        buffer = buf,
         callback = function()
-          local ft = vim.bo[a.buf].filetype
-          local last_known_line = vim.api.nvim_buf_get_mark(a.buf, '"')[1]
+          local ft = vim.bo[buf].filetype
+          local last_known_line = vim.api.nvim_buf_get_mark(buf, '"')[1]
           if
             not (ft:match('commit') and ft:match('rebase'))
             and last_known_line > 1
-            and last_known_line <= vim.api.nvim_buf_line_count(a.buf)
+            and last_known_line <= vim.api.nvim_buf_line_count(buf)
           then
             vim.api.nvim_feedkeys('g`"', 'nx', false)
           end
