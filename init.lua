@@ -204,7 +204,7 @@ function M.autocmd()
 
   vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'checkhealth', 'help', 'man', 'qf' },
-    callback = function(a) vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = a.buf }) end,
+    callback = function() vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = true }) end,
     desc = 'Close current window',
   })
 
