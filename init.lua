@@ -339,13 +339,16 @@ function M.lsp()
     typescript = jsts,
     javascriptreact = jsts,
     typescriptreact = jsts,
+    -- nix = {
+    --   cmd = { 'nil' },
+    --   settings = {
+    --     ['nil'] = {
+    --       formatting = { command = { 'alejandra' } },
+    --     },
+    --   },
+    -- },
     nix = {
-      cmd = { 'nil' },
-      settings = {
-        ['nil'] = {
-          formatting = { command = { 'alejandra' } },
-        },
-      },
+      cmd = { 'nixd' },
     },
   }
 

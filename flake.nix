@@ -139,6 +139,7 @@
             editorconfig-checker
             lua-language-server
             nil
+            nixd
             statix
             stylua
             yaml-language-server
