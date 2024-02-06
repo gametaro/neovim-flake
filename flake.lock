@@ -158,11 +158,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1706913249,
-        "narHash": "sha256-x3M7iV++CsvRXI1fpyFPduGELUckZEhSv0XWnUopAG8=",
+        "lastModified": 1707092692,
+        "narHash": "sha256-ZbHsm+mGk/izkWtT4xwwqz38fdlwu7nUUKXTOmm4SyE=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "e92b6015881907e698782c77641aa49298330223",
+        "rev": "faf912b086576fd1a15fca610166c98d47bc667e",
         "type": "github"
       },
       "original": {
@@ -191,11 +191,11 @@
     "nvim-fx": {
       "flake": false,
       "locked": {
-        "lastModified": 1706347078,
-        "narHash": "sha256-csbISSpz8OuvVUEOiAPfI0E1efu8Bj43swMcvs6hAt8=",
+        "lastModified": 1707229797,
+        "narHash": "sha256-9BqpmVTTkmUq0t9+i9aneW2I4gnMngo3ZLbLwEJmrjE=",
         "owner": "gametaro",
         "repo": "nvim-fx",
-        "rev": "2a1fe4c1982fa81e4c2bc48be290f4ee460c31ed",
+        "rev": "9d9d63e4e452f79e5575b32076a8b068308b4145",
         "type": "github"
       },
       "original": {
