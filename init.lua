@@ -20,6 +20,9 @@ function utils.get_root(names)
   return roots[dirname]
 end
 
+---@param lnum integer
+---@param col integer
+---@return string
 function utils.get_char_at(lnum, col)
   local line = vim.fn.getline(lnum)
   if col > vim.api.nvim_strwidth(line) then return ' ' end
@@ -238,6 +241,7 @@ function M.autocmd()
 
   vim.api.nvim_create_autocmd('BufRead', {
     callback = function(a)
+      --- @type integer
       local buf = a.buf
       vim.api.nvim_create_autocmd('BufWinEnter', {
         once = true,
@@ -339,19 +343,18 @@ function M.lsp()
     typescript = jsts,
     javascriptreact = jsts,
     typescriptreact = jsts,
-    -- nix = {
-    --   cmd = { 'nil' },
-    --   settings = {
-    --     ['nil'] = {
-    --       formatting = { command = { 'alejandra' } },
-    --     },
-    --   },
-    -- },
     nix = {
-      cmd = { 'nixd' },
+      cmd = { 'nil' },
+      settings = {
+        ['nil'] = {
+          formatting = { command = { 'alejandra' } },
+        },
+      },
     },
   }
 
+  ---@param config table
+  ---@param opts lsp.StartOpts|nil
   local function start(config, opts)
     config = config or {}
     local root_dir = config.root_dir or utils.get_root(config.root_names)
@@ -377,6 +380,7 @@ function M.lsp()
   vim.api.nvim_create_autocmd('FileType', {
     group = group,
     callback = function(a)
+      --- @type string
       local ft = a.match
       if configs[ft] then start(configs[ft]) end
     end,
@@ -417,6 +421,7 @@ function M.keyword()
     return vim.regex('\\k'):match_str(char)
   end
 
+  ---@param motion 'w'|'b'|'e'|'ge'
   local function keyword_motion(motion)
     for _ = 1, vim.v.count1 do
       local current_pos = vim.api.nvim_win_get_cursor(0)
@@ -470,8 +475,13 @@ function M.session()
 end
 
 function M.edge()
+  ---@param s string
+  ---@return boolean
   local function is_blank(s) return string.match(s, '^%s*$') ~= nil end
 
+  ---@param lnum integer
+  ---@param col integer
+  ---@return boolean
   local function is_block(lnum, col)
     local char = utils.get_char_at(lnum, col)
     if is_blank(char) then
@@ -482,6 +492,7 @@ function M.edge()
     return true
   end
 
+  ---@param next boolean
   local function jump(next)
     local start_line = vim.fn.line('.')
     local last_line = vim.fn.line('$')
@@ -521,6 +532,7 @@ function M.edge()
 end
 
 function M.bufjump()
+  ---@param next boolean
   local function jump(next)
     local jumplist, last_pos = unpack(vim.fn.getjumplist())
     last_pos = last_pos + 1
@@ -546,6 +558,7 @@ function M.bufjump()
 end
 
 function M.walkthrough()
+  ---@param next boolean
   local function jump(next)
     local fullname = vim.api.nvim_buf_get_name(0)
     local dirname = vim.fs.dirname(fullname)
