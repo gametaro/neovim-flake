@@ -696,7 +696,7 @@ function M.plugins()
 
   require('nvim-treesitter.configs').setup({
     highlight = { enable = true },
-    indent = { enable = true },
+    indent = { enable = false },
   })
 
   local cmp = require('cmp')
