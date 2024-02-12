@@ -63,6 +63,12 @@ function M.keymap()
   vim.keymap.set('n', '<c-t>l', '<cmd>tablast<cr>')
   vim.keymap.set('n', '<c-t>n', '<cmd>tabnew<cr>')
   vim.keymap.set('n', '<c-t>o', '<cmd>tabonly<cr>')
+  vim.keymap.set('n', ']b', '<cmd>bnext<cr>')
+  vim.keymap.set('n', '[b', '<cmd>bprevious<cr>')
+  vim.keymap.set('n', ']q', '<cmd>cnext<cr>')
+  vim.keymap.set('n', '[q', '<cmd>cprevious<cr>')
+  vim.keymap.set('n', 'qo', '<cmd>copen<cr>')
+  vim.keymap.set('n', 'qc', '<cmd>cclose<cr>')
   vim.keymap.set('t', '<esc>', '<c-\\><c-n>')
   vim.keymap.set('t', '<c-^>', '<c-\\><c-n><c-^>')
   vim.keymap.set(
@@ -72,7 +78,7 @@ function M.keymap()
     { expr = true }
   )
   vim.keymap.set('n', 'x', '"_x')
-  vim.keymap.set('n', '-', function() vim.cmd.edit('%:p:h') end)
+  vim.keymap.set('n', '-', '<cmd>edit %:p:h<cr>')
   vim.keymap.set('s', '<bs>', '<bs>i')
   vim.keymap.set('s', '<c-h>', '<c-h>i')
   vim.keymap.set(
@@ -209,7 +215,9 @@ function M.autocmd()
 
   vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'checkhealth', 'help', 'man', 'qf' },
-    callback = function() vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = true }) end,
+    callback = function()
+      vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = true, nowait = true })
+    end,
     desc = 'Close current window',
   })
 
