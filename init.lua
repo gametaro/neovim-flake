@@ -1,29 +1,9 @@
 local M = {}
-local utils = {}
----@type table<string, string>
-local roots = {}
----@type table<string, table<integer, integer>>
-local terminals = vim.defaulttable(function() return {} end)
-
----@param names? string|string[]
----@return string?
-function utils.get_root(names)
-  names = names or { '.git' }
-  local path = vim.api.nvim_buf_get_name(0)
-  if path == '' then return end
-
-  local dirname = vim.fs.dirname(path)
-  if not dirname then return end
-
-  roots[dirname] = roots[dirname] or vim.fs.dirname(vim.fs.find(names, { path = dirname, upward = true })[1])
-
-  return roots[dirname]
-end
 
 ---@param lnum integer
 ---@param col integer
 ---@return string
-function utils.get_char_at(lnum, col)
+local function get_char_at(lnum, col)
   local line = vim.fn.getline(lnum)
   if col > vim.api.nvim_strwidth(line) then return ' ' end
   return vim.fn.strcharpart(vim.fn.strpart(line, col - 1), 0, 1)
@@ -103,7 +83,10 @@ function M.keymap()
   vim.keymap.set(
     { 'n', 'x', 'o' },
     '$',
-    function() return vim.fn.virtcol('.') == vim.api.nvim_strwidth(vim.fn.getline('.'):match('.*%S')) and '$' or 'g_' end,
+    function()
+      return vim.fn.virtcol('.') == vim.api.nvim_strwidth(vim.fn.getline('.'):match('.*%S')) and '$'
+        or 'g_'
+    end,
     { expr = true, desc = 'To line end or last non-blank character' }
   )
 
@@ -156,19 +139,29 @@ function M.keymap()
   vim.keymap.set('n', '<leader>i', '<cmd>Inspect<cr>')
   vim.keymap.set('n', '<leader>I', '<cmd>Inspect!<cr>')
 
+  ---@type table<string, table<integer, integer>>
+  local terminals = vim.defaulttable(function() return {} end)
   vim.keymap.set('n', 't', function()
     local count = vim.v.count1
     local cwd = vim.fn.getcwd(-1, vim.api.nvim_tabpage_get_number(0))
-
     local buf = terminals[cwd][count]
     if buf and vim.api.nvim_buf_is_loaded(buf) then
       vim.cmd.buffer(buf)
       return
     end
-
     vim.cmd.terminal()
     terminals[cwd][count] = vim.api.nvim_get_current_buf()
   end)
+
+  vim
+    .iter({
+      I = { v = '<c-v>I', V = '<c-v>^o^I', ['\22'] = 'I' },
+      A = { v = '<c-v>A', V = '<c-v>0o$A', ['\22'] = 'A' },
+      gI = { v = '<c-v>0I', V = '<c-v>0o$I', ['\22'] = '0I' },
+    })
+    :each(function(k, v)
+      vim.keymap.set('x', k, function() return v[vim.api.nvim_get_mode().mode] end, { expr = true })
+    end)
 end
 
 function M.diagnostic()
@@ -231,9 +224,12 @@ function M.autocmd()
   })
 
   vim.api.nvim_create_autocmd({ 'BufWinEnter', 'VimEnter' }, {
-    callback = function()
+    callback = function(a)
+      vim.print(a)
+      local dirname = vim.fs.dirname(a.file)
+      if not dirname then return end
+      local root = vim.fs.dirname(vim.fs.find({ 'git' }, { path = dirname, upward = true })[1])
       local pwd = vim.fn.getcwd(-1, 0)
-      local root = utils.get_root()
       if root and pwd ~= root then vim.cmd.tcd(root) end
     end,
     desc = 'Change directory to project root',
@@ -267,13 +263,31 @@ function M.autocmd()
     callback = function() vim.cmd.startinsert() end,
     desc = 'Start in Terminal mode',
   })
+
+  vim.api.nvim_create_autocmd('FileType', {
+    callback = function() pcall(vim.treesitter.start) end,
+  })
 end
 
 function M.lsp()
+  local schemastore = require('schemastore')
+  local cmp_nvim_lsp = require('cmp_nvim_lsp')
+  local actionlint = require('efmls-configs.linters.actionlint')
+  local markdownlint = require('efmls-configs.linters.markdownlint')
+  local prettier_d = require('efmls-configs.formatters.prettier_d')
+  local statix = require('efmls-configs.linters.statix')
+  local stylua = require('efmls-configs.formatters.stylua')
+  local shfmt = require('efmls-configs.formatters.shfmt')
+
   local jsts = {
     cmd = { 'vtsls', '--stdio' },
     settings = {
       javascript = {
+        suggest = {
+          completeFunctionCalls = true,
+        },
+      },
+      typescript = {
         suggest = {
           completeFunctionCalls = true,
         },
@@ -284,8 +298,8 @@ function M.lsp()
     cmd = { 'vscode-css-language-server', '--stdio' },
     settings = {
       css = { validate = true },
-      scss = { validate = true },
       less = { validate = true },
+      scss = { validate = true },
     },
   }
   local json = {
@@ -295,94 +309,114 @@ function M.lsp()
     },
     settings = {
       json = {
-        schemas = require('schemastore').json.schemas(),
+        schemas = schemastore.json.schemas(),
         validate = { enable = true },
       },
     },
   }
 
-  local configs = {
-    dockerfile = {
-      cmd = { 'docker-langserver', '--stdio' },
-    },
-    markdown = {
-      cmd = { 'vscode-markdown-language-server', '--stdio' },
-    },
-    json = json,
-    jsonc = json,
-    lua = {
-      cmd = { 'lua-language-server' },
-      root_names = { '.luarc.json' },
-    },
-    css = css,
-    scss = css,
-    html = {
-      cmd = { 'vscode-html-language-server', '--stdio' },
-    },
-    sh = {
-      cmd = { 'bash-language-server', 'start' },
+  local configs_ft = {
+    css = { css },
+    scss = { css },
+    javascript = { jsts },
+    javascriptreact = { jsts },
+    typescript = { jsts },
+    typescriptreact = { jsts },
+    json = { json },
+    jsonc = { json },
+    dockerfile = { { cmd = { 'docker-langserver', '--stdio' } } },
+    html = { { cmd = { 'vscode-html-language-server', '--stdio' } } },
+    lua = { { cmd = { 'lua-language-server' } } },
+    markdown = { { cmd = { 'vscode-markdown-language-server', '--stdio' } } },
+    sh = { { cmd = { 'bash-language-server', 'start' } } },
+    nix = {
+      {
+        cmd = { 'nil' },
+        settings = { ['nil'] = { formatting = { command = { 'alejandra' } } } },
+      },
     },
     yaml = {
-      cmd = { 'yaml-language-server', '--stdio' },
-      settings = {
-        redhat = { telemetry = { enabled = false } },
-        yaml = {
-          format = true,
-          schemas = {
-            -- https://github.com/awslabs/goformation
-            -- https://github.com/redhat-developer/yaml-language-server#more-examples-of-schema-association
-            ['https://raw.githubusercontent.com/awslabs/goformation/master/schema/cloudformation.schema.json'] = {
-              'template.yaml',
-              '*-template.yaml',
+      {
+        cmd = { 'yaml-language-server', '--stdio' },
+        settings = {
+          redhat = { telemetry = { enabled = false } },
+          yaml = {
+            format = true,
+            schemas = {
+              -- https://github.com/awslabs/goformation
+              -- https://github.com/redhat-developer/yaml-language-server#more-examples-of-schema-association
+              ['https://raw.githubusercontent.com/awslabs/goformation/master/schema/cloudformation.schema.json'] = {
+                'template.yaml',
+                '*-template.yaml',
+              },
             },
           },
         },
       },
     },
-    javascript = jsts,
-    typescript = jsts,
-    javascriptreact = jsts,
-    typescriptreact = jsts,
-    nix = {
-      cmd = { 'nil' },
-      settings = {
-        ['nil'] = {
-          formatting = { command = { 'alejandra' } },
-        },
-      },
-    },
   }
 
-  ---@param config table
-  ---@param opts lsp.StartOpts|nil
-  local function start(config, opts)
-    config = config or {}
-    local root_dir = config.root_dir or utils.get_root(config.root_names)
+  local languages = {
+    javascript = { prettier_d },
+    javascriptreact = { prettier_d },
+    typescript = { prettier_d },
+    typescriptreact = { prettier_d },
+    lua = { stylua },
+    markdown = { markdownlint },
+    nix = { statix },
+    sh = { shfmt },
+    yaml = { actionlint },
+  }
 
-    if config.cmd then
-      local original = config.cmd[1]
-      config.cmd[1] = vim.fn.exepath(config.cmd[1])
-      if #config.cmd[1] == 0 then config.cmd[1] = original end
-    end
+  configs_ft = vim.iter(languages):fold(configs_ft, function(acc, k)
+    acc[k][#acc[k] + 1] = {
+      cmd = { 'efm-langserver' },
+      settings = {
+        languages = languages,
+      },
+      init_options = {
+        documentFormatting = true,
+        documentRangeFormatting = true,
+        -- hover = true,
+        -- documentSymbol = true,
+        codeAction = true,
+        completion = true,
+      },
+    }
+    return acc
+  end)
 
-    config = vim.tbl_deep_extend('force', config, {
-      capabilities = vim.tbl_deep_extend(
-        'force',
-        vim.lsp.protocol.make_client_capabilities(),
-        require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
-      ),
-      root_dir = root_dir,
-    })
-    vim.lsp.start(config, opts)
-  end
+  local capabilities = vim.tbl_deep_extend(
+    'force',
+    vim.lsp.protocol.make_client_capabilities(),
+    cmp_nvim_lsp.default_capabilities()
+  )
 
   local group = vim.api.nvim_create_augroup('lsp', {})
   vim.api.nvim_create_autocmd('FileType', {
     group = group,
     callback = function(a)
-      --- @type string
+      ---@type string
       local ft = a.match
-      if configs[ft] then start(configs[ft]) end
+      ---@type string
+      local file = a.file
+
+      local root_markers = { '.git' }
+
+      local configs = configs_ft[ft]
+      if configs then
+        vim
+          .iter(configs)
+          :map(function(config)
+            local exepath = vim.fn.exepath(config.cmd[1])
+            if exepath ~= '' then config.cmd[1] = exepath end
+            config.root_dir =
+              vim.fs.dirname(vim.fs.find(root_markers, { path = file, upward = true })[1])
+            config.capabilities = capabilities
+            return config
+          end)
+          :each(function(config) vim.lsp.start(config) end)
+      end
     end,
     desc = 'Start lsp server',
   })
@@ -393,7 +427,7 @@ function M.lsp()
       local client = vim.lsp.get_client_by_id(a.data.client_id)
       if not client then return end
 
-      -- client.server_capabilities.semanticTokensProvider = nil
+      client.server_capabilities.semanticTokensProvider = nil
 
       local function map(mode, lhs, rhs, opts)
         opts = opts or {}
@@ -409,7 +443,7 @@ function M.lsp()
       map('n', '<leader>cl', vim.lsp.codelens.run)
       map('n', '<leader>cr', vim.lsp.buf.rename)
       map({ 'n', 'x' }, '<leader>ca', vim.lsp.buf.code_action)
-      -- map({ 'n', 'x' }, '<m-f>', vim.lsp.buf.format)
+      map({ 'n', 'x' }, '<leader>cf', vim.lsp.buf.format)
     end,
     desc = 'Attach to lsp server',
   })
@@ -417,7 +451,7 @@ end
 
 function M.keyword()
   local function is_keyword_char()
-    local char = utils.get_char_at(vim.fn.line('.'), vim.fn.col('.'))
+    local char = get_char_at(vim.fn.line('.'), vim.fn.col('.'))
     return vim.regex('\\k'):match_str(char)
   end
 
@@ -439,18 +473,6 @@ function M.keyword()
   vim.iter({ 'w', 'b', 'e', 'ge' }):each(function(motion)
     vim.keymap.set({ 'n', 'x' }, motion, function() keyword_motion(motion) end)
   end)
-end
-
-function M.niceblock()
-  vim
-    .iter({
-      I = { v = '<c-v>I', V = '<c-v>^o^I', ['\22'] = 'I' },
-      A = { v = '<c-v>A', V = '<c-v>0o$A', ['\22'] = 'A' },
-      gI = { v = '<c-v>0I', V = '<c-v>0o$I', ['\22'] = '0I' },
-    })
-    :each(function(k, v)
-      vim.keymap.set('x', k, function() return v[vim.api.nvim_get_mode().mode] end, { expr = true })
-    end)
 end
 
 function M.session()
@@ -483,10 +505,10 @@ function M.edge()
   ---@param col integer
   ---@return boolean
   local function is_block(lnum, col)
-    local char = utils.get_char_at(lnum, col)
+    local char = get_char_at(lnum, col)
     if is_blank(char) then
-      local prev_char = col > 1 and utils.get_char_at(lnum, col - 1) or ' '
-      local next_char = utils.get_char_at(lnum, col + 1)
+      local prev_char = col > 1 and get_char_at(lnum, col - 1) or ' '
+      local next_char = get_char_at(lnum, col + 1)
       return not (is_blank(prev_char) or is_blank(next_char))
     end
     return true
@@ -707,11 +729,6 @@ function M.plugins()
     end,
   })
 
-  require('nvim-treesitter.configs').setup({
-    highlight = { enable = true },
-    indent = { enable = false },
-  })
-
   local cmp = require('cmp')
   cmp.setup({
     confirmation = { default_behavior = 'replace' },
@@ -781,42 +798,6 @@ function M.plugins()
     silent = true,
   })
 
-  require('illuminate').configure({
-    modes_denylist = { 'i' },
-    filetypes_denylist = { 'checkhealth', 'fx', 'qf', 'TelescopePrompt' },
-  })
-  vim.api.nvim_set_hl(0, 'IlluminatedWordText', { link = 'Visual' })
-  vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { link = 'Visual' })
-  vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { link = 'Visual' })
-
-  require('conform').setup({
-    formatters_by_ft = {
-      lua = { 'stylua' },
-      python = { 'isort', 'black' },
-      javascript = { { 'prettierd', 'prettier' } },
-      typescript = { { 'prettierd', 'prettier' } },
-    },
-    format_on_save = { timeout_ms = 500, lsp_fallback = true },
-    formatters = {
-      shfmt = {
-        prepend_args = { '-i', '2' },
-      },
-    },
-  })
-  vim.keymap.set('', '<m-f>', function() require('conform').format({ async = true, lsp_fallback = true }) end)
-  vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-
-  require('lint').linters_by_ft = {
-    gitcommit = { 'gitlint' },
-    markdown = { 'markdownlint' },
-    nix = { 'statix' },
-    yaml = { 'actionlint' },
-    zsh = { 'zsh' },
-  }
-  vim.api.nvim_create_autocmd('BufWritePost', {
-    callback = function() require('lint').try_lint(nil, { ignore_errors = true }) end,
-  })
-
   local flash = require('flash')
   flash.setup({
     highlight = { backdrop = false },
@@ -854,6 +835,7 @@ local function init()
   })
 
   vim.iter(M):each(function(_, m)
+    --- @type boolean, string
     local ok, msg = pcall(m)
     if not ok then vim.notify(msg) end
   end)
