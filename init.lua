@@ -173,6 +173,7 @@ end
 
 function M.diagnostic()
   vim.diagnostic.config({
+    virtual_text = false,
     severity_sort = true,
     signs = {
       text = {
@@ -182,7 +183,6 @@ function M.diagnostic()
         [4] = '●',
       },
     },
-    virtual_text = false,
     float = {
       header = '',
       suffix = function(diag) return string.format(' (%s)', diag.code or ''), 'Comment' end,
@@ -405,15 +405,21 @@ function M.lsp()
       ---@type string
       local file = a.file
 
-      local root_markers = { '.git' }
-
       local configs = configs_ft[ft]
       if configs then
         vim
           .iter(configs)
           :map(function(config)
+            config.capabilities = capabilities
+            return config
+          end)
+          :map(function(config)
             local exepath = vim.fn.exepath(config.cmd[1])
             if exepath ~= '' then config.cmd[1] = exepath end
+            return config
+          end)
+          :map(function(config)
+            local root_markers = { '.git' }
             root_markers = config.root_markers
                 and vim.iter(config.root_markers):fold(root_markers, function(acc, k)
                   acc[#acc + 1] = k
@@ -422,7 +428,6 @@ function M.lsp()
               or root_markers
             config.root_dir =
               vim.fs.dirname(vim.fs.find(root_markers, { path = file, upward = true })[1])
-            config.capabilities = capabilities
             return config
           end)
           :each(function(config) vim.lsp.start(config) end)
