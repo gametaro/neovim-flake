@@ -278,19 +278,7 @@ function M.lsp()
   local shfmt = require('efmls-configs.formatters.shfmt')
 
   local jsts = {
-    cmd = { 'vtsls', '--stdio' },
-    settings = {
-      javascript = {
-        suggest = {
-          completeFunctionCalls = true,
-        },
-      },
-      typescript = {
-        suggest = {
-          completeFunctionCalls = true,
-        },
-      },
-    },
+    cmd = { 'typescript-language-server', '--stdio' },
   }
   local css = {
     cmd = { 'vscode-css-language-server', '--stdio' },
