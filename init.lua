@@ -279,6 +279,7 @@ function M.lsp()
 
   local jsts = {
     cmd = { 'typescript-language-server', '--stdio' },
+    root_markers = { 'tsconfig.json', 'package.json' },
   }
   local css = {
     cmd = { 'vscode-css-language-server', '--stdio' },
@@ -310,15 +311,23 @@ function M.lsp()
     typescriptreact = { jsts },
     json = { json },
     jsonc = { json },
-    dockerfile = { { cmd = { 'docker-langserver', '--stdio' } } },
+    dockerfile = {
+      {
+        cmd = { 'docker-langserver', '--stdio' },
+        root_markers = { 'Dockerfile', 'Containerfile' },
+      },
+    },
     html = { { cmd = { 'vscode-html-language-server', '--stdio' } } },
-    lua = { { cmd = { 'lua-language-server' } } },
+    lua = {
+      { cmd = { 'lua-language-server' }, root_markers = { '.luarc.json' } },
+    },
     markdown = { { cmd = { 'vscode-markdown-language-server', '--stdio' } } },
     sh = { { cmd = { 'bash-language-server', 'start' } } },
     nix = {
       {
         cmd = { 'nil' },
         settings = { ['nil'] = { formatting = { command = { 'alejandra' } } } },
+        root_markers = { 'flake.nix' },
       },
     },
     yaml = {
@@ -396,6 +405,12 @@ function M.lsp()
           :map(function(config)
             local exepath = vim.fn.exepath(config.cmd[1])
             if exepath ~= '' then config.cmd[1] = exepath end
+            root_markers = config.root_markers
+                and vim.iter(config.root_markers):fold(root_markers, function(acc, k)
+                  acc[#acc + 1] = k
+                  return acc
+                end)
+              or root_markers
             config.root_dir =
               vim.fs.dirname(vim.fs.find(root_markers, { path = file, upward = true })[1])
             config.capabilities = capabilities
