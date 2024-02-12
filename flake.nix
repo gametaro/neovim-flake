@@ -64,12 +64,12 @@
       pkgs:
         with pkgs; {
           default = devshell.mkShell {
-            packages = [
-              alejandra
-              deadnix
-              nil
-              statix
-            ];
+            # packages = [
+            #   alejandra
+            #   deadnix
+            #   nil
+            #   statix
+            # ];
             devshell.startup.pre-commit-hooks.text = "${self.checks.${pkgs.system}.pre-commit-hooks.shellHook}";
           };
         }
