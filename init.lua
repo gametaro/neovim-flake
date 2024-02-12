@@ -225,7 +225,6 @@ function M.autocmd()
 
   vim.api.nvim_create_autocmd({ 'BufWinEnter', 'VimEnter' }, {
     callback = function(a)
-      vim.print(a)
       local dirname = vim.fs.dirname(a.file)
       if not dirname then return end
       local root = vim.fs.dirname(vim.fs.find({ 'git' }, { path = dirname, upward = true })[1])
