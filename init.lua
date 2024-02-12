@@ -12,6 +12,7 @@ end
 function M.highlight()
   vim.api.nvim_set_hl(0, '@variable.member', { default = true, link = 'Identifier' })
   vim.api.nvim_set_hl(0, '@variable.parameter', { default = true, link = 'Identifier' })
+  vim.api.nvim_set_hl(0, 'StatusLine', { fg = 'NvimLightGrey2', bg = 'NvimDarkGrey4' })
 end
 
 function M.option()
