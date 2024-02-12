@@ -53,10 +53,14 @@
           editorconfig-checker.enable = true;
           deadnix.enable = true;
           nil.enable = true;
-          lua-ls.enable = false;
+          lua-ls.enable = true;
           statix.enable = true;
           stylua.enable = true;
           yamllint.enable = true;
+        };
+        settings = {
+          lua-ls.config = builtins.fromJSON (builtins.readFile ./.luarc.json);
+          lua-ls.checklevel = "Error";
         };
       };
     });
