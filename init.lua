@@ -47,7 +47,7 @@ end
 
 function M.keymap()
   vim.keymap.set('', '<space>', '')
-  vim.keymap.set('', ';', ':')
+  -- vim.keymap.set('', ';', ':')
   vim.keymap.set('c', '<c-a>', '<home>')
   vim.keymap.set('c', '<c-b>', '<left>')
   vim.keymap.set('c', '<c-e>', '<end>')
@@ -132,9 +132,9 @@ function M.keymap()
 
   vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
   vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-  vim.keymap.set('n', '<leader>dK', vim.diagnostic.open_float)
-  vim.keymap.set('n', '<leader>dq', vim.diagnostic.setqflist)
-  vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist)
+  vim.keymap.set('n', 'dK', vim.diagnostic.open_float)
+  vim.keymap.set('n', 'dq', vim.diagnostic.setqflist)
+  vim.keymap.set('n', 'dl', vim.diagnostic.setloclist)
 
   vim.keymap.set('n', '<leader>i', '<cmd>Inspect<cr>')
   vim.keymap.set('n', '<leader>I', '<cmd>Inspect!<cr>')
