@@ -40,6 +40,7 @@ function M.option()
   vim.o.splitkeep = 'screen'
   vim.o.termguicolors = true
   vim.o.undofile = true
+  vim.o.virtualedit = 'all'
   vim.o.wildignorecase = true
   vim.o.wildoptions = vim.o.wildoptions .. ',fuzzy'
   vim.o.wrap = false
