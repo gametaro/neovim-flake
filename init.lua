@@ -111,13 +111,11 @@ function M.keymap()
       vim.diagnostic.disable(0)
     end
   end)
-  vim.keymap.set('n', '\\i', function()
-    if vim.lsp.inlay_hint.is_enabled(0) then
-      vim.lsp.inlay_hint.enable(0, false)
-    else
-      vim.lsp.inlay_hint.enable(0, true)
-    end
-  end)
+  vim.keymap.set(
+    'n',
+    '\\i',
+    function() vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled()) end
+  )
 
   vim.keymap.set(
     { 'i', 's' },
