@@ -325,12 +325,18 @@ function M.lsp()
         root_markers = { 'Dockerfile', 'Containerfile' },
       },
     },
-    html = { { cmd = { 'vscode-html-language-server', '--stdio' } } },
+    html = {
+      { cmd = { 'vscode-html-language-server', '--stdio' } },
+    },
     lua = {
       { cmd = { 'lua-language-server' }, root_markers = { '.luarc.json' } },
     },
-    markdown = { { cmd = { 'vscode-markdown-language-server', '--stdio' } } },
-    sh = { { cmd = { 'bash-language-server', 'start' } } },
+    markdown = {
+      { cmd = { 'vscode-markdown-language-server', '--stdio' } },
+    },
+    sh = {
+      { cmd = { 'bash-language-server', 'start' } },
+    },
     nix = {
       {
         cmd = { 'nil' },
