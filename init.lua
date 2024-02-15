@@ -431,8 +431,12 @@ function M.lsp()
                   return acc
                 end)
               or root_markers
-            config.root_dir =
-              vim.fs.dirname(vim.fs.find(root_markers, { path = file, upward = true })[1])
+            config.root_dir = vim.fn.fnamemodify(
+              ---@diagnostic disable-next-line: param-type-mismatch
+              vim.fs.dirname(vim.fs.find(root_markers, { path = file, upward = true })[1]),
+              ':p:h'
+            )
+
             return config
           end)
           :each(function(config) vim.lsp.start(config) end)
