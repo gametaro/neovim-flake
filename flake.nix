@@ -59,7 +59,7 @@
           yamllint.enable = true;
         };
         settings = {
-          lua-ls.config = builtins.fromJSON (builtins.readFile ./.luarc.json);
+          lua-ls.config = lib.importJSON ./.luarc.json;
           lua-ls.checklevel = "Error";
         };
       };
