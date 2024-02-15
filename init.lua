@@ -331,9 +331,9 @@ function M.lsp()
     lua = {
       { cmd = { 'lua-language-server' }, root_markers = { '.luarc.json' } },
     },
-    markdown = {
-      { cmd = { 'vscode-markdown-language-server', '--stdio' } },
-    },
+    -- markdown = {
+    --   { cmd = { 'vscode-markdown-language-server', '--stdio' } },
+    -- },
     sh = {
       { cmd = { 'bash-language-server', 'start' } },
     },
