@@ -378,6 +378,7 @@ function M.lsp()
   }
 
   configs_ft = vim.iter(languages):fold(configs_ft, function(acc, k)
+    acc[k] = acc[k] or {}
     acc[k][#acc[k] + 1] = {
       cmd = { 'efm-langserver' },
       settings = {
