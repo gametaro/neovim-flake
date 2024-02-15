@@ -68,12 +68,14 @@
       pkgs:
         with pkgs; {
           default = devshell.mkShell {
-            # packages = [
-            #   alejandra
-            #   deadnix
-            #   nil
-            #   statix
-            # ];
+            packages = [
+              alejandra
+              deadnix
+              lua-language-server
+              nil
+              statix
+              stylua
+            ];
             devshell.startup.pre-commit-hooks.text = "${self.checks.${pkgs.system}.pre-commit-hooks.shellHook}";
           };
         }
