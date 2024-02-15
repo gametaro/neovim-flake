@@ -15,7 +15,7 @@
     pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    neovim.url = "github:neovim/neovim/35a147fa77f28e3e9b5eaa217b5b383b59b6c9d2?dir=contrib";
+    neovim.url = "github:neovim/neovim?dir=contrib";
     neovim.inputs.nixpkgs.follows = "nixpkgs";
 
     nvim-fx.url = "github:gametaro/nvim-fx";
