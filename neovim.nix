@@ -67,7 +67,12 @@
       --suffix PATH : "${pkgs.lib.makeBinPath extraPackages}"
     '';
   };
+
+  nvim-clean = pkgs.writeShellScriptBin "vc" ''
+    ${inputs.neovim.packages.${pkgs.system}.neovim}/bin/nvim --clean "$@"
+  '';
 in {
   default = nvim;
   inherit nvim;
+  inherit nvim-clean;
 }
