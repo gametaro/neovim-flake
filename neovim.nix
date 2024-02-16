@@ -68,7 +68,7 @@
     '';
   };
 
-  nvim-clean = pkgs.writeShellScriptBin "vc" ''
+  nvim-clean = pkgs.writeShellScriptBin "nvim-clean" ''
     ${inputs.neovim.packages.${pkgs.system}.neovim}/bin/nvim --clean "$@"
   '';
 in {
