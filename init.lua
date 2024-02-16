@@ -1,5 +1,12 @@
 local M = {}
 
+local function keys(t)
+  return vim.iter(t):enumerate():fold({}, function(acc, i, k)
+    acc[i] = k
+    return acc
+  end)
+end
+
 ---@param lnum integer
 ---@param col integer
 ---@return string
@@ -378,21 +385,22 @@ function M.lsp()
   }
 
   configs_ft = vim.iter(languages):fold(configs_ft, function(acc, k)
-    acc[k] = acc[k] or {}
-    acc[k][#acc[k] + 1] = {
-      cmd = { 'efm-langserver' },
-      settings = {
-        languages = languages,
-      },
-      init_options = {
-        documentFormatting = true,
-        documentRangeFormatting = true,
-        -- hover = true,
-        -- documentSymbol = true,
-        codeAction = true,
-        completion = true,
-      },
-    }
+    if acc[k] then
+      acc[k][#acc[k] + 1] = {
+        cmd = { 'efm-langserver' },
+        settings = {
+          languages = languages,
+        },
+        init_options = {
+          documentFormatting = true,
+          documentRangeFormatting = true,
+          -- hover = true,
+          -- documentSymbol = true,
+          codeAction = true,
+          completion = true,
+        },
+      }
+    end
     return acc
   end)
 
@@ -402,46 +410,48 @@ function M.lsp()
     cmp_nvim_lsp.default_capabilities()
   )
 
+  local function extend_config(config)
+    config.capabilities = capabilities
+
+    local exepath = vim.fn.exepath(config.cmd[1])
+    if exepath ~= '' then config.cmd[1] = exepath end
+
+    local root_markers = { '.git' }
+    root_markers = config.root_markers
+        and vim.iter(config.root_markers):fold(root_markers, function(acc, k)
+          acc[#acc + 1] = k
+          return acc
+        end)
+      or root_markers
+    config.root_dir = vim.fn.fnamemodify(
+      ---@diagnostic disable-next-line: param-type-mismatch
+      vim.fs.dirname(
+        vim.fs.find(
+          root_markers,
+          { path = vim.fs.dirname(vim.api.nvim_buf_get_name(0)), upward = true }
+        )[1]
+      ),
+      ':p:h'
+    )
+
+    return config
+  end
+
   local group = vim.api.nvim_create_augroup('lsp', {})
   vim.api.nvim_create_autocmd('FileType', {
+    pattern = keys(configs_ft),
     group = group,
     callback = function(a)
-      ---@type string
-      local ft = a.match
-      ---@type string
-      local file = a.file
-
-      local configs = configs_ft[ft]
-      if configs then
-        vim
-          .iter(configs)
-          :map(function(config)
-            config.capabilities = capabilities
-            return config
-          end)
-          :map(function(config)
-            local exepath = vim.fn.exepath(config.cmd[1])
-            if exepath ~= '' then config.cmd[1] = exepath end
-            return config
-          end)
-          :map(function(config)
-            local root_markers = { '.git' }
-            root_markers = config.root_markers
-                and vim.iter(config.root_markers):fold(root_markers, function(acc, k)
-                  acc[#acc + 1] = k
-                  return acc
-                end)
-              or root_markers
-            config.root_dir = vim.fn.fnamemodify(
-              ---@diagnostic disable-next-line: param-type-mismatch
-              vim.fs.dirname(vim.fs.find(root_markers, { path = file, upward = true })[1]),
-              ':p:h'
-            )
-
-            return config
-          end)
-          :each(function(config) vim.lsp.start(config) end)
-      end
+      vim.iter(configs_ft[a.match]):map(extend_config):each(function(config)
+        vim.lsp.start(config, {
+          -- NOTE: will be fixed in core
+          reuse_client = function(client, conf)
+            local name = vim.fs.basename(conf.cmd[1])
+            return client.name == name and client.root_dir == conf.root_dir
+          end,
+          bufnr = 0,
+        })
+      end)
     end,
     desc = 'Start lsp server',
   })
