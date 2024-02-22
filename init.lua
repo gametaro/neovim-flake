@@ -1,10 +1,13 @@
 local M = {}
 
+---@param t table
 local function keys(t)
-  return vim.iter(t):enumerate():fold({}, function(acc, i, k)
-    acc[i] = k
-    return acc
-  end)
+  return vim.iter(t):map(function(k) return k end):totable()
+end
+
+---@param t table
+local function values(t)
+  return vim.iter(t):map(function(_, v) return v end):totable()
 end
 
 ---@param ms integer
