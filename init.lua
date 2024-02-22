@@ -7,6 +7,20 @@ local function keys(t)
   end)
 end
 
+---@param ms integer
+---@param fn function
+---@return function
+local function debounce(ms, fn)
+  local timer = assert(vim.uv.new_timer())
+  return function(...)
+    local argv = { ... }
+    timer:start(ms, 0, function()
+      timer:stop()
+      vim.schedule_wrap(fn)(unpack(argv))
+    end)
+  end
+end
+
 ---@param lnum integer
 ---@param col integer
 ---@return string
@@ -238,6 +252,28 @@ function M.autocmd()
     pattern = { 'changelog', 'gitcommit', 'markdown', 'text' },
     callback = function() vim.wo[0][0].spell = true end,
     desc = 'Enable spell',
+  })
+
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = { 'changelog', 'markdown', 'text' },
+    callback = function(a)
+      local buf = a.buf ---@type integer
+      local file = a.file ---@type string
+      local function save()
+        if
+          vim.api.nvim_buf_is_valid(buf)
+          and vim.bo[buf].buftype == ''
+          and vim.bo[buf].modifiable
+        then
+          vim.cmd.update({ file, mods = { silent = true, noautocmd = true } })
+        end
+      end
+      vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
+        buffer = buf,
+        callback = debounce(3000, save),
+      })
+    end,
+    desc = 'Enable auto-save',
   })
 
   vim.api.nvim_create_autocmd({ 'BufWinEnter', 'VimEnter' }, {
