@@ -45,6 +45,8 @@ function M.option()
   vim.o.signcolumn = 'yes'
   vim.o.smartcase = true
   vim.o.smoothscroll = true
+  vim.o.spelllang = 'en,cjk'
+  vim.o.spelloptions = 'camel,noplainbuffer'
   vim.o.splitkeep = 'screen'
   vim.o.termguicolors = true
   vim.o.undofile = true
