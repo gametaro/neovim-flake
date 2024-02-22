@@ -833,6 +833,7 @@ function M.plugins()
 
   require('mini.operators').setup({
     exchange = { prefix = '' },
+    multiply = { prefix = '' },
   })
 
   require('mini.surround').setup({
