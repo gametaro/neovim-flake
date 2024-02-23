@@ -253,8 +253,18 @@ function M.autocmd()
 
   vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'changelog', 'gitcommit', 'markdown', 'text' },
-    callback = function() vim.wo[0][0].spell = true end,
-    desc = 'Enable spell',
+    callback = function(a)
+      vim.wo[0][0].breakindent = true
+      vim.wo[0][0].list = true
+      vim.wo[0][0].showbreak = '> '
+      vim.wo[0][0].spell = true
+      vim.wo[0][0].wrap = true
+
+      vim.keymap.set({ 'n', 'x' }, 'j', 'gj', { buffer = a.buf })
+      vim.keymap.set({ 'n', 'x' }, 'k', 'gk', { buffer = a.buf })
+      vim.keymap.set({ 'n', 'x' }, 'gj', 'j', { buffer = a.buf })
+      vim.keymap.set({ 'n', 'x' }, 'gk', 'k', { buffer = a.buf })
+    end,
   })
 
   vim.api.nvim_create_autocmd('FileType', {
