@@ -78,10 +78,7 @@ function M.keymap()
   -- vim.keymap.set('', ';', ':')
   vim.keymap.set('c', '<c-a>', '<home>')
   vim.keymap.set('c', '<c-b>', '<left>')
-  vim.keymap.set('c', '<c-e>', '<end>')
   vim.keymap.set('c', '<c-f>', '<right>')
-  vim.keymap.set('c', '<c-n>', '<down>')
-  vim.keymap.set('c', '<c-p>', '<up>')
   vim.keymap.set('c', '<m-b>', '<s-left>')
   vim.keymap.set('c', '<m-f>', '<s-right>')
   vim.keymap.set('n', '<c-t>', '')
@@ -96,6 +93,28 @@ function M.keymap()
   vim.keymap.set('n', '[q', '<cmd>cprevious<cr>')
   vim.keymap.set('n', 'qo', '<cmd>copen<cr>')
   vim.keymap.set('n', 'qc', '<cmd>cclose<cr>')
+  vim.keymap.set('n', 'cn', '*``cgn')
+  vim.keymap.set('n', 'cN', '*``cgN')
+  vim.keymap.set('x', 'p', 'P')
+  vim.keymap.set('x', 'P', 'p')
+  vim.keymap.set(
+    'ca',
+    'E',
+    function() return vim.fn.getcmdtype() == ':' and 'e' or 'E' end,
+    { expr = true }
+  )
+  vim.keymap.set(
+    'ca',
+    'H',
+    function() return vim.fn.getcmdtype() == ':' and 'h' or 'H' end,
+    { expr = true }
+  )
+  vim.keymap.set(
+    'ca',
+    'W',
+    function() return vim.fn.getcmdtype() == ':' and 'w' or 'W' end,
+    { expr = true }
+  )
   vim.keymap.set('t', '<esc>', '<c-\\><c-n>')
   vim.keymap.set('t', '<c-^>', '<c-\\><c-n><c-^>')
   vim.keymap.set(
@@ -106,23 +125,22 @@ function M.keymap()
   )
   vim.keymap.set('n', 'x', '"_x')
   vim.keymap.set('n', '-', '<cmd>edit %:p:h<cr>')
+  vim.keymap.set('n', 'cd', '<cmd>cd %:p:h<bar>pwd<cr>')
+  vim.keymap.set('n', 'gm', '<cmd>message<cr>')
   vim.keymap.set('s', '<bs>', '<bs>i')
   vim.keymap.set('s', '<c-h>', '<c-h>i')
   vim.keymap.set(
     { 'n', 'x', 'o' },
     '0',
+    ---@diagnostic disable-next-line: param-type-mismatch
     function() return vim.fn.virtcol('.') == vim.fn.indent('.') + 1 and '0' or '^' end,
     { expr = true, desc = 'To line start or first non-blank character' }
   )
-  vim.keymap.set(
-    { 'n', 'x', 'o' },
-    '$',
-    function()
-      return vim.fn.virtcol('.') == vim.api.nvim_strwidth(vim.fn.getline('.'):match('.*%S')) and '$'
-        or 'g_'
-    end,
-    { expr = true, desc = 'To line end or last non-blank character' }
-  )
+  vim.keymap.set({ 'n', 'x', 'o' }, '$', function()
+    ---@diagnostic disable-next-line: param-type-mismatch
+    return vim.fn.virtcol('.') == vim.api.nvim_strwidth(vim.fn.getline('.'):match('.*%S')) and '$'
+      or 'g_'
+  end, { expr = true, desc = 'To line end or last non-blank character' })
 
   vim.keymap.set('n', '\\c', '<cmd>setlocal cursorline!<cr>')
   vim.keymap.set('n', '\\f', '<cmd>setlocal foldenable!<cr>')
