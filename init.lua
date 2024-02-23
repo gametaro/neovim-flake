@@ -54,7 +54,8 @@ function M.option()
   vim.o.cmdheight = 0
   vim.o.completeopt = 'menu,menuone,noselect,popup'
   vim.o.confirm = true
-  vim.o.diffopt = vim.o.diffopt .. ',algorithm:histogram,indent-heuristic,vertical,linematch:60'
+  vim.o.diffopt =
+    'internal,filler,closeoff,algorithm:histogram,indent-heuristic,vertical,linematch:60'
   vim.o.exrc = true
   vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
   vim.o.foldlevelstart = 99
@@ -64,7 +65,7 @@ function M.option()
   vim.o.jumpoptions = 'view'
   vim.o.modeline = false
   vim.o.sessionoptions = 'buffers,tabpages,folds'
-  vim.o.shortmess = vim.o.shortmess .. 'IWcs'
+  vim.o.shortmess = 'atToOCFIWcs'
   vim.o.showcmd = false
   vim.o.showmode = false
   vim.o.signcolumn = 'yes'
@@ -77,7 +78,7 @@ function M.option()
   vim.o.undofile = true
   vim.o.virtualedit = 'all'
   vim.o.wildignorecase = true
-  vim.o.wildoptions = vim.o.wildoptions .. ',fuzzy'
+  vim.o.wildoptions = 'fuzzy,pum,tagfile'
   vim.o.wrap = false
 end
 
