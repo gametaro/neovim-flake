@@ -661,8 +661,8 @@ function M.bufjump()
     end
   end
 
-  vim.keymap.set('n', '<m-i>', function() jump(true) end)
-  vim.keymap.set('n', '<m-o>', function() jump(false) end)
+  vim.keymap.set('n', '<leader><c-i>', function() jump(true) end)
+  vim.keymap.set('n', '<leader><c-o>', function() jump(false) end)
 end
 
 function M.walkthrough()
