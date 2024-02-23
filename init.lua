@@ -34,9 +34,17 @@ local function get_char_at(lnum, col)
 end
 
 function M.highlight()
-  vim.api.nvim_set_hl(0, '@variable.member', { default = true, link = 'Identifier' })
-  vim.api.nvim_set_hl(0, '@variable.parameter', { default = true, link = 'Identifier' })
-  vim.api.nvim_set_hl(0, 'StatusLine', { fg = 'NvimLightGrey2', bg = 'NvimDarkGrey4' })
+  vim.api.nvim_create_autocmd('ColorScheme', {
+    pattern = { 'default' },
+    callback = function()
+      vim.api.nvim_set_hl(0, '@variable.member', { default = true, link = 'Identifier' })
+      vim.api.nvim_set_hl(0, '@variable.parameter', { default = true, link = 'Identifier' })
+      vim.api.nvim_set_hl(0, 'Constant', { fg = 'NvimLightYellow' })
+      vim.api.nvim_set_hl(0, 'Delimiter', { fg = 'NvimLightGrey3' })
+      vim.api.nvim_set_hl(0, 'StatusLine', { fg = 'NvimLightGrey2', bg = 'NvimDarkGrey4' })
+    end,
+    desc = 'Tweak default colorscheme',
+  })
 end
 
 function M.option()
@@ -945,6 +953,8 @@ local function init()
     local ok, msg = pcall(m)
     if not ok then vim.notify(msg) end
   end)
+
+  vim.cmd.colorscheme('default')
 end
 
 init()
