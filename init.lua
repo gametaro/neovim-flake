@@ -859,9 +859,25 @@ function M.plugins()
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
     }, {
-      { name = 'buffer' },
+      {
+        name = 'buffer',
+        option = {
+          get_bufnrs = function()
+            return vim
+              .iter(vim.api.nvim_list_wins())
+              :map(vim.api.nvim_win_get_buf)
+              :filter(vim.api.nvim_buf_is_loaded)
+              :totable()
+          end,
+        },
+      },
       { name = 'path' },
     }),
+    sorting = {
+      comparators = {
+        function(...) return require('cmp_buffer'):compare_locality(...) end,
+      },
+    },
   })
 
   require('mini.comment').setup({
