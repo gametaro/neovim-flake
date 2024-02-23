@@ -272,16 +272,17 @@ function M.autocmd()
   vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'changelog', 'gitcommit', 'markdown', 'text' },
     callback = function(a)
+      local buf = a.buf ---@type integer
       vim.wo[0][0].breakindent = true
       vim.wo[0][0].list = true
       vim.wo[0][0].showbreak = '> '
       vim.wo[0][0].spell = true
       vim.wo[0][0].wrap = true
 
-      vim.keymap.set({ 'n', 'x' }, 'j', 'gj', { buffer = a.buf })
-      vim.keymap.set({ 'n', 'x' }, 'k', 'gk', { buffer = a.buf })
-      vim.keymap.set({ 'n', 'x' }, 'gj', 'j', { buffer = a.buf })
-      vim.keymap.set({ 'n', 'x' }, 'gk', 'k', { buffer = a.buf })
+      vim.keymap.set({ 'n', 'x' }, 'j', 'gj', { buffer = buf })
+      vim.keymap.set({ 'n', 'x' }, 'k', 'gk', { buffer = buf })
+      vim.keymap.set({ 'n', 'x' }, 'gj', 'j', { buffer = buf })
+      vim.keymap.set({ 'n', 'x' }, 'gk', 'k', { buffer = buf })
     end,
   })
 
