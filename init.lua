@@ -319,8 +319,8 @@ function M.autocmd()
 
   vim.api.nvim_create_autocmd({ 'BufWinEnter', 'VimEnter' }, {
     callback = function(a)
-      local dirname = vim.fs.dirname(a.file)
-      local root = vim.fs.dirname(vim.fs.find({ '.git' }, { path = dirname, upward = true })[1])
+      local path = vim.fs.dirname(a.file)
+      local root = vim.fs.dirname(vim.fs.find({ '.git' }, { path = path, upward = true })[1])
       local pwd = vim.fn.getcwd(-1, 0)
       if root and pwd ~= root then vim.cmd.tcd(root) end
     end,
@@ -329,8 +329,7 @@ function M.autocmd()
 
   vim.api.nvim_create_autocmd('BufRead', {
     callback = function(a)
-      --- @type integer
-      local buf = a.buf
+      local buf = a.buf ---@type integer
       vim.api.nvim_create_autocmd('BufWinEnter', {
         once = true,
         buffer = buf,
@@ -495,13 +494,10 @@ function M.lsp()
     local exepath = vim.fn.exepath(config.cmd[1])
     if exepath ~= '' then config.cmd[1] = exepath end
 
-    local root_markers = { '.git' }
-    root_markers = config.root_markers
-        and vim.iter(config.root_markers):fold(root_markers, function(acc, k)
-          acc[#acc + 1] = k
-          return acc
-        end)
-      or root_markers
+    local root_markers = vim.iter(config.root_markers or {}):fold({ '.git' }, function(acc, k)
+      acc[#acc + 1] = k
+      return acc
+    end)
     config.root_dir = vim.fn.fnamemodify(
       ---@diagnostic disable-next-line: param-type-mismatch
       vim.fs.dirname(
