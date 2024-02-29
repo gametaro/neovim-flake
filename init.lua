@@ -395,6 +395,7 @@ function M.lsp()
     },
   }
 
+  ---@type lsp.ClientConfig[]
   local configs_ft = {
     css = { css },
     scss = { css },
@@ -462,7 +463,8 @@ function M.lsp()
     yaml = { actionlint },
   }
 
-  configs_ft = vim.iter(languages):fold(configs_ft, function(acc, k)
+  ---@type lsp.ClientConfig[]
+  local configs = vim.iter(languages):fold(configs_ft, function(acc, k)
     if acc[k] then
       acc[k][#acc[k] + 1] = {
         cmd = { 'efm-langserver' },
@@ -517,7 +519,7 @@ function M.lsp()
     pattern = keys(configs_ft),
     group = group,
     callback = function(a)
-      vim.iter(configs_ft[a.match]):map(extend_config):each(function(config)
+      vim.iter(configs[a.match]):map(extend_config):each(function(config)
         vim.lsp.start(config, {
           -- NOTE: will be fixed in core
           reuse_client = function(client, conf)
