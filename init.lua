@@ -65,6 +65,7 @@ function M.option()
   vim.o.jumpoptions = 'view'
   vim.o.modeline = false
   vim.o.sessionoptions = 'buffers,tabpages,folds'
+  vim.o.shada = vim.o.shada .. ',r/tmp/,r/private/,r/nix/store/,rzipfile:,rterm:,rhealth:'
   vim.o.shortmess = 'atToOCFIWcs'
   vim.o.showcmd = false
   vim.o.showmode = false
