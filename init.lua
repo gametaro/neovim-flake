@@ -41,7 +41,13 @@ function M.highlight()
       vim.api.nvim_set_hl(0, '@variable.parameter', { default = true, link = 'Identifier' })
       vim.api.nvim_set_hl(0, 'Constant', { fg = 'NvimLightYellow' })
       vim.api.nvim_set_hl(0, 'Delimiter', { fg = 'NvimLightGrey3' })
-      vim.api.nvim_set_hl(0, 'StatusLine', { fg = 'NvimLightGrey2', bg = 'NvimDarkGrey4' })
+      vim.api.nvim_set_hl(0, 'Operator', { fg = 'NvimLightGrey3' })
+      vim.api.nvim_set_hl(0, 'WinSeparator', { fg = 'NvimLightGrey3' })
+      vim.api.nvim_set_hl(
+        0,
+        'StatusLine',
+        { fg = 'NvimLightGrey2', bg = 'NvimDarkGrey4', cterm = { reverse = true } }
+      )
     end,
     desc = 'Tweak default colorscheme',
   })
