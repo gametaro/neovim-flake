@@ -954,6 +954,45 @@ function M.plugins()
   vim.keymap.set({ 'o', 'x' }, 'R', flash.treesitter_search)
   vim.keymap.set('c', '<c-s>', flash.toggle)
   vim.api.nvim_set_hl(0, 'FlashLabel', { bg = 'NvimDarkBlue' })
+
+  require('fx').setup()
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = 'fx',
+    callback = function(a)
+      local dir = a.file ---@type string
+      vim.keymap.set('n', '<CR>', function()
+        local cfile = vim.fs.joinpath(dir, vim.fn.expand('<cfile>'))
+        vim.cmd.edit(cfile)
+      end, { buffer = true })
+      vim.keymap.set('n', 'D', function()
+        local cfile = vim.fn.expand('<cfile>')
+        vim.ui.select({ 'Yes', 'No' }, {
+          prompt = string.format('Delete "%s"?: ', cfile),
+        }, function(choice)
+          if choice and choice == 'Yes' then
+            vim.fn.delete(vim.fs.joinpath(dir, cfile), 'rf')
+            vim.cmd.edit()
+          end
+        end)
+      end, { buffer = true })
+      vim.keymap.set('n', 'R', function()
+        local cfile = vim.fn.expand('<cfile>')
+        vim.ui.input({ prompt = string.format('Rename "%s" to: ', cfile) }, function(input)
+          if input and input ~= '' then
+            vim.fn.rename(vim.fs.joinpath(dir, cfile), vim.fs.joinpath(dir, input))
+            vim.cmd.edit()
+          end
+        end)
+      end, { buffer = true })
+      vim.keymap.set(
+        'n',
+        '<C-l>',
+        '<Cmd>nohlsearch<Bar>edit!<Bar>normal! <C-l><CR>',
+        { buffer = true }
+      )
+      vim.keymap.set('n', '-', '<cmd>edit %:p:h:h<cr>', { buffer = true })
+    end,
+  })
 end
 
 local function init()
