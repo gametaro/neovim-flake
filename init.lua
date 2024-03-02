@@ -960,37 +960,40 @@ function M.plugins()
     pattern = 'fx',
     callback = function(a)
       local dir = a.file ---@type string
-      vim.keymap.set('n', '<CR>', function()
-        local cfile = vim.fs.joinpath(dir, vim.fn.expand('<cfile>'))
-        vim.cmd.edit(cfile)
-      end, { buffer = true })
-      vim.keymap.set('n', 'D', function()
-        local cfile = vim.fn.expand('<cfile>')
+
+      local function map(mode, lhs, rhs, opts)
+        opts = opts or {}
+        opts.buffer = a.buf
+        vim.keymap.set(mode, lhs, rhs, opts)
+      end
+
+      map(
+        'n',
+        '<cr>',
+        function() vim.cmd.edit(vim.fs.joinpath(dir, vim.api.nvim_get_current_line())) end
+      )
+      map('n', '-', '<cmd>edit %:h<cr>')
+      map('n', '<c-l>', '<cmd>nohlsearch<bar>edit!<bar>normal! <C-l><cr>')
+      map('n', 'D', function()
+        local file = vim.api.nvim_get_current_line()
         vim.ui.select({ 'Yes', 'No' }, {
-          prompt = string.format('Delete "%s"?: ', cfile),
+          prompt = string.format('Delete "%s"?: ', file),
         }, function(choice)
           if choice and choice == 'Yes' then
-            vim.fn.delete(vim.fs.joinpath(dir, cfile), 'rf')
+            vim.fn.delete(vim.fs.joinpath(dir, file), 'rf')
             vim.cmd.edit()
           end
         end)
-      end, { buffer = true })
-      vim.keymap.set('n', 'R', function()
-        local cfile = vim.fn.expand('<cfile>')
-        vim.ui.input({ prompt = string.format('Rename "%s" to: ', cfile) }, function(input)
+      end)
+      map('n', 'R', function()
+        local file = vim.api.nvim_get_current_line()
+        vim.ui.input({ prompt = string.format('Rename "%s" to: ', file) }, function(input)
           if input and input ~= '' then
-            vim.fn.rename(vim.fs.joinpath(dir, cfile), vim.fs.joinpath(dir, input))
+            vim.fn.rename(vim.fs.joinpath(dir, file), vim.fs.joinpath(dir, input))
             vim.cmd.edit()
           end
         end)
-      end, { buffer = true })
-      vim.keymap.set(
-        'n',
-        '<C-l>',
-        '<Cmd>nohlsearch<Bar>edit!<Bar>normal! <C-l><CR>',
-        { buffer = true }
-      )
-      vim.keymap.set('n', '-', '<cmd>edit %:p:h:h<cr>', { buffer = true })
+      end)
     end,
   })
 end
