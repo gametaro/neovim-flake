@@ -405,7 +405,7 @@ function M.lsp()
     },
   }
 
-  ---@type lsp.ClientConfig[]
+  ---@type vim.lsp.ClientConfig[]
   local configs_ft = {
     css = { css },
     scss = { css },
@@ -473,7 +473,7 @@ function M.lsp()
     yaml = { actionlint },
   }
 
-  ---@type lsp.ClientConfig[]
+  ---@type vim.lsp.ClientConfig[]
   local configs = vim.iter(languages):fold(configs_ft, function(acc, k)
     if acc[k] then
       acc[k][#acc[k] + 1] = {
@@ -678,13 +678,15 @@ end
 function M.bufjump()
   ---@param next boolean
   local function jump(next)
-    local jumplist, last_pos = unpack(vim.fn.getjumplist())
+    local jumplist = vim.fn.getjumplist()
+    local items = jumplist[1]
+    local last_pos = jumplist[2]
     last_pos = last_pos + 1
     local step = next and 1 or -1
     local target_pos = last_pos + step
 
-    while target_pos >= 1 and target_pos <= #jumplist do
-      local target_buf = jumplist[target_pos].bufnr
+    while target_pos >= 1 and target_pos <= #items do
+      local target_buf = items[target_pos].bufnr
       if vim.api.nvim_buf_is_valid(target_buf) and target_buf ~= vim.api.nvim_get_current_buf() then
         vim.api.nvim_feedkeys(
           vim.keycode(string.format('%d%s', target_pos - last_pos, next and '<c-i>' or '<c-o>')),
@@ -922,10 +924,14 @@ function M.plugins()
       l = function(type)
         if vim.api.nvim_get_current_line() == '' then return end
         vim.cmd.normal({ type == 'i' and '^' or '0', bang = true })
-        local from_line, from_col = unpack(vim.api.nvim_win_get_cursor(0))
+        local from_pos = vim.api.nvim_win_get_cursor(0)
+        local from_line = from_pos[1]
+        local from_col = from_pos[2]
         local from = { line = from_line, col = from_col + 1 }
         vim.cmd.normal({ type == 'i' and 'g_' or '$', bang = true })
-        local to_line, to_col = unpack(vim.api.nvim_win_get_cursor(0))
+        local to_pos = vim.api.nvim_win_get_cursor(0)
+        local to_line = to_pos[1]
+        local to_col = to_pos[2]
         local to = { line = to_line, col = to_col + 1 }
         return { from = from, to = to }
       end,
