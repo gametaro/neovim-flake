@@ -319,9 +319,9 @@ function M.autocmd()
           vim.cmd.update({ file, mods = { silent = true, noautocmd = true } })
         end
       end
-      vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
+      vim.api.nvim_create_autocmd('CursorHold', {
         buffer = buf,
-        callback = debounce(3000, save),
+        callback = save,
       })
     end,
     desc = 'Enable auto-save',
