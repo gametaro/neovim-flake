@@ -993,7 +993,11 @@ function M.plugins()
       end)
       map('n', 'R', function()
         local file = vim.api.nvim_get_current_line()
-        vim.ui.input({ prompt = string.format('Rename "%s" to: ', file) }, function(input)
+        vim.ui.input({
+          completion = 'file',
+          default = file,
+          prompt = string.format('Rename "%s" to: ', file),
+        }, function(input)
           if input and input ~= '' then
             vim.fn.rename(vim.fs.joinpath(dir, file), vim.fs.joinpath(dir, input))
             vim.cmd.edit()
