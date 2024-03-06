@@ -48,8 +48,8 @@
         [
           SchemaStore-nvim
           cmp-buffer
-          cmp-path
           cmp-nvim-lsp
+          cmp-path
           diffview-nvim
           efmls-configs-nvim
           flash-nvim
