@@ -319,7 +319,7 @@ function M.autocmd()
           vim.cmd.update({ file, mods = { silent = true, noautocmd = true } })
         end
       end
-      vim.api.nvim_create_autocmd('CursorHold', {
+      vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
         buffer = buf,
         callback = save,
       })
