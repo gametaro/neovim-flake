@@ -329,7 +329,7 @@ function M.autocmd()
 
   vim.api.nvim_create_autocmd({ 'BufWinEnter', 'VimEnter' }, {
     callback = function(a)
-      local path = vim.fs.dirname(a.file)
+      local path = vim.fs.dirname(a.file --[[@as string]])
       local root = vim.fs.dirname(vim.fs.find({ '.git' }, { path = path, upward = true })[1])
       local pwd = vim.fn.getcwd(-1, 0)
       if root and pwd ~= root then vim.cmd.tcd(root) end
@@ -511,7 +511,6 @@ function M.lsp()
       return acc
     end)
     config.root_dir = vim.fn.fnamemodify(
-      ---@diagnostic disable-next-line: param-type-mismatch
       vim.fs.dirname(
         vim.fs.find(
           root_markers,
@@ -533,7 +532,7 @@ function M.lsp()
         vim.lsp.start(config, {
           -- NOTE: will be fixed in core
           reuse_client = function(client, conf)
-            local name = vim.fs.basename(conf.cmd[1])
+            local name = vim.fs.basename(conf.cmd[1] --[[@as string]])
             return client.name == name and client.root_dir == conf.root_dir
           end,
           bufnr = 0,
@@ -553,7 +552,7 @@ function M.lsp()
 
       local function map(mode, lhs, rhs, opts)
         opts = opts or {}
-        opts.buffer = a.buf
+        opts.buffer = a.buf --[[@as integer]]
         vim.keymap.set(mode, lhs, rhs, opts)
       end
 
@@ -977,7 +976,7 @@ function M.plugins()
 
       local function map(mode, lhs, rhs, opts)
         opts = opts or {}
-        opts.buffer = a.buf
+        opts.buffer = a.buf --[[@as integer]]
         vim.keymap.set(mode, lhs, rhs, opts)
       end
 
