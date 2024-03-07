@@ -707,25 +707,16 @@ function M.walkthrough()
   local function jump(next)
     local fullname = vim.api.nvim_buf_get_name(0)
     local dirname = vim.fs.dirname(fullname)
-    if not dirname then return end
     local basename = vim.fs.basename(fullname)
 
     ---@type string[]
-    local files = vim.iter.map(function(name) return name end, vim.fs.dir(dirname))
-    if #files <= 1 then return end
+    local files = vim.iter(vim.fs.dir(dirname)):map(function(name) return name end):totable()
+    ---@type integer
+    local current_idx = vim.iter(files):enumerate():find(function(_, v) return v == basename end)
 
-    local current_idx ---@type integer?
-    for i, file in ipairs(files) do
-      if file == basename then
-        current_idx = i
-        break
-      end
-    end
-
-    if current_idx then
-      local target_idx = next and (current_idx % #files + 1) or ((current_idx - 2) % #files + 1)
-      vim.cmd.edit(vim.fs.joinpath(dirname, files[target_idx]))
-    end
+    local target_idx = next and (current_idx - 1 + vim.v.count1) % #files + 1
+      or (current_idx - 1 - vim.v.count1 + #files) % #files + 1
+    vim.cmd.edit(files[target_idx])
   end
 
   vim.keymap.set('n', ']w', function() jump(true) end)
