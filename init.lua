@@ -361,7 +361,12 @@ function M.autocmd()
 
   vim.api.nvim_create_autocmd('TermOpen', {
     pattern = 'term://*',
-    callback = function() vim.cmd.startinsert() end,
+    callback = function()
+      vim.wo[0][0].list = false
+      vim.wo[0][0].signcolumn = 'no'
+
+      vim.cmd.startinsert()
+    end,
     desc = 'Start in Terminal mode',
   })
 
