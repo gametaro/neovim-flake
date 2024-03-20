@@ -63,6 +63,7 @@ function M.option()
   vim.o.diffopt =
     'internal,filler,closeoff,algorithm:histogram,indent-heuristic,vertical,linematch:60'
   vim.o.exrc = true
+  vim.o.fillchars = 'eob:·'
   vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
   vim.o.foldlevelstart = 99
   vim.o.foldmethod = 'expr'
