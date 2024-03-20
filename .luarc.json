@@ -20,5 +20,8 @@
       "strong": "Warning",
       "strict": "Warning"
     }
+  },
+  "format": {
+    "enable": false
   }
 }
