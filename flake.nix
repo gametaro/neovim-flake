@@ -54,13 +54,13 @@
           deadnix.enable = true;
           nil.enable = true;
           lua-ls.enable = true;
+          lua-ls.settings = {
+            config = lib.importJSON ./.luarc.json;
+            checklevel = "Error";
+          };
           statix.enable = true;
           stylua.enable = true;
           yamllint.enable = true;
-        };
-        settings = {
-          lua-ls.config = lib.importJSON ./.luarc.json;
-          lua-ls.checklevel = "Error";
         };
       };
     });
