@@ -48,6 +48,25 @@ function M.highlight()
         'StatusLine',
         { fg = 'NvimLightGrey2', bg = 'NvimDarkGrey4', cterm = { reverse = true } }
       )
+      local bg = vim.o.background == 'dark' and 'NvimDark' or 'NvimLight'
+      local fg = bg == 'NvimDark' and 'NvimLight' or 'NvimDark'
+
+      vim.g.terminal_color_0 = vim.g.terminal_color_0 or (bg .. 'Grey2')
+      vim.g.terminal_color_1 = vim.g.terminal_color_1 or (fg .. 'Red')
+      vim.g.terminal_color_2 = vim.g.terminal_color_2 or (fg .. 'Green')
+      vim.g.terminal_color_3 = vim.g.terminal_color_3 or (fg .. 'Yellow')
+      vim.g.terminal_color_4 = vim.g.terminal_color_4 or (fg .. 'Blue')
+      vim.g.terminal_color_5 = vim.g.terminal_color_5 or (fg .. 'Magenta')
+      vim.g.terminal_color_6 = vim.g.terminal_color_6 or (fg .. 'Cyan')
+      vim.g.terminal_color_7 = vim.g.terminal_color_7 or (fg .. 'Grey2')
+      vim.g.terminal_color_8 = vim.g.terminal_color_8 or (bg .. 'Grey2')
+      vim.g.terminal_color_9 = vim.g.terminal_color_9 or (fg .. 'Red')
+      vim.g.terminal_color_10 = vim.g.terminal_color_10 or (fg .. 'Green')
+      vim.g.terminal_color_11 = vim.g.terminal_color_11 or (fg .. 'Yellow')
+      vim.g.terminal_color_12 = vim.g.terminal_color_12 or (fg .. 'Blue')
+      vim.g.terminal_color_13 = vim.g.terminal_color_13 or (fg .. 'Magenta')
+      vim.g.terminal_color_14 = vim.g.terminal_color_14 or (fg .. 'Cyan')
+      vim.g.terminal_color_15 = vim.g.terminal_color_15 or (fg .. 'Grey2')
     end,
     desc = 'Tweak default colorscheme',
   })
