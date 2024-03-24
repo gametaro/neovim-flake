@@ -37,36 +37,37 @@ function M.highlight()
   vim.api.nvim_create_autocmd('ColorScheme', {
     pattern = { 'default' },
     callback = function()
+      local bg = vim.o.background == 'dark' and 'NvimDark' or 'NvimLight'
+      local fg = vim.o.background == 'dark' and 'NvimLight' or 'NvimDark'
+
       vim.api.nvim_set_hl(0, '@variable.member', { default = true, link = 'Identifier' })
       vim.api.nvim_set_hl(0, '@variable.parameter', { default = true, link = 'Identifier' })
-      vim.api.nvim_set_hl(0, 'Constant', { fg = 'NvimLightYellow' })
-      vim.api.nvim_set_hl(0, 'Delimiter', { fg = 'NvimLightGrey3' })
-      vim.api.nvim_set_hl(0, 'Operator', { fg = 'NvimLightGrey3' })
-      vim.api.nvim_set_hl(0, 'WinSeparator', { fg = 'NvimLightGrey3' })
+      vim.api.nvim_set_hl(0, 'Constant', { fg = fg .. 'Yellow' })
+      vim.api.nvim_set_hl(0, 'Delimiter', { fg = fg .. 'Grey3' })
+      vim.api.nvim_set_hl(0, 'Operator', { fg = fg .. 'Grey3' })
+      vim.api.nvim_set_hl(0, 'WinSeparator', { fg = fg .. 'Grey3' })
       vim.api.nvim_set_hl(
         0,
         'StatusLine',
-        { fg = 'NvimLightGrey2', bg = 'NvimDarkGrey4', cterm = { reverse = true } }
+        { fg = fg .. 'Grey2', bg = bg .. 'Grey4', cterm = { reverse = true } }
       )
-      local bg = vim.o.background == 'dark' and 'NvimDark' or 'NvimLight'
-      local fg = bg == 'NvimDark' and 'NvimLight' or 'NvimDark'
 
-      vim.g.terminal_color_0 = vim.g.terminal_color_0 or (bg .. 'Grey2')
-      vim.g.terminal_color_1 = vim.g.terminal_color_1 or (fg .. 'Red')
-      vim.g.terminal_color_2 = vim.g.terminal_color_2 or (fg .. 'Green')
-      vim.g.terminal_color_3 = vim.g.terminal_color_3 or (fg .. 'Yellow')
-      vim.g.terminal_color_4 = vim.g.terminal_color_4 or (fg .. 'Blue')
-      vim.g.terminal_color_5 = vim.g.terminal_color_5 or (fg .. 'Magenta')
-      vim.g.terminal_color_6 = vim.g.terminal_color_6 or (fg .. 'Cyan')
-      vim.g.terminal_color_7 = vim.g.terminal_color_7 or (fg .. 'Grey2')
-      vim.g.terminal_color_8 = vim.g.terminal_color_8 or (bg .. 'Grey2')
-      vim.g.terminal_color_9 = vim.g.terminal_color_9 or (fg .. 'Red')
-      vim.g.terminal_color_10 = vim.g.terminal_color_10 or (fg .. 'Green')
-      vim.g.terminal_color_11 = vim.g.terminal_color_11 or (fg .. 'Yellow')
-      vim.g.terminal_color_12 = vim.g.terminal_color_12 or (fg .. 'Blue')
-      vim.g.terminal_color_13 = vim.g.terminal_color_13 or (fg .. 'Magenta')
-      vim.g.terminal_color_14 = vim.g.terminal_color_14 or (fg .. 'Cyan')
-      vim.g.terminal_color_15 = vim.g.terminal_color_15 or (fg .. 'Grey2')
+      vim.g.terminal_color_0 = bg .. 'Grey2'
+      vim.g.terminal_color_1 = fg .. 'Red'
+      vim.g.terminal_color_2 = fg .. 'Green'
+      vim.g.terminal_color_3 = fg .. 'Yellow'
+      vim.g.terminal_color_4 = fg .. 'Blue'
+      vim.g.terminal_color_5 = fg .. 'Magenta'
+      vim.g.terminal_color_6 = fg .. 'Cyan'
+      vim.g.terminal_color_7 = fg .. 'Grey2'
+      vim.g.terminal_color_8 = bg .. 'Grey2'
+      vim.g.terminal_color_9 = fg .. 'Red'
+      vim.g.terminal_color_10 = fg .. 'Green'
+      vim.g.terminal_color_11 = fg .. 'Yellow'
+      vim.g.terminal_color_12 = fg .. 'Blue'
+      vim.g.terminal_color_13 = fg .. 'Magenta'
+      vim.g.terminal_color_14 = fg .. 'Cyan'
+      vim.g.terminal_color_15 = fg .. 'Grey2'
     end,
     desc = 'Tweak default colorscheme',
   })
