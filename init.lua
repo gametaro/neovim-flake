@@ -988,7 +988,7 @@ function M.plugins()
   vim.api.nvim_create_autocmd('FileType', {
     pattern = 'fx',
     callback = function(a)
-      local dir = a.file ---@type string
+      local dir = vim.api.nvim_buf_get_name(a.buf)
 
       local function map(mode, lhs, rhs, opts)
         opts = opts or {}
