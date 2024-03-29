@@ -300,6 +300,7 @@ function M.autocmd()
     pattern = { 'checkhealth', 'help', 'man', 'qf' },
     callback = function()
       vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = true, nowait = true })
+      vim.wo.winfixbuf = true
     end,
     desc = 'Close current window',
   })
