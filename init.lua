@@ -656,10 +656,37 @@ function M.lsp()
       local client = vim.lsp.get_client_by_id(a.data.client_id)
       if not client then return end
 
+      local function map(mode, lhs, rhs, opts)
+        opts = opts or {}
+        opts.buffer = a.buf --[[@as integer]]
+        vim.keymap.set(mode, lhs, rhs, opts)
+      end
+
       client.server_capabilities.semanticTokensProvider = nil
       if client.name == 'typescript-language-server' then
         client.server_capabilities.documentFormattingProvider = false
         client.server_capabilities.documentRangeFormattingProvider = false
+        map('n', '<leader>cA', function()
+          vim.lsp.buf.code_action({
+            context = {
+              only = {
+                ---@diagnostic disable-next-line: assign-type-mismatch
+                'source.addMissingImports.ts',
+                ---@diagnostic disable-next-line: assign-type-mismatch
+                'source.fixAll.ts',
+                ---@diagnostic disable-next-line: assign-type-mismatch
+                'source.organizeImports.ts',
+                ---@diagnostic disable-next-line: assign-type-mismatch
+                'source.removeUnused.ts',
+                ---@diagnostic disable-next-line: assign-type-mismatch
+                'source.removeUnusedImports.ts',
+                ---@diagnostic disable-next-line: assign-type-mismatch
+                'source.sortImports.ts',
+              },
+              diagnostics = {},
+            },
+          })
+        end)
       end
 
       if client.server_capabilities.codeLensProvider then
@@ -667,12 +694,6 @@ function M.lsp()
           buffer = 0,
           callback = vim.lsp.codelens.refresh,
         })
-      end
-
-      local function map(mode, lhs, rhs, opts)
-        opts = opts or {}
-        opts.buffer = a.buf --[[@as integer]]
-        vim.keymap.set(mode, lhs, rhs, opts)
       end
 
       map('n', 'gd', vim.lsp.buf.definition)
