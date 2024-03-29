@@ -24,6 +24,9 @@
   "completion": {
     "callSnippet": "Replace"
   },
+  "codeLens": {
+    "enable": true
+  },
   "format": {
     "enable": false
   }
