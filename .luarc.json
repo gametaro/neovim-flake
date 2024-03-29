@@ -21,6 +21,9 @@
       "strict": "Warning"
     }
   },
+  "completion": {
+    "callSnippet": "Replace"
+  },
   "format": {
     "enable": false
   }
