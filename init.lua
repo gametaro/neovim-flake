@@ -51,6 +51,8 @@ function M.highlight()
         'StatusLine',
         { fg = fg .. 'Grey2', bg = bg .. 'Grey4', cterm = { reverse = true } }
       )
+      vim.api.nvim_set_hl(0, 'LspCodeLens', { default = true, link = 'NonText' })
+      vim.api.nvim_set_hl(0, 'LspCodeLensSeparator', { default = true, link = 'NonText' })
 
       vim.g.terminal_color_0 = bg .. 'Grey2'
       vim.g.terminal_color_1 = fg .. 'Red'
@@ -407,10 +409,41 @@ function M.lsp()
   local stylua = require('efmls-configs.formatters.stylua')
   local shfmt = require('efmls-configs.formatters.shfmt')
 
-  local tls = {
+  local ts_settings = {
+    implementationsCodeLens = {
+      enabled = true,
+    },
+    referencesCodeLens = {
+      enabled = true,
+      showOnAllFunctions = true,
+    },
+    inlayHints = {
+      includeInlayEnumMemberValueHints = true,
+      includeInlayFunctionLikeReturnTypeHints = true,
+      includeInlayFunctionParameterTypeHints = true,
+      includeInlayParameterNameHints = 'all',
+      includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+      includeInlayPropertyDeclarationTypeHints = true,
+      includeInlayVariableTypeHints = true,
+      includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+    },
+  }
+  ---@type vim.lsp.ClientConfig
+  local ts = {
     init_options = { hostInfo = 'neovim' },
     cmd = { 'typescript-language-server', '--stdio' },
     root_markers = { 'tsconfig.json', 'package.json' },
+    settings = {
+      completions = {
+        completeFunctionCalls = true,
+      },
+      javascript = ts_settings,
+      typescript = ts_settings,
+      javascriptreact = ts_settings,
+      typescriptreact = ts_settings,
+      ['javascript.jsx'] = ts_settings,
+      ['typescript.tsx'] = ts_settings,
+    },
   }
 
   ---@type vim.lsp.ClientConfig
@@ -423,12 +456,6 @@ function M.lsp()
       '.eslintrc.json',
       '.eslintrc.yaml',
       '.eslintrc.yml',
-      'eslint.config.cjs',
-      'eslint.config.cts',
-      'eslint.config.js',
-      'eslint.config.mjs',
-      'eslint.config.mts',
-      'eslint.config.ts',
       'package.json',
     },
     settings = {
@@ -490,10 +517,10 @@ function M.lsp()
   local configs_ft = {
     css = { css },
     scss = { css },
-    javascript = { tls, eslint },
-    javascriptreact = { tls, eslint },
-    typescript = { tls, eslint },
-    typescriptreact = { tls, eslint },
+    javascript = { ts, eslint },
+    javascriptreact = { ts, eslint },
+    typescript = { ts, eslint },
+    typescriptreact = { ts, eslint },
     json = { json },
     jsonc = { json },
     dockerfile = {
@@ -630,6 +657,17 @@ function M.lsp()
       if not client then return end
 
       client.server_capabilities.semanticTokensProvider = nil
+      if client.name == 'typescript-language-server' then
+        client.server_capabilities.documentFormattingProvider = false
+        client.server_capabilities.documentRangeFormattingProvider = false
+      end
+
+      if client.server_capabilities.codeLensProvider then
+        vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
+          buffer = 0,
+          callback = vim.lsp.codelens.refresh,
+        })
+      end
 
       local function map(mode, lhs, rhs, opts)
         opts = opts or {}
