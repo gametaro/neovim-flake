@@ -544,7 +544,19 @@ function M.lsp()
     nix = {
       {
         cmd = { 'nil' },
-        settings = { ['nil'] = { formatting = { command = { 'alejandra' } } } },
+        --- https://github.com/oxalica/nil/blob/main/docs/configuration.md
+        settings = {
+          ['nil'] = {
+            formatting = {
+              command = { 'alejandra' },
+            },
+            nix = {
+              flake = {
+                autoEvalInputs = true,
+              },
+            },
+          },
+        },
         root_markers = { 'flake.nix' },
       },
     },
