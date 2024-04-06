@@ -1036,10 +1036,6 @@ function M.plugins()
   require('mini.notify').setup()
   vim.notify = require('mini.notify').make_notify()
 
-  require('mini.comment').setup({
-    options = { ignore_blank_line = true },
-  })
-
   require('mini.operators').setup({
     exchange = { prefix = '' },
     multiply = { prefix = '' },
