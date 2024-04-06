@@ -300,9 +300,9 @@ function M.autocmd()
 
   vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'checkhealth', 'help', 'man', 'qf' },
-    callback = function()
+    callback = function(a)
       vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = true, nowait = true })
-      vim.wo.winfixbuf = true
+      if a.match ~= 'help' then vim.wo.winfixbuf = true end
     end,
     desc = 'Close current window',
   })
