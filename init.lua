@@ -672,10 +672,11 @@ function M.lsp()
     callback = function(a)
       local client = vim.lsp.get_client_by_id(a.data.client_id)
       if not client then return end
+      local buf = a.buf --[[@as integer]]
 
       local function map(mode, lhs, rhs, opts)
         opts = opts or {}
-        opts.buffer = a.buf --[[@as integer]]
+        opts.buffer = buf
         vim.keymap.set(mode, lhs, rhs, opts)
       end
 
@@ -708,8 +709,8 @@ function M.lsp()
 
       if client.server_capabilities.codeLensProvider then
         vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
-          buffer = 0,
-          callback = vim.lsp.codelens.refresh,
+          buffer = buf,
+          callback = function() vim.lsp.codelens.refresh({ bufnr = buf }) end,
         })
       end
 
