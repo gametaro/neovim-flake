@@ -60,7 +60,6 @@
           };
           statix.enable = true;
           stylua.enable = true;
-          yamllint.enable = true;
         };
       };
     });
