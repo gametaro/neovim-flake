@@ -53,6 +53,7 @@ function M.highlight()
       )
       vim.api.nvim_set_hl(0, 'LspCodeLens', { default = true, link = 'NonText' })
       vim.api.nvim_set_hl(0, 'LspCodeLensSeparator', { default = true, link = 'NonText' })
+      vim.api.nvim_set_hl(0, 'FlashLabel', { bg = bg .. 'Blue' })
 
       vim.g.terminal_color_0 = bg .. 'Grey2'
       vim.g.terminal_color_1 = fg .. 'Red'
@@ -1114,7 +1115,6 @@ function M.plugins()
   vim.keymap.set('o', 'r', flash.remote)
   vim.keymap.set({ 'o', 'x' }, 'R', flash.treesitter_search)
   vim.keymap.set('c', '<c-s>', flash.toggle)
-  vim.api.nvim_set_hl(0, 'FlashLabel', { bg = 'NvimDarkBlue' })
 
   require('fx').setup()
   vim.api.nvim_create_autocmd('FileType', {
