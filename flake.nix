@@ -55,7 +55,7 @@
           nil.enable = true;
           lua-ls.enable = true;
           lua-ls.settings = {
-            config = lib.importJSON ./.luarc.json;
+            configuration = lib.importJSON ./.luarc.json;
             checklevel = "Error";
           };
           statix.enable = true;
