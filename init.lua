@@ -351,6 +351,11 @@ function M.autocmd()
     desc = 'Enable auto-save',
   })
 
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = { 'gitcommit', 'gitrebase' },
+    callback = function() vim.bo.buflisted = false end,
+  })
+
   vim.api.nvim_create_autocmd({ 'BufWinEnter', 'VimEnter' }, {
     callback = function(a)
       local path = vim.fs.dirname(a.file --[[@as string]])
