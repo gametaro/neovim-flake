@@ -655,6 +655,8 @@ function M.lsp()
     pattern = keys(configs_ft),
     group = group,
     callback = function(a)
+      if vim.wo[0][0].diff then return end
+
       vim.iter(configs[a.match]):map(extend_config):each(function(config)
         vim.lsp.start(config, {
           -- NOTE: will be fixed in core
