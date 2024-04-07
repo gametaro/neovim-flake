@@ -45,12 +45,13 @@ function M.highlight()
       vim.api.nvim_set_hl(0, 'Constant', { fg = fg .. 'Yellow' })
       vim.api.nvim_set_hl(0, 'Delimiter', { fg = fg .. 'Grey3' })
       vim.api.nvim_set_hl(0, 'Operator', { fg = fg .. 'Grey3' })
-      vim.api.nvim_set_hl(0, 'WinSeparator', { fg = fg .. 'Grey3' })
+      vim.api.nvim_set_hl(0, 'WinSeparator', { fg = bg .. 'Grey4' })
       vim.api.nvim_set_hl(
         0,
         'StatusLine',
         { fg = fg .. 'Grey2', bg = bg .. 'Grey4', cterm = { reverse = true } }
       )
+      vim.api.nvim_set_hl(0, 'PmenuSel', { bg = bg .. 'Grey4' })
       vim.api.nvim_set_hl(0, 'LspCodeLens', { default = true, link = 'NonText' })
       vim.api.nvim_set_hl(0, 'LspCodeLensSeparator', { default = true, link = 'NonText' })
       vim.api.nvim_set_hl(0, 'FlashLabel', { bg = bg .. 'Blue' })
