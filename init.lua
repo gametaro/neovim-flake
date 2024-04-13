@@ -379,7 +379,7 @@ function M.autocmd()
   vim.api.nvim_create_autocmd({ 'BufWinEnter', 'VimEnter' }, {
     callback = function(a)
       local path = vim.fs.dirname(a.file --[[@as string]])
-      local root = vim.fs.dirname(vim.fs.find({ '.git' }, { path = path, upward = true })[1])
+      local root = get_root(path, { '.git' })
       local pwd = vim.fn.getcwd(-1, 0)
       if root and pwd ~= root then vim.cmd.tcd(root) end
     end,
