@@ -671,7 +671,8 @@ function M.lsp()
     pattern = keys(configs_ft),
     group = group,
     callback = function(a)
-      if vim.wo[0][0].diff then return end
+      if vim.bo.buftype ~= '' then return end
+      if vim.bo.bufhidden ~= '' then return end
 
       vim.iter(configs[a.match]):map(extend_config):each(vim.lsp.start)
     end,
