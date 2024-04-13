@@ -1043,9 +1043,6 @@ function M.plugins()
     },
   })
 
-  require('mini.notify').setup()
-  vim.notify = require('mini.notify').make_notify()
-
   require('mini.operators').setup({
     exchange = { prefix = '' },
     multiply = { prefix = '' },
