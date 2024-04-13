@@ -55,6 +55,8 @@ function M.highlight()
       vim.api.nvim_set_hl(0, 'LspCodeLens', { default = true, link = 'NonText' })
       vim.api.nvim_set_hl(0, 'LspCodeLensSeparator', { default = true, link = 'NonText' })
       vim.api.nvim_set_hl(0, 'FlashLabel', { bg = bg .. 'Blue' })
+      vim.api.nvim_set_hl(0, 'TelescopeNormal', { default = true, link = 'Pmenu' })
+      vim.api.nvim_set_hl(0, 'TelescopeSelection', { default = true, link = 'PmenuSel' })
 
       vim.g.terminal_color_0 = bg .. 'Grey2'
       vim.g.terminal_color_1 = fg .. 'Red'
