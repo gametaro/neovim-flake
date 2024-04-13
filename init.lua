@@ -33,6 +33,22 @@ local function get_char_at(lnum, col)
   return vim.fn.strcharpart(vim.fn.strpart(line, col - 1), 0, 1)
 end
 
+---@param path string
+---@param names string[]
+---@return string
+local function get_root(path, names)
+  local root = vim.fs.find(names, { path = path, upward = true })[1]
+  if root then
+    local stat = vim.uv.fs_stat(root)
+    if stat and stat.type == 'directory' then
+      root = vim.fn.fnamemodify(root, ':p:h:h')
+    else
+      root = vim.fn.fnamemodify(root, ':p:h')
+    end
+  end
+  return root
+end
+
 function M.highlight()
   vim.api.nvim_create_autocmd('ColorScheme', {
     pattern = { 'default' },
@@ -629,27 +645,25 @@ function M.lsp()
     cmp_nvim_lsp.default_capabilities()
   )
 
+  ---@param config vim.lsp.ClientConfig
+  ---@return vim.lsp.ClientConfig
   local function extend_config(config)
-    config.capabilities = capabilities
+    local conf = vim.deepcopy(config, true)
 
-    local exepath = vim.fn.exepath(config.cmd[1])
-    if exepath ~= '' then config.cmd[1] = exepath end
+    conf.name = conf.cmd[1]
+    conf.capabilities = capabilities
 
-    local root_markers = vim.iter(config.root_markers or {}):fold({ '.git' }, function(acc, k)
+    local exepath = vim.fn.exepath(conf.cmd[1])
+    if exepath ~= '' then conf.cmd[1] = exepath end
+
+    ---@diagnostic disable-next-line: undefined-field
+    local root_markers = vim.iter(conf.root_markers or {}):fold({ '.git' }, function(acc, k)
       acc[#acc + 1] = k
       return acc
     end)
-    config.root_dir = vim.fn.fnamemodify(
-      vim.fs.dirname(
-        vim.fs.find(
-          root_markers,
-          { path = vim.fs.dirname(vim.api.nvim_buf_get_name(0)), upward = true }
-        )[1]
-      ),
-      ':p:h'
-    )
+    conf.root_dir = get_root(vim.fs.dirname(vim.api.nvim_buf_get_name(0)), root_markers)
 
-    return config
+    return conf
   end
 
   local group = vim.api.nvim_create_augroup('lsp', {})
@@ -659,16 +673,7 @@ function M.lsp()
     callback = function(a)
       if vim.wo[0][0].diff then return end
 
-      vim.iter(configs[a.match]):map(extend_config):each(function(config)
-        vim.lsp.start(config, {
-          -- NOTE: will be fixed in core
-          reuse_client = function(client, conf)
-            local name = vim.fs.basename(conf.cmd[1] --[[@as string]])
-            return client.name == name and client.root_dir == conf.root_dir
-          end,
-          bufnr = 0,
-        })
-      end)
+      vim.iter(configs[a.match]):map(extend_config):each(vim.lsp.start)
     end,
     desc = 'Start lsp server',
   })
