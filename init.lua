@@ -1181,6 +1181,18 @@ local function init()
   vim.g.loaded_rplugin = 1
   vim.g.loaded_tutor = 1
 
+  vim.g.clipboard = {
+    name = 'OSC 52',
+    copy = {
+      ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+      ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+    },
+    paste = {
+      ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+      ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+    },
+  }
+
   vim.filetype.add({
     filename = {
       ['flake.lock'] = 'json',
