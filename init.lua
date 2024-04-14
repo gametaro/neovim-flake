@@ -430,6 +430,14 @@ function M.autocmd()
   autocmd('FileType', {
     callback = function() pcall(vim.treesitter.start) end,
   })
+
+  autocmd('VimEnter', {
+    desc = 'Load .nvim.lua on startup',
+    callback = function()
+      local contents = vim.secure.read('.nvim.lua')
+      if contents then assert(loadstring(contents))() end
+    end,
+  })
 end
 
 function M.lsp()
