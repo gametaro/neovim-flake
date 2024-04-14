@@ -50,7 +50,9 @@ local function get_root(path, names)
 end
 
 function M.highlight()
+  local group = vim.api.nvim_create_augroup('highlight', {})
   vim.api.nvim_create_autocmd('ColorScheme', {
+    group = group,
     pattern = { 'default' },
     callback = function()
       local bg = vim.o.background == 'dark' and 'NvimDark' or 'NvimLight'
@@ -296,19 +298,25 @@ function M.diagnostic()
 end
 
 function M.autocmd()
-  vim.api.nvim_create_autocmd('TextYankPost', {
+  local group = vim.api.nvim_create_augroup('init', {})
+  local function autocmd(event, opts)
+    opts.group = group
+    vim.api.nvim_create_autocmd(event, opts)
+  end
+
+  autocmd('TextYankPost', {
     callback = function() vim.highlight.on_yank() end,
     desc = 'Highlight yanked region',
   })
 
-  vim.api.nvim_create_autocmd('BufWritePost', {
+  autocmd('BufWritePost', {
     callback = function()
       if vim.wo.diff then vim.cmd.diffupdate() end
     end,
     desc = 'Update diff',
   })
 
-  vim.api.nvim_create_autocmd({ 'BufWritePre', 'FileWritePre' }, {
+  autocmd({ 'BufWritePre', 'FileWritePre' }, {
     callback = function()
       if not string.find(vim.fn.expand('%'), '://') then
         local dir = vim.fn.expand('<afile>:p:h')
@@ -318,7 +326,7 @@ function M.autocmd()
     desc = 'Create missing parent directories',
   })
 
-  vim.api.nvim_create_autocmd('FileType', {
+  autocmd('FileType', {
     pattern = { 'checkhealth', 'help', 'man', 'qf' },
     callback = function(a)
       vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = true, nowait = true })
@@ -327,12 +335,12 @@ function M.autocmd()
     desc = 'Close current window',
   })
 
-  vim.api.nvim_create_autocmd('VimResized', {
+  autocmd('VimResized', {
     callback = function() vim.cmd.wincmd('=') end,
     desc = 'Resize window',
   })
 
-  vim.api.nvim_create_autocmd('FileType', {
+  autocmd('FileType', {
     pattern = { 'changelog', 'gitcommit', 'markdown', 'text' },
     callback = function(a)
       local buf = a.buf ---@type integer
@@ -349,7 +357,7 @@ function M.autocmd()
     end,
   })
 
-  vim.api.nvim_create_autocmd('FileType', {
+  autocmd('FileType', {
     pattern = { 'changelog', 'markdown', 'text' },
     callback = function(a)
       local buf = a.buf ---@type integer
@@ -363,7 +371,7 @@ function M.autocmd()
           vim.cmd.update({ file, mods = { silent = true, noautocmd = true } })
         end
       end
-      vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+      autocmd({ 'CursorHold', 'CursorHoldI' }, {
         buffer = buf,
         callback = save,
       })
@@ -371,12 +379,12 @@ function M.autocmd()
     desc = 'Enable auto-save',
   })
 
-  vim.api.nvim_create_autocmd('FileType', {
+  autocmd('FileType', {
     pattern = { 'gitcommit', 'gitrebase' },
     callback = function() vim.bo.buflisted = false end,
   })
 
-  vim.api.nvim_create_autocmd({ 'BufWinEnter', 'VimEnter' }, {
+  autocmd({ 'BufWinEnter', 'VimEnter' }, {
     callback = function(a)
       local path = vim.fs.dirname(a.file --[[@as string]])
       local root = get_root(path, { '.git' })
@@ -386,10 +394,10 @@ function M.autocmd()
     desc = 'Change directory to project root',
   })
 
-  vim.api.nvim_create_autocmd('BufRead', {
+  autocmd('BufRead', {
     callback = function(a)
       local buf = a.buf ---@type integer
-      vim.api.nvim_create_autocmd('BufWinEnter', {
+      autocmd('BufWinEnter', {
         once = true,
         buffer = buf,
         callback = function()
@@ -408,7 +416,7 @@ function M.autocmd()
     desc = 'Restore cursor position',
   })
 
-  vim.api.nvim_create_autocmd('TermOpen', {
+  autocmd('TermOpen', {
     pattern = 'term://*',
     callback = function()
       vim.wo[0][0].list = false
@@ -419,7 +427,7 @@ function M.autocmd()
     desc = 'Start in Terminal mode',
   })
 
-  vim.api.nvim_create_autocmd('FileType', {
+  autocmd('FileType', {
     callback = function() pcall(vim.treesitter.start) end,
   })
 end
@@ -721,6 +729,7 @@ function M.lsp()
 
       if client.server_capabilities.codeLensProvider then
         vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
+          group = group,
           buffer = buf,
           callback = function() vim.lsp.codelens.refresh({ bufnr = buf }) end,
         })
@@ -767,7 +776,10 @@ function M.keyword()
 end
 
 function M.session()
+  local group = vim.api.nvim_create_augroup('session', {})
+
   vim.api.nvim_create_autocmd('VimLeavePre', {
+    group = group,
     callback = function()
       if vim.fn.argc(-1) > 0 then vim.cmd('%argdelete') end
       vim.cmd.mksession({ bang = true })
@@ -776,6 +788,7 @@ function M.session()
   })
 
   vim.api.nvim_create_autocmd('VimEnter', {
+    group = group,
     nested = true,
     callback = function()
       local session_file = 'Session.vim'
@@ -1125,7 +1138,9 @@ function M.plugins()
   vim.keymap.set('c', '<c-s>', flash.toggle)
 
   require('fx').setup()
+  local group = vim.api.nvim_create_augroup('fx_mappings', {})
   vim.api.nvim_create_autocmd('FileType', {
+    group = group,
     pattern = 'fx',
     callback = function(a)
       local dir = vim.api.nvim_buf_get_name(a.buf)
