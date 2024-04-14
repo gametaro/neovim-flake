@@ -52,6 +52,7 @@ end
 function M.highlight()
   local group = vim.api.nvim_create_augroup('highlight', {})
   vim.api.nvim_create_autocmd('ColorScheme', {
+    desc = 'Tweak default colorscheme',
     group = group,
     pattern = { 'default' },
     callback = function()
@@ -93,7 +94,6 @@ function M.highlight()
       vim.g.terminal_color_14 = fg .. 'Cyan'
       vim.g.terminal_color_15 = fg .. 'Grey2'
     end,
-    desc = 'Tweak default colorscheme',
   })
 end
 
@@ -305,39 +305,39 @@ function M.autocmd()
   end
 
   autocmd('TextYankPost', {
-    callback = function() vim.highlight.on_yank() end,
     desc = 'Highlight yanked region',
+    callback = function() vim.highlight.on_yank() end,
   })
 
   autocmd('BufWritePost', {
+    desc = 'Update diff',
     callback = function()
       if vim.wo.diff then vim.cmd.diffupdate() end
     end,
-    desc = 'Update diff',
   })
 
   autocmd({ 'BufWritePre', 'FileWritePre' }, {
+    desc = 'Create missing parent directories',
     callback = function()
       if not string.find(vim.fn.expand('%'), '://') then
         local dir = vim.fn.expand('<afile>:p:h')
         if vim.fn.isdirectory(dir) == 0 then vim.fn.mkdir(dir, 'p') end
       end
     end,
-    desc = 'Create missing parent directories',
   })
 
   autocmd('FileType', {
+    desc = 'Close current window',
     pattern = { 'checkhealth', 'help', 'man', 'qf' },
     callback = function(a)
       vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = true, nowait = true })
       if a.match ~= 'help' then vim.wo.winfixbuf = true end
     end,
-    desc = 'Close current window',
   })
 
   autocmd('VimResized', {
-    callback = function() vim.cmd.wincmd('=') end,
     desc = 'Resize window',
+    callback = function() vim.cmd.wincmd('=') end,
   })
 
   autocmd('FileType', {
@@ -358,6 +358,7 @@ function M.autocmd()
   })
 
   autocmd('FileType', {
+    desc = 'Enable auto-save',
     pattern = { 'changelog', 'markdown', 'text' },
     callback = function(a)
       local buf = a.buf ---@type integer
@@ -376,7 +377,6 @@ function M.autocmd()
         callback = save,
       })
     end,
-    desc = 'Enable auto-save',
   })
 
   autocmd('FileType', {
@@ -385,16 +385,17 @@ function M.autocmd()
   })
 
   autocmd({ 'BufWinEnter', 'VimEnter' }, {
+    desc = 'Change directory to project root',
     callback = function(a)
       local path = vim.fs.dirname(a.file --[[@as string]])
       local root = get_root(path, { '.git' })
       local pwd = vim.fn.getcwd(-1, 0)
       if root and pwd ~= root then vim.cmd.tcd(root) end
     end,
-    desc = 'Change directory to project root',
   })
 
   autocmd('BufRead', {
+    desc = 'Restore cursor position',
     callback = function(a)
       local buf = a.buf ---@type integer
       autocmd('BufWinEnter', {
@@ -413,10 +414,10 @@ function M.autocmd()
         end,
       })
     end,
-    desc = 'Restore cursor position',
   })
 
   autocmd('TermOpen', {
+    desc = 'Start in Terminal mode',
     pattern = 'term://*',
     callback = function()
       vim.wo[0][0].list = false
@@ -424,10 +425,10 @@ function M.autocmd()
 
       vim.cmd.startinsert()
     end,
-    desc = 'Start in Terminal mode',
   })
 
   autocmd('FileType', {
+    desc = 'Starts treesitter highlighting for a buffer',
     callback = function() pcall(vim.treesitter.start) end,
   })
 
@@ -684,6 +685,7 @@ function M.lsp()
 
   local group = vim.api.nvim_create_augroup('lsp', {})
   vim.api.nvim_create_autocmd('FileType', {
+    desc = 'Start lsp server',
     pattern = keys(configs_ft),
     group = group,
     callback = function(a)
@@ -692,10 +694,10 @@ function M.lsp()
 
       vim.iter(configs[a.match]):map(extend_config):each(vim.lsp.start)
     end,
-    desc = 'Start lsp server',
   })
 
   vim.api.nvim_create_autocmd('LspAttach', {
+    desc = 'Attach to lsp server',
     group = group,
     callback = function(a)
       local client = vim.lsp.get_client_by_id(a.data.client_id)
@@ -753,7 +755,6 @@ function M.lsp()
       map({ 'n', 'x' }, '<leader>ca', vim.lsp.buf.code_action)
       map({ 'n', 'x' }, '<leader>cf', vim.lsp.buf.format)
     end,
-    desc = 'Attach to lsp server',
   })
 end
 
@@ -787,15 +788,16 @@ function M.session()
   local group = vim.api.nvim_create_augroup('session', {})
 
   vim.api.nvim_create_autocmd('VimLeavePre', {
+    desc = 'Save session',
     group = group,
     callback = function()
       if vim.fn.argc(-1) > 0 then vim.cmd('%argdelete') end
       vim.cmd.mksession({ bang = true })
     end,
-    desc = 'Save session',
   })
 
   vim.api.nvim_create_autocmd('VimEnter', {
+    desc = 'Restore session',
     group = group,
     nested = true,
     callback = function()
@@ -804,7 +806,6 @@ function M.session()
         vim.cmd.source({ session_file, mods = { emsg_silent = true } })
       end
     end,
-    desc = 'Restore session',
   })
 end
 
