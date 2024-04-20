@@ -1217,12 +1217,6 @@ local function init()
     },
   }
 
-  vim.filetype.add({
-    filename = {
-      ['flake.lock'] = 'json',
-    },
-  })
-
   vim.iter(M):each(function(_, m)
     --- @type boolean, string
     local ok, msg = pcall(m)
