@@ -277,6 +277,8 @@ end
 
 function M.autocmd()
   local group = vim.api.nvim_create_augroup('init', {})
+  ---@param event string|string[]
+  ---@param opts vim.api.keyset.create_autocmd
   local function autocmd(event, opts)
     opts.group = group
     vim.api.nvim_create_autocmd(event, opts)
