@@ -33,22 +33,6 @@ local function get_char_at(lnum, col)
   return vim.fn.strcharpart(vim.fn.strpart(line, col - 1), 0, 1)
 end
 
----@param path string
----@param names string[]
----@return string
-local function get_root(path, names)
-  local root = vim.fs.find(names, { path = path, upward = true })[1]
-  if root then
-    local stat = vim.uv.fs_stat(root)
-    if stat and stat.type == 'directory' then
-      root = vim.fn.fnamemodify(root, ':p:h:h')
-    else
-      root = vim.fn.fnamemodify(root, ':p:h')
-    end
-  end
-  return root
-end
-
 function M.highlight()
   local group = vim.api.nvim_create_augroup('highlight', {})
   vim.api.nvim_create_autocmd('ColorScheme', {
@@ -381,8 +365,7 @@ function M.autocmd()
   autocmd({ 'BufWinEnter', 'VimEnter' }, {
     desc = 'Change directory to project root',
     callback = function(a)
-      local path = vim.fs.dirname(a.file --[[@as string]])
-      local root = get_root(path, { '.git' })
+      local root = vim.fs.root(a.buf, { '.git' })
       local pwd = vim.fn.getcwd(-1, 0)
       if root and pwd ~= root then vim.cmd.tcd(root) end
     end,
@@ -672,7 +655,7 @@ function M.lsp()
       acc[#acc + 1] = k
       return acc
     end)
-    conf.root_dir = get_root(vim.fs.dirname(vim.api.nvim_buf_get_name(0)), root_markers)
+    conf.root_dir = vim.fs.root(0, root_markers)
 
     return conf
   end
