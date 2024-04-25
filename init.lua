@@ -212,17 +212,11 @@ function M.keymap()
   vim.keymap.set('n', '\\n', '<cmd>setlocal number!<cr>')
   vim.keymap.set('n', '\\N', '<cmd>setlocal relativenumber!<cr>')
   vim.keymap.set('n', '\\w', '<cmd>setlocal wrap!<cr>')
-  vim.keymap.set('n', '\\d', function()
-    if vim.diagnostic.is_disabled(0) then
-      vim.diagnostic.enable(0)
-    else
-      vim.diagnostic.disable(0)
-    end
-  end)
+  vim.keymap.set('n', '\\d', function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
   vim.keymap.set(
     'n',
     '\\i',
-    function() vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled()) end
+    function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end
   )
 
   vim.keymap.set(
@@ -933,12 +927,12 @@ function M.zen()
     end)
 
     vim.iter(options):each(function(k, v) vim.o[k] = v end)
-    vim.diagnostic.disable(0)
+    vim.diagnostic.enable(false)
   end
 
   local function disable()
     vim.iter(org):each(function(k, v) vim.o[k] = v end)
-    vim.diagnostic.enable(0)
+    vim.diagnostic.enable(true)
     org = nil
   end
 
