@@ -450,7 +450,7 @@ function M.lsp()
   local ts = {
     init_options = { hostInfo = 'neovim' },
     cmd = { 'typescript-language-server', '--stdio' },
-    root_markers = { 'tsconfig.json', 'package.json' },
+    marker = { 'tsconfig.json', 'package.json' },
     settings = {
       completions = {
         completeFunctionCalls = true,
@@ -467,7 +467,7 @@ function M.lsp()
   ---@type vim.lsp.ClientConfig
   local eslint = {
     cmd = { 'vscode-eslint-language-server', '--stdio' },
-    root_markers = {
+    marker = {
       '.eslintrc',
       '.eslintrc.cjs',
       '.eslintrc.js',
@@ -544,14 +544,14 @@ function M.lsp()
     dockerfile = {
       {
         cmd = { 'docker-langserver', '--stdio' },
-        root_markers = { 'Dockerfile', 'Containerfile' },
+        marker = { 'Dockerfile', 'Containerfile' },
       },
     },
     html = {
       { cmd = { 'vscode-html-language-server', '--stdio' } },
     },
     lua = {
-      { cmd = { 'lua-language-server' }, root_markers = { '.luarc.json' } },
+      { cmd = { 'lua-language-server' }, marker = { '.luarc.json' } },
     },
     -- markdown = {
     --   { cmd = { 'vscode-markdown-language-server', '--stdio' } },
@@ -575,7 +575,7 @@ function M.lsp()
             },
           },
         },
-        root_markers = { 'flake.nix' },
+        marker = { 'flake.nix' },
       },
     },
     yaml = {
@@ -650,11 +650,11 @@ function M.lsp()
     if exepath ~= '' then conf.cmd[1] = exepath end
 
     ---@diagnostic disable-next-line: undefined-field
-    local root_markers = vim.iter(conf.root_markers or {}):fold({ '.git' }, function(acc, k)
+    local marker = vim.iter(conf.marker or {}):fold({ '.git' }, function(acc, k)
       acc[#acc + 1] = k
       return acc
     end)
-    conf.root_dir = vim.fs.root(0, root_markers)
+    conf.root_dir = vim.fs.root(0, marker)
 
     return conf
   end
