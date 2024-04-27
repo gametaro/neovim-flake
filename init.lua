@@ -222,9 +222,6 @@ function M.keymap()
     { expr = true }
   )
 
-  vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-  vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-  vim.keymap.set('n', 'dK', vim.diagnostic.open_float)
   vim.keymap.set('n', 'dq', vim.diagnostic.setqflist)
   vim.keymap.set('n', 'dl', vim.diagnostic.setloclist)
 
@@ -726,13 +723,9 @@ function M.lsp()
 
       map('n', 'gd', vim.lsp.buf.definition)
       map('n', 'gD', vim.lsp.buf.declaration)
-      map('n', 'gR', vim.lsp.buf.references)
       map('n', 'gI', vim.lsp.buf.implementation)
-      map('i', '<c-s>', vim.lsp.buf.signature_help)
-      map('n', '<leader>cl', vim.lsp.codelens.run)
-      map('n', '<leader>cr', vim.lsp.buf.rename)
-      map({ 'n', 'x' }, '<leader>ca', vim.lsp.buf.code_action)
-      map({ 'n', 'x' }, '<leader>cf', vim.lsp.buf.format)
+      map('n', 'crl', vim.lsp.codelens.run)
+      map({ 'n', 'x' }, 'crf', vim.lsp.buf.format)
     end,
   })
 end
@@ -1053,6 +1046,7 @@ function M.plugins()
   })
 
   require('mini.operators').setup({
+    replace = { prefix = 'gR' },
     exchange = { prefix = '' },
     multiply = { prefix = '' },
   })
