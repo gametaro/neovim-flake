@@ -668,7 +668,10 @@ function M.lsp()
       if vim.bo.buftype ~= '' then return end
       if vim.bo.bufhidden ~= '' then return end
 
-      vim.iter(configs[a.match]):map(extend_config):each(vim.lsp.start)
+      vim.iter(configs[a.match]):map(extend_config):each(
+        ---@diagnostic disable-next-line: missing-fields
+        function(config) vim.lsp.start(config, { silent = true }) end
+      )
     end,
   })
 
