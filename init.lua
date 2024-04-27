@@ -693,7 +693,7 @@ function M.lsp()
       if client.name == 'typescript-language-server' then
         client.server_capabilities.documentFormattingProvider = false
         client.server_capabilities.documentRangeFormattingProvider = false
-        map('n', '<leader>cA', function()
+        map('n', 'crR', function()
           vim.lsp.buf.code_action({
             context = {
               only = {
@@ -716,7 +716,7 @@ function M.lsp()
         end)
       end
 
-      if client.server_capabilities.codeLensProvider then
+      if client.supports_method('textDocument/codeLens') then
         vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
           group = group,
           buffer = buf,
@@ -726,9 +726,9 @@ function M.lsp()
 
       map('n', 'gd', vim.lsp.buf.definition)
       map('n', 'gD', vim.lsp.buf.declaration)
-      map('n', 'gI', vim.lsp.buf.implementation)
+      map('n', 'g<C-I>', vim.lsp.buf.implementation)
       map('n', 'crl', vim.lsp.codelens.run)
-      map({ 'n', 'x' }, 'crf', vim.lsp.buf.format)
+      map('n', 'crf', function() vim.lsp.buf.format({ async = true }) end)
     end,
   })
 end
