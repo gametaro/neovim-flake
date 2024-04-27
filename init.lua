@@ -340,18 +340,18 @@ function M.autocmd()
     callback = function(a)
       local buf = a.buf ---@type integer
       local file = a.file ---@type string
-      local function save()
-        if
-          vim.api.nvim_buf_is_valid(buf)
-          and vim.bo[buf].buftype == ''
-          and vim.bo[buf].modifiable
-        then
-          vim.cmd.update({ file, mods = { silent = true, noautocmd = true } })
-        end
-      end
+
       autocmd({ 'CursorHold', 'CursorHoldI' }, {
         buffer = buf,
-        callback = save,
+        callback = function()
+          if
+            vim.api.nvim_buf_is_valid(buf)
+            and vim.bo[buf].buftype == ''
+            and vim.bo[buf].modifiable
+          then
+            vim.cmd.update({ file, mods = { silent = true, noautocmd = true } })
+          end
+        end,
       })
     end,
   })
