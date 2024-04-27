@@ -366,8 +366,8 @@ function M.autocmd()
 
   autocmd({ 'BufWinEnter', 'VimEnter' }, {
     desc = 'Change directory to project root',
-    callback = function(a)
-      local root = vim.fs.root(a.buf, { '.git' })
+    callback = function()
+      local root = vim.fs.root(0, { '.git' })
       local pwd = vim.fn.getcwd(-1, 0)
       if root and pwd ~= root then vim.cmd.tcd(root) end
     end,
