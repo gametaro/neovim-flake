@@ -212,13 +212,18 @@ function M.keymap()
   vim.keymap.set(
     { 'i', 's' },
     '<tab>',
-    function() return vim.snippet.jumpable(1) and '<cmd>lua vim.snippet.jump(1)<cr>' or '<tab>' end,
+    function()
+      return vim.snippet.active({ direction = 1 }) and '<cmd>lua vim.snippet.jump(1)<cr>' or '<tab>'
+    end,
     { expr = true }
   )
   vim.keymap.set(
     { 'i', 's' },
     '<s-tab>',
-    function() return vim.snippet.jumpable(-1) and '<cmd>lua vim.snippet.jump(-1)<cr>' or '<s-tab>' end,
+    function()
+      return vim.snippet.active({ direction = -1 }) and '<cmd>lua vim.snippet.jump(-1)<cr>'
+        or '<s-tab>'
+    end,
     { expr = true }
   )
 
