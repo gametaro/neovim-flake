@@ -34,10 +34,9 @@ local function get_char_at(lnum, col)
 end
 
 function M.highlight()
-  local group = vim.api.nvim_create_augroup('highlight', {})
   vim.api.nvim_create_autocmd('ColorScheme', {
     desc = 'Tweak default colorscheme',
-    group = group,
+    group = vim.api.nvim_create_augroup('highlight', {}),
     pattern = { 'default' },
     callback = function()
       local bg = vim.o.background == 'dark' and 'NvimDark' or 'NvimLight'
@@ -55,8 +54,6 @@ function M.highlight()
         { fg = fg .. 'Grey2', bg = bg .. 'Grey4', cterm = { reverse = true } }
       )
       vim.api.nvim_set_hl(0, 'PmenuSel', { bg = bg .. 'Grey4' })
-      vim.api.nvim_set_hl(0, 'LspCodeLens', { default = true, link = 'NonText' })
-      vim.api.nvim_set_hl(0, 'LspCodeLensSeparator', { default = true, link = 'NonText' })
       vim.api.nvim_set_hl(0, 'FlashLabel', { bg = bg .. 'Blue' })
       vim.api.nvim_set_hl(0, 'TelescopeNormal', { default = true, link = 'Pmenu' })
       vim.api.nvim_set_hl(0, 'TelescopeSelection', { default = true, link = 'PmenuSel' })
@@ -688,17 +685,11 @@ function M.lsp()
       if not client then return end
       local buf = a.buf --[[@as integer]]
 
-      local function map(mode, lhs, rhs, opts)
-        opts = opts or {}
-        opts.buffer = buf
-        vim.keymap.set(mode, lhs, rhs, opts)
-      end
-
       client.server_capabilities.semanticTokensProvider = nil
       if client.name == 'typescript-language-server' then
         client.server_capabilities.documentFormattingProvider = false
         client.server_capabilities.documentRangeFormattingProvider = false
-        map('n', 'crR', function()
+        vim.keymap.set('n', 'crR', function()
           vim.lsp.buf.code_action({
             context = {
               only = {
@@ -718,7 +709,7 @@ function M.lsp()
               diagnostics = {},
             },
           })
-        end)
+        end, { buffer = buf })
       end
 
       if client.supports_method('textDocument/codeLens') then
@@ -729,11 +720,16 @@ function M.lsp()
         })
       end
 
-      map('n', 'gd', vim.lsp.buf.definition)
-      map('n', 'gD', vim.lsp.buf.declaration)
-      map('n', 'g<C-I>', vim.lsp.buf.implementation)
-      map('n', 'crl', vim.lsp.codelens.run)
-      map('n', 'crf', function() vim.lsp.buf.format({ async = true }) end)
+      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = buf })
+      vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = buf })
+      vim.keymap.set('n', 'g<C-I>', vim.lsp.buf.implementation, { buffer = buf })
+      vim.keymap.set('n', 'crl', vim.lsp.codelens.run, { buffer = buf })
+      vim.keymap.set(
+        'n',
+        'crf',
+        function() vim.lsp.buf.format({ async = true }) end,
+        { buffer = buf }
+      )
     end,
   })
 end
@@ -1128,9 +1124,8 @@ function M.plugins()
   vim.keymap.set('c', '<c-s>', flash.toggle)
 
   require('fx').setup()
-  local group = vim.api.nvim_create_augroup('fx_mappings', {})
   vim.api.nvim_create_autocmd('FileType', {
-    group = group,
+    group = vim.api.nvim_create_augroup('fx_mappings', {}),
     pattern = 'fx',
     callback = function(a)
       local dir = vim.api.nvim_buf_get_name(a.buf)
