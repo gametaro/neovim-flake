@@ -200,7 +200,7 @@ function M.keymap()
   vim.keymap.set(
     'n',
     '\\i',
-    function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end
+    function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({})) end
   )
 
   vim.keymap.set(
