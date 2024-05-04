@@ -417,6 +417,27 @@ function M.autocmd()
       if contents then assert(loadstring(contents))() end
     end,
   })
+
+  autocmd('VimEnter', {
+    callback = function()
+      vim
+        .iter(vim.fs.find(function(name) return string.match(name, '.+%.add$') end, {
+          type = 'file',
+          path = vim.fs.joinpath(vim.fn.stdpath('config') --[[@as string]], 'spell'),
+        }))
+        :each(function(add_file)
+          local spell_file = add_file --[[@as string]]
+            .. '.spl'
+          local spell_stat = vim.uv.fs_stat(spell_file)
+          if not spell_stat then vim.cmd.mkspell(add_file) end
+          local add_stat = vim.uv.fs_stat(add_file)
+          if add_stat and spell_stat and add_stat.mtime.sec > spell_stat.mtime.sec then
+            vim.cmd.mkspell({ add_file, bang = true })
+          end
+        end)
+    end,
+    desc = 'Create or update spell files',
+  })
 end
 
 function M.lsp()
