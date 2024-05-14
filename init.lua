@@ -203,7 +203,7 @@ function M.keymap()
   vim.keymap.set(
     { 'i', 's' },
     '<esc>',
-    function() return vim.snippet.active() and '<cmd>lua vim.snippet.exit()<cr><esc>' or '<Esc>' end,
+    function() return vim.snippet.active() and '<cmd>lua vim.snippet.stop()<cr><esc>' or '<Esc>' end,
     { expr = true }
   )
   vim.keymap.set(
