@@ -1036,16 +1036,12 @@ function M.plugins()
   cmp.setup({
     confirmation = { default_behavior = 'replace' },
     experimental = { ghost_text = true },
-    snippet = {
-      expand = function(args) vim.snippet.expand(args.body) end,
-    },
     mapping = cmp.mapping.preset.insert({
       ['<c-d>'] = cmp.mapping.scroll_docs(-4),
       ['<c-f>'] = cmp.mapping.scroll_docs(4),
       ['<c-Space>'] = cmp.mapping.complete(),
       ['<cr>'] = cmp.mapping.confirm({ select = true }),
     }),
-    formatting = { deprecated = true },
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
     }, {
