@@ -15,7 +15,7 @@
     pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    neovim.url = "github:neovim/neovim?dir=contrib";
+    neovim.url = "github:nix-community/neovim-nightly-overlay";
     neovim.inputs.nixpkgs.follows = "nixpkgs";
 
     nvim-fx.url = "github:gametaro/nvim-fx";
@@ -38,7 +38,7 @@
     pkgsFor = lib.genAttrs systems (system:
       import nixpkgs {
         inherit system;
-        overlays = [inputs.devshell.overlays.default];
+        overlays = [inputs.devshell.overlays.default inputs.neovim.overlays.default];
       });
     forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
   in {
