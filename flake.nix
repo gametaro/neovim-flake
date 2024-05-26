@@ -9,9 +9,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    devshell.url = "github:numtide/devshell";
-    devshell.inputs.nixpkgs.follows = "nixpkgs";
-
     pre-commit-hooks-nix.url = "github:cachix/git-hooks.nix";
     pre-commit-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -38,20 +35,21 @@
     pkgsFor = lib.genAttrs systems (system:
       import nixpkgs {
         inherit system;
-        overlays = [inputs.devshell.overlays.default inputs.neovim.overlays.default];
+        overlays = [inputs.neovim.overlays.default];
       });
     forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
   in {
     packages = forEachSystem (pkgs: import ./neovim.nix {inherit pkgs inputs;});
     formatter = forEachSystem (pkgs: pkgs.alejandra);
     checks = forEachSystem (pkgs: {
-      pre-commit-hooks = inputs.pre-commit-hooks-nix.lib.${pkgs.system}.run {
+      pre-commit-check = inputs.pre-commit-hooks-nix.lib.${pkgs.system}.run {
         src = ./.;
         hooks = {
           actionlint.enable = true;
           alejandra.enable = true;
           editorconfig-checker.enable = true;
           deadnix.enable = true;
+          flake-checker.enable = true;
           nil.enable = true;
           lua-ls.enable = true;
           lua-ls.settings = {
@@ -64,20 +62,12 @@
       };
     });
     devShells = forEachSystem (
-      pkgs:
-        with pkgs; {
-          default = devshell.mkShell {
-            packages = [
-              alejandra
-              deadnix
-              lua-language-server
-              nil
-              statix
-              stylua
-            ];
-            devshell.startup.pre-commit-hooks.text = "${self.checks.${pkgs.system}.pre-commit-hooks.shellHook}";
-          };
-        }
+      pkgs: {
+        default = pkgs.mkShellNoCC {
+          inherit (self.checks.${pkgs.system}.pre-commit-check) shellHook;
+          buildInputs = self.checks.${pkgs.system}.pre-commit-check.enabledPackages;
+        };
+      }
     );
   };
 }
