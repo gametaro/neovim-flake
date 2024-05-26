@@ -1064,7 +1064,7 @@ function M.plugins()
   })
 
   require('mini.operators').setup({
-    replace = { prefix = 'gR' },
+    replace = { prefix = '_' },
     exchange = { prefix = '' },
     multiply = { prefix = '' },
   })
