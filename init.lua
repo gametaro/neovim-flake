@@ -785,6 +785,9 @@ function M.session()
     desc = 'Save session',
     group = group,
     callback = function()
+      if vim.bo.buftype ~= '' then return end
+      if vim.bo.bufhidden ~= '' then return end
+
       if vim.fn.argc(-1) > 0 then vim.cmd('%argdelete') end
       vim.cmd.mksession({ bang = true })
     end,
