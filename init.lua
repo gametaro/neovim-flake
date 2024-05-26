@@ -531,6 +531,7 @@ function M.lsp()
     },
   }
 
+  ---@type vim.lsp.ClientConfig
   local css = {
     cmd = { 'vscode-css-language-server', '--stdio' },
     settings = {
@@ -539,6 +540,8 @@ function M.lsp()
       scss = { validate = true },
     },
   }
+
+  ---@type vim.lsp.ClientConfig
   local json = {
     cmd = { 'vscode-json-language-server', '--stdio' },
     init_options = {
