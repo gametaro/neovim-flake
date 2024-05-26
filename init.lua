@@ -707,7 +707,7 @@ function M.lsp()
       if client.name == 'typescript-language-server' then
         client.server_capabilities.documentFormattingProvider = false
         client.server_capabilities.documentRangeFormattingProvider = false
-        vim.keymap.set('n', 'crR', function()
+        vim.keymap.set('n', 'grA', function()
           vim.lsp.buf.code_action({
             context = {
               only = {
@@ -741,10 +741,10 @@ function M.lsp()
       vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = buf })
       vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = buf })
       vim.keymap.set('n', 'g<C-I>', vim.lsp.buf.implementation, { buffer = buf })
-      vim.keymap.set('n', 'crl', vim.lsp.codelens.run, { buffer = buf })
+      vim.keymap.set('n', 'grl', vim.lsp.codelens.run, { buffer = buf })
       vim.keymap.set(
         'n',
-        'crf',
+        'grf',
         function() vim.lsp.buf.format({ async = true }) end,
         { buffer = buf }
       )
