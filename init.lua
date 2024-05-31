@@ -204,23 +204,6 @@ function M.keymap()
     function() return vim.snippet.active() and '<cmd>lua vim.snippet.stop()<cr><esc>' or '<Esc>' end,
     { expr = true }
   )
-  vim.keymap.set(
-    { 'i', 's' },
-    '<tab>',
-    function()
-      return vim.snippet.active({ direction = 1 }) and '<cmd>lua vim.snippet.jump(1)<cr>' or '<tab>'
-    end,
-    { expr = true }
-  )
-  vim.keymap.set(
-    { 'i', 's' },
-    '<s-tab>',
-    function()
-      return vim.snippet.active({ direction = -1 }) and '<cmd>lua vim.snippet.jump(-1)<cr>'
-        or '<s-tab>'
-    end,
-    { expr = true }
-  )
 
   vim.keymap.set('n', 'dq', vim.diagnostic.setqflist)
   vim.keymap.set('n', 'dl', vim.diagnostic.setloclist)
@@ -268,6 +251,9 @@ function M.diagnostic()
     float = {
       header = '',
       suffix = function(diag) return string.format(' (%s)', diag.code or ''), 'Comment' end,
+    },
+    jump = {
+      float = true,
     },
   })
 end
