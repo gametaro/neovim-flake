@@ -198,12 +198,10 @@ function M.keymap()
     function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({})) end
   )
 
-  vim.keymap.set(
-    { 'i', 's' },
-    '<esc>',
-    function() return vim.snippet.active() and '<cmd>lua vim.snippet.stop()<cr><esc>' or '<Esc>' end,
-    { expr = true }
-  )
+  vim.keymap.set({ 'i', 's' }, '<esc>', function()
+    vim.snippet.stop()
+    return '<esc>'
+  end, { expr = true })
 
   vim.keymap.set('n', 'dq', vim.diagnostic.setqflist)
   vim.keymap.set('n', 'dl', vim.diagnostic.setloclist)
