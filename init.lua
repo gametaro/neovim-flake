@@ -717,7 +717,7 @@ function M.lsp()
         end, { buffer = buf })
       end
 
-      if client.supports_method('textDocument/codeLens') then
+      if client.supports_method(vim.lsp.protocol.Methods.textDocument_codeLens) then
         vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
           group = group,
           buffer = buf,
