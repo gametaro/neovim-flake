@@ -5,25 +5,6 @@ local function keys(t)
   return vim.iter(t):map(function(k) return k end):totable()
 end
 
----@param t table
-local function values(t)
-  return vim.iter(t):map(function(_, v) return v end):totable()
-end
-
----@param ms integer
----@param fn function
----@return function
-local function debounce(ms, fn)
-  local timer = assert(vim.uv.new_timer())
-  return function(...)
-    local argv = { ... }
-    timer:start(ms, 0, function()
-      timer:stop()
-      vim.schedule_wrap(fn)(unpack(argv))
-    end)
-  end
-end
-
 ---@param lnum integer
 ---@param col integer
 ---@return string
