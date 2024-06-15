@@ -3,14 +3,7 @@
   inputs,
   ...
 }: let
-  inherit
-    (builtins)
-    attrValues
-    mapAttrs
-    readFile
-    ;
-
-  plugins = attrValues (mapAttrs (pname: src:
+  plugins = builtins.attrValues (builtins.mapAttrs (pname: src:
     pkgs.vimUtils.buildVimPlugin {
       inherit pname src;
       version = src.lastModifiedDate;
@@ -42,7 +35,7 @@
   ];
 
   nvim = pkgs.wrapNeovimUnstable inputs.neovim.packages.${pkgs.system}.neovim {
-    luaRcContent = readFile ./init.lua;
+    luaRcContent = builtins.readFile ./init.lua;
     packpathDirs.myNeovimPackages = {
       start = with pkgs.vimPlugins;
         [
