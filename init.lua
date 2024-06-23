@@ -23,6 +23,8 @@ function M.highlight()
       local bg = vim.o.background == 'dark' and 'NvimDark' or 'NvimLight'
       local fg = vim.o.background == 'dark' and 'NvimLight' or 'NvimDark'
 
+      vim.api.nvim_set_hl(0, '@variable.member', { default = true, link = 'Identifier' })
+      vim.api.nvim_set_hl(0, '@variable.parameter', { default = true, link = 'Identifier' })
       vim.api.nvim_set_hl(0, 'Constant', { fg = fg .. 'Yellow' })
       vim.api.nvim_set_hl(0, 'Delimiter', { fg = fg .. 'Grey3' })
       vim.api.nvim_set_hl(0, 'Operator', { fg = fg .. 'Grey3' })
@@ -671,6 +673,8 @@ function M.lsp()
       local client = vim.lsp.get_client_by_id(a.data.client_id)
       if not client then return end
       local buf = a.buf --[[@as integer]]
+
+      client.server_capabilities.semanticTokensProvider = nil
 
       if client.name == 'typescript-language-server' then
         client.server_capabilities.documentFormattingProvider = false
