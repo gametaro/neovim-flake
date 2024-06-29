@@ -77,6 +77,7 @@ function M.option()
   vim.o.ignorecase = true
   vim.o.jumpoptions = 'view'
   -- vim.o.modeline = false
+  vim.o.updatetime = 300
   vim.o.sessionoptions = 'buffers,tabpages,folds'
   vim.o.shada = vim.o.shada .. ',r/tmp/,r/private/,r/nix/store/,rzipfile:,rterm:,rhealth:'
   vim.o.shortmess = 'atToOCFIWcs'
@@ -703,10 +704,42 @@ function M.lsp()
       end
 
       if client.supports_method(vim.lsp.protocol.Methods.textDocument_codeLens) then
-        vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
+        vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave' }, {
           group = group,
           buffer = buf,
           callback = function() vim.lsp.codelens.refresh({ bufnr = buf }) end,
+        })
+      end
+
+      if client.supports_method(vim.lsp.protocol.Methods.textDocument_formatting) then
+        vim.api.nvim_create_autocmd('BufWritePre', {
+          group = group,
+          buffer = buf,
+          callback = function() vim.lsp.buf.format({ bufnr = buf, id = client.id }) end,
+        })
+      end
+
+      if client.supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
+        vim.lsp.completion.enable(true, client.id, buf, { autotrigger = false })
+      end
+
+      if client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+        vim.api.nvim_create_autocmd({ 'CursorHold' }, {
+          group = group,
+          buffer = buf,
+          callback = function()
+            client.request(
+              vim.lsp.protocol.Methods.textDocument_documentHighlight,
+              vim.lsp.util.make_position_params(0, client.offset_encoding),
+              nil,
+              buf
+            )
+          end,
+        })
+        vim.api.nvim_create_autocmd({ 'CursorMoved' }, {
+          group = group,
+          buffer = buf,
+          callback = function() pcall(vim.lsp.buf.clear_references) end,
         })
       end
 
