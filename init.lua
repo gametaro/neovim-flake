@@ -1112,7 +1112,6 @@ function M.plugins()
   vim.keymap.set({ 'o', 'x' }, 'R', flash.treesitter_search)
   vim.keymap.set('c', '<c-s>', flash.toggle)
 
-  require('fx').setup()
   vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('fx_mappings', {}),
     pattern = 'fx',
