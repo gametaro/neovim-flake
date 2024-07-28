@@ -988,7 +988,7 @@ function M.plugins()
   vim.keymap.set('n', '<leader>gf', '<cmd>DiffviewFileHistory %<cr>')
   vim.keymap.set('n', '<leader>gF', '<cmd>DiffviewFileHistory<cr>')
   vim.keymap.set('x', '<leader>gf', ":'<,'>DiffviewFileHistory<cr>")
-  require('diffview').setup({ use_icons = false })
+  require('diffview').setup()
 
   require('gitsigns').setup({
     on_attach = function(buffer)
@@ -1127,6 +1127,9 @@ function M.plugins()
     },
     silent = true,
   })
+
+  require('mini.icons').setup({ style = 'ascii' })
+  MiniIcons.mock_nvim_web_devicons()
 
   local flash = require('flash')
   flash.setup({
