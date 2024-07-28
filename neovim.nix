@@ -56,9 +56,7 @@
         ++ plugins;
     };
     withPython3 = false;
-    wrapperArgs = ''
-      --suffix PATH : "${pkgs.lib.makeBinPath extraPackages}"
-    '';
+    wrapperArgs = ["--suffix" "PATH" ":" "${pkgs.lib.makeBinPath extraPackages}"];
   };
 
   nvim-clean = pkgs.writeShellScriptBin "nvim-clean" ''
