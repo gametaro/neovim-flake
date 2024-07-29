@@ -194,11 +194,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1722041514,
-        "narHash": "sha256-P5jP2qPycCDAFHYQqwhhGABbWFRq1t9PsHyDUytcz48=",
+        "lastModified": 1722132807,
+        "narHash": "sha256-zoaimNxqTf/x1fZ4eXBj5qdgDa0qs9JPWUCFsIPZQzs=",
         "owner": "nix-community",
         "repo": "neovim-nightly-overlay",
-        "rev": "4d8b2d84d26e99dab6c823ec54dea4f7043e10b8",
+        "rev": "4e77eaba554c3ec4763ecef358e6aa6ace41a6a3",
         "type": "github"
       },
       "original": {
@@ -210,11 +210,11 @@
     "neovim-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1722035529,
-        "narHash": "sha256-OT0eI7sTzcgSnQqPEOXqFd2iVULQ80BTgXr4haWO1s0=",
+        "lastModified": 1722112214,
+        "narHash": "sha256-BSE2ivy/IQyPClatgqdTJP1DyJZ4vryqBdMuEA9NOmQ=",
         "owner": "neovim",
         "repo": "neovim",
-        "rev": "aa853f362addded400d52d8fdfe5247c300c0e89",
+        "rev": "bdff50dee56ebf6de58d58315920abf2f8e262f7",
         "type": "github"
       },
       "original": {
@@ -258,11 +258,11 @@
     "nvim-fx": {
       "flake": false,
       "locked": {
-        "lastModified": 1719628400,
-        "narHash": "sha256-CbrP6ZXoqxeJfYhF78gj+YYdIFZsEubUdAOC9ABMNw4=",
+        "lastModified": 1722139719,
+        "narHash": "sha256-yoKGbcaBb2CVhn5+MW/BA9606m7KJ/AMBrB6SdH6jeg=",
         "owner": "gametaro",
         "repo": "nvim-fx",
-        "rev": "1d945ca0adbe3511f5ed40415209a4361fab1adc",
+        "rev": "94df8be8b2579825c024a11ea1ab5ec2cd998203",
         "type": "github"
       },
       "original": {
