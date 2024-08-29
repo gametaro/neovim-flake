@@ -896,27 +896,6 @@ function M.bufjump()
   vim.keymap.set('n', '<leader><c-o>', function() jump(false) end)
 end
 
-function M.walkthrough()
-  ---@param next boolean
-  local function jump(next)
-    local fullname = vim.api.nvim_buf_get_name(0)
-    local dirname = vim.fs.dirname(fullname)
-    local basename = vim.fs.basename(fullname)
-
-    ---@type string[]
-    local files = vim.iter(vim.fs.dir(dirname)):map(function(name) return name end):totable()
-    ---@type integer
-    local current_idx = vim.iter(files):enumerate():find(function(_, v) return v == basename end)
-
-    local target_idx = next and (current_idx - 1 + vim.v.count1) % #files + 1
-      or (current_idx - 1 - vim.v.count1 + #files) % #files + 1
-    vim.cmd.edit(files[target_idx])
-  end
-
-  vim.keymap.set('n', ']w', function() jump(true) end)
-  vim.keymap.set('n', '[w', function() jump(false) end)
-end
-
 function M.zen()
   local org = nil
   local options = {
