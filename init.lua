@@ -868,34 +868,6 @@ function M.edge()
   vim.keymap.set({ 'n', 'x' }, '[e', function() jump(false) end)
 end
 
-function M.bufjump()
-  ---@param next boolean
-  local function jump(next)
-    local jumplist = vim.fn.getjumplist()
-    local items = jumplist[1]
-    local last_pos = jumplist[2]
-    last_pos = last_pos + 1
-    local step = next and 1 or -1
-    local target_pos = last_pos + step
-
-    while target_pos >= 1 and target_pos <= #items do
-      local target_buf = items[target_pos].bufnr
-      if vim.api.nvim_buf_is_valid(target_buf) and target_buf ~= vim.api.nvim_get_current_buf() then
-        vim.api.nvim_feedkeys(
-          vim.keycode(string.format('%d%s', target_pos - last_pos, next and '<c-i>' or '<c-o>')),
-          'n',
-          false
-        )
-        return
-      end
-      target_pos = target_pos + step
-    end
-  end
-
-  vim.keymap.set('n', '<leader><c-i>', function() jump(true) end)
-  vim.keymap.set('n', '<leader><c-o>', function() jump(false) end)
-end
-
 function M.zen()
   local org = nil
   local options = {
