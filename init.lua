@@ -1053,29 +1053,14 @@ function M.plugins()
     },
   })
 
+  local gen_ai_spec = require('mini.extra').gen_ai_spec
   require('mini.ai').setup({
     custom_textobjects = {
-      -- textobj-entire
-      e = function()
-        local from = { line = 1, col = 1 }
-        local to = { line = vim.fn.line('$'), col = math.max(vim.fn.getline('$'):len(), 1) }
-        return { from = from, to = to, vis_mode = 'V' }
-      end,
-      -- textobj-line
-      l = function(type)
-        if vim.api.nvim_get_current_line() == '' then return end
-        vim.cmd.normal({ type == 'i' and '^' or '0', bang = true })
-        local from_pos = vim.api.nvim_win_get_cursor(0)
-        local from_line = from_pos[1]
-        local from_col = from_pos[2]
-        local from = { line = from_line, col = from_col + 1 }
-        vim.cmd.normal({ type == 'i' and 'g_' or '$', bang = true })
-        local to_pos = vim.api.nvim_win_get_cursor(0)
-        local to_line = to_pos[1]
-        local to_col = to_pos[2]
-        local to = { line = to_line, col = to_col + 1 }
-        return { from = from, to = to }
-      end,
+      b = gen_ai_spec.buffer(),
+      d = gen_ai_spec.diagnostic(),
+      i = gen_ai_spec.indent(),
+      l = gen_ai_spec.line(),
+      n = gen_ai_spec.number(),
     },
     mappings = {
       around_last = '',
