@@ -64,7 +64,7 @@ function M.option()
   vim.o.backup = true
   vim.opt.backupdir:remove('.')
   vim.o.cmdheight = 0
-  vim.o.completeopt = 'menu,menuone,noselect,popup'
+  vim.o.completeopt = 'menu,menuone,noselect,popup,fuzzy'
   vim.o.confirm = true
   vim.o.diffopt =
     'internal,filler,closeoff,algorithm:histogram,indent-heuristic,vertical,linematch:60'
