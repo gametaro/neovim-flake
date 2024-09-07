@@ -276,7 +276,7 @@ function M.autocmd()
     pattern = { 'checkhealth', 'help', 'man', 'qf' },
     callback = function(a)
       vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = true, nowait = true })
-      if a.match ~= 'help' then vim.wo.winfixbuf = true end
+      if a.match ~= 'help' then vim.wo[0][0].winfixbuf = true end
     end,
   })
 
