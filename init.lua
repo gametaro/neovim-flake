@@ -1072,11 +1072,9 @@ function M.plugins()
 
   local flash = require('flash')
   flash.setup({
-    highlight = { backdrop = false },
     modes = {
       char = {
         keys = { 'f', 'F' },
-        highlight = { backdrop = false },
       },
     },
   })
