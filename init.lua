@@ -1134,7 +1134,7 @@ function M.plugins()
   })
 end
 
-local function init()
+local function main()
   vim.loader.enable()
 
   vim.g.mapleader = ' '
@@ -1165,4 +1165,4 @@ local function init()
   vim.cmd.colorscheme('default')
 end
 
-init()
+main()
