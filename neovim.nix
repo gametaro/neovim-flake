@@ -25,6 +25,7 @@
     nodePackages.dockerfile-language-server-nodejs
     nodePackages.typescript-language-server
     prettierd
+    pyright
     ripgrep
     shellcheck
     shfmt

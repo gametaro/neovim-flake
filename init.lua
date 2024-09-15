@@ -548,6 +548,20 @@ function M.lsp()
     -- markdown = {
     --   { cmd = { 'vscode-markdown-language-server', '--stdio' } },
     -- },
+    python = {
+      {
+        cmd = { 'pyright-langserver', '--stdio' },
+        settings = {
+          python = {
+            analysis = {
+              autoSearchPaths = true,
+              diagnosticMode = 'openFilesOnly',
+              useLibraryCodeForTypes = true,
+            },
+          },
+        },
+      },
+    },
     sh = {
       { cmd = { 'bash-language-server', 'start' } },
     },
