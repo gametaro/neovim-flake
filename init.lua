@@ -554,7 +554,7 @@ function M.lsp()
     nix = {
       {
         cmd = { 'nil' },
-        --- https://github.com/oxalica/nil/blob/main/docs/configuration.md
+        -- https://github.com/oxalica/nil/blob/main/docs/configuration.md
         settings = {
           ['nil'] = {
             formatting = {
