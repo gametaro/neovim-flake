@@ -882,44 +882,6 @@ function M.edge()
   vim.keymap.set({ 'n', 'x' }, '[e', function() jump(false) end)
 end
 
-function M.zen()
-  local org = nil
-  local options = {
-    cmdheight = 0,
-    laststatus = 0,
-    number = false,
-    relativenumber = false,
-    showtabline = 0,
-    signcolumn = 'no',
-  }
-
-  local function enable()
-    org = vim.iter(options):fold({}, function(t, k)
-      t[k] = vim.o[k]
-      return t
-    end)
-
-    vim.iter(options):each(function(k, v) vim.o[k] = v end)
-    vim.diagnostic.enable(false)
-  end
-
-  local function disable()
-    vim.iter(org):each(function(k, v) vim.o[k] = v end)
-    vim.diagnostic.enable(true)
-    org = nil
-  end
-
-  local function toggle()
-    if org then
-      disable()
-    else
-      enable()
-    end
-  end
-
-  vim.keymap.set('n', '\\z', toggle)
-end
-
 function M.plugins()
   vim.keymap.set('n', '<c-p>', function()
     local ok = pcall(require('telescope.builtin').git_files)
