@@ -385,6 +385,7 @@ function M.autocmd()
   })
 
   autocmd('VimEnter', {
+    desc = 'Create or update spell files',
     callback = function()
       vim
         .iter(vim.fs.find(function(name) return string.match(name, '.+%.add$') end, {
@@ -402,7 +403,6 @@ function M.autocmd()
           end
         end)
     end,
-    desc = 'Create or update spell files',
   })
 end
 
