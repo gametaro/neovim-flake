@@ -1136,6 +1136,9 @@ local function main()
     if not ok then vim.notify(msg) end
   end)
 
+  vim.cmd.aunmenu('PopUp.How-to\\ disable\\ mouse')
+  vim.cmd.aunmenu('PopUp.-2-')
+
   vim.cmd.colorscheme('default')
 end
 
