@@ -27,6 +27,7 @@
     prettierd
     pyright
     ripgrep
+    ruff
     shellcheck
     shfmt
     statix

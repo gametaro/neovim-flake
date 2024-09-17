@@ -561,6 +561,9 @@ function M.lsp()
           },
         },
       },
+      {
+        cmd = { 'ruff', 'server' },
+      },
     },
     sh = {
       { cmd = { 'bash-language-server', 'start' } },
