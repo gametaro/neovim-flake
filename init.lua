@@ -75,7 +75,7 @@ function M.option()
   vim.o.foldmethod = 'expr'
   vim.o.foldtext = ''
   vim.o.ignorecase = true
-  vim.o.jumpoptions = 'view'
+  vim.o.jumpoptions = 'view,unload'
   -- vim.o.modeline = false
   vim.o.updatetime = 300
   vim.o.sessionoptions = 'buffers,tabpages,folds'
