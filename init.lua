@@ -921,49 +921,61 @@ function M.plugins()
   require('diffview').setup()
 
   require('gitsigns').setup({
-    on_attach = function(buffer)
+    on_attach = function(buf)
       local gs = package.loaded.gitsigns
 
-      local function map(mode, lhs, rhs, opts)
-        opts = opts or {}
-        opts.buffer = buffer
-        vim.keymap.set(mode, lhs, rhs, opts)
-      end
-
-      map('n', ']c', function()
+      vim.keymap.set('n', ']c', function()
         if vim.wo.diff then
           return ']c'
         else
           vim.schedule(function() gs.next_hunk({ greedy = false }) end)
           return '<Ignore>'
         end
-      end, { expr = true })
-      map('n', '[c', function()
+      end, { buffer = buf, expr = true })
+      vim.keymap.set('n', '[c', function()
         if vim.wo.diff then
           return '[c'
         else
           vim.schedule(function() gs.prev_hunk({ greedy = false }) end)
           return '<Ignore>'
         end
-      end, { expr = true })
-      map('n', '<leader>hs', gs.stage_hunk)
-      map('n', '<leader>hr', gs.reset_hunk)
-      map('x', '<leader>hs', function() gs.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end)
-      map('x', '<leader>hr', function() gs.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end)
-      map('n', '<leader>hS', gs.stage_buffer)
-      map('n', '<leader>hu', gs.undo_stage_hunk)
-      map('n', '<leader>hR', gs.reset_buffer)
-      map('n', '<leader>hp', gs.preview_hunk_inline)
-      map('n', '<leader>hb', function() gs.blame_line({ full = true }) end)
-      map('n', '<leader>hd', gs.diffthis)
-      map('n', '<leader>hD', function() gs.diffthis('~') end)
-      map('n', '<leader>hq', gs.setqflist)
-      map('n', '<leader>hQ', function() gs.setqflist('all') end)
-      map('n', '<leader>hl', gs.setloclist)
-      map('n', '\\hb', gs.toggle_current_line_blame)
-      map('n', '\\hd', gs.toggle_deleted)
-      map('n', '\\hw', gs.toggle_word_diff)
-      map({ 'o', 'x' }, 'ih', ':<c-u>Gitsigns select_hunk<cr>', { silent = true })
+      end, { buffer = buf, expr = true })
+      vim.keymap.set('n', '<leader>hs', gs.stage_hunk, { buffer = buf })
+      vim.keymap.set('n', '<leader>hr', gs.reset_hunk, { buffer = buf })
+      vim.keymap.set(
+        'x',
+        '<leader>hs',
+        function() gs.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') }, { buffer = buf }) end
+      )
+      vim.keymap.set(
+        'x',
+        '<leader>hr',
+        function() gs.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') }, { buffer = buf }) end
+      )
+      vim.keymap.set('n', '<leader>hS', gs.stage_buffer, { buffer = buf })
+      vim.keymap.set('n', '<leader>hu', gs.undo_stage_hunk, { buffer = buf })
+      vim.keymap.set('n', '<leader>hR', gs.reset_buffer, { buffer = buf })
+      vim.keymap.set('n', '<leader>hp', gs.preview_hunk_inline, { buffer = buf })
+      vim.keymap.set(
+        'n',
+        '<leader>hb',
+        function() gs.blame_line({ full = true }) end,
+        { buffer = buf }
+      )
+      vim.keymap.set('n', '<leader>hd', gs.diffthis, { buffer = buf })
+      vim.keymap.set('n', '<leader>hD', function() gs.diffthis('~') end, { buffer = buf })
+      vim.keymap.set('n', '<leader>hq', gs.setqflist, { buffer = buf })
+      vim.keymap.set('n', '<leader>hQ', function() gs.setqflist('all') end, { buffer = buf })
+      vim.keymap.set('n', '<leader>hl', gs.setloclist, { buffer = buf })
+      vim.keymap.set('n', '\\hb', gs.toggle_current_line_blame, { buffer = buf })
+      vim.keymap.set('n', '\\hd', gs.toggle_deleted, { buffer = buf })
+      vim.keymap.set('n', '\\hw', gs.toggle_word_diff, { buffer = buf })
+      vim.keymap.set(
+        { 'o', 'x' },
+        'ih',
+        ':<c-u>Gitsigns select_hunk<cr>',
+        { buffer = buf, silent = true }
+      )
     end,
   })
 
@@ -1069,21 +1081,22 @@ function M.plugins()
     pattern = 'fx',
     callback = function(a)
       local dir = vim.api.nvim_buf_get_name(a.buf)
+      local buf = a.buf --- @type integer
 
-      local function map(mode, lhs, rhs, opts)
-        opts = opts or {}
-        opts.buffer = a.buf --[[@as integer]]
-        vim.keymap.set(mode, lhs, rhs, opts)
-      end
-
-      map(
+      vim.keymap.set(
         'n',
         '<cr>',
-        function() vim.cmd.edit(vim.fs.joinpath(dir, vim.api.nvim_get_current_line())) end
+        function() vim.cmd.edit(vim.fs.joinpath(dir, vim.api.nvim_get_current_line())) end,
+        { buffer = buf }
       )
-      map('n', '-', '<cmd>edit %:h<cr>')
-      map('n', '<c-l>', '<cmd>nohlsearch<bar>edit!<bar>normal! <C-l><cr>')
-      map('n', 'D', function()
+      vim.keymap.set('n', '-', '<cmd>edit %:h<cr>', { buffer = buf })
+      vim.keymap.set(
+        'n',
+        '<c-l>',
+        '<cmd>nohlsearch<bar>edit!<bar>normal! <C-l><cr>',
+        { buffer = buf }
+      )
+      vim.keymap.set('n', 'D', function()
         local file = vim.api.nvim_get_current_line()
         vim.ui.select({ 'Yes', 'No' }, {
           prompt = string.format('Delete "%s"?: ', file),
@@ -1094,7 +1107,7 @@ function M.plugins()
           end
         end)
       end)
-      map('n', 'R', function()
+      vim.keymap.set('n', 'R', function()
         local file = vim.api.nvim_get_current_line()
         vim.ui.input({
           completion = 'file',
