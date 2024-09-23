@@ -90,6 +90,7 @@ function M.option()
   vim.o.spelloptions = 'camel,noplainbuffer'
   vim.o.splitkeep = 'screen'
   vim.o.termguicolors = true
+  vim.o.tabclose = 'uselast'
   vim.o.undofile = true
   vim.o.virtualedit = 'all'
   vim.o.wildignorecase = true
