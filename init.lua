@@ -35,6 +35,7 @@ function M.highlight()
         { fg = fg .. 'Grey2', bg = bg .. 'Grey4', cterm = { reverse = true } }
       )
       vim.api.nvim_set_hl(0, 'PmenuSel', { bg = bg .. 'Grey4' })
+      vim.api.nvim_set_hl(0, 'Underlined', { fg = fg .. 'Blue', underline = true })
       vim.api.nvim_set_hl(0, 'FlashLabel', { bg = bg .. 'Blue' })
       vim.api.nvim_set_hl(0, 'TelescopeNormal', { default = true, link = 'Pmenu' })
       vim.api.nvim_set_hl(0, 'TelescopeSelection', { default = true, link = 'PmenuSel' })
