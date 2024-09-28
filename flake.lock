@@ -142,7 +142,7 @@
     "gitignore_2": {
       "inputs": {
         "nixpkgs": [
-          "pre-commit-hooks-nix",
+          "pre-commit-hooks",
           "nixpkgs"
         ]
       },
@@ -303,7 +303,7 @@
         "type": "github"
       }
     },
-    "pre-commit-hooks-nix": {
+    "pre-commit-hooks": {
       "inputs": {
         "flake-compat": "flake-compat_3",
         "gitignore": "gitignore_2",
@@ -333,7 +333,7 @@
         "nvim-fx": "nvim-fx",
         "nvim-quickview": "nvim-quickview",
         "nvim-solo": "nvim-solo",
-        "pre-commit-hooks-nix": "pre-commit-hooks-nix"
+        "pre-commit-hooks": "pre-commit-hooks"
       }
     }
   },

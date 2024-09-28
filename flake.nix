@@ -9,8 +9,8 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    pre-commit-hooks-nix.url = "github:cachix/git-hooks.nix";
-    pre-commit-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
+    pre-commit-hooks.url = "github:cachix/git-hooks.nix";
+    pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
 
     neovim.url = "github:nix-community/neovim-nightly-overlay";
     neovim.inputs.nixpkgs.follows = "nixpkgs";
@@ -42,7 +42,7 @@
     packages = forEachSystem (pkgs: import ./neovim.nix {inherit pkgs inputs;});
     formatter = forEachSystem (pkgs: pkgs.alejandra);
     checks = forEachSystem (pkgs: {
-      pre-commit-check = inputs.pre-commit-hooks-nix.lib.${pkgs.system}.run {
+      pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.system}.run {
         src = ./.;
         hooks = {
           actionlint.enable = true;
