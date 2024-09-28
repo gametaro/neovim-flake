@@ -1053,7 +1053,12 @@ function M.plugins()
   MiniIcons.mock_nvim_web_devicons()
 
   require('mini.git').setup()
-  vim.keymap.set('ca', 'g', 'Git')
+  vim.keymap.set(
+    'ca',
+    'g',
+    function() return vim.fn.getcmdtype() == ':' and 'Git' or 'g' end,
+    { expr = true }
+  )
   vim.keymap.set('n', '<leader>gs', '<cmd>Git status<cr>')
   vim.keymap.set('n', '<leader>gc', '<cmd>Git commit<cr>')
   vim.keymap.set('n', '<leader>gl', '<cmd>Git log<cr>')
