@@ -1059,9 +1059,12 @@ function M.plugins()
     function() return vim.fn.getcmdtype() == ':' and 'Git' or 'g' end,
     { expr = true }
   )
-  vim.keymap.set('n', '<leader>gs', '<cmd>Git status<cr>')
-  vim.keymap.set('n', '<leader>gc', '<cmd>Git commit<cr>')
-  vim.keymap.set('n', '<leader>gl', '<cmd>Git log<cr>')
+  vim.keymap.set('n', 'gis', '<cmd>Git status<cr>')
+  vim.keymap.set('n', 'gic', '<cmd>Git commit<cr>')
+  vim.keymap.set('n', 'gia', '<cmd>Git commit --amend --no-edit<cr>')
+  vim.keymap.set('n', 'gil', '<cmd>Git log<cr>')
+  vim.keymap.set('n', 'gip', '<cmd>Git pull<cr>')
+  vim.keymap.set('n', 'giP', '<cmd>Git push<cr>')
 
   local flash = require('flash')
   flash.setup({
