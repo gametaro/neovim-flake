@@ -77,6 +77,7 @@ function M.option()
   vim.o.foldtext = ''
   vim.o.ignorecase = true
   vim.o.jumpoptions = 'view,clean'
+  vim.o.mouse = 'ar'
   -- vim.o.modeline = false
   vim.o.updatetime = 300
   vim.o.sessionoptions = 'buffers,tabpages,folds'
