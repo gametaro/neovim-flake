@@ -1088,12 +1088,10 @@ function M.plugins()
       local dir = vim.api.nvim_buf_get_name(a.buf)
       local buf = a.buf --- @type integer
 
-      vim.keymap.set(
-        'n',
-        '<cr>',
-        function() vim.cmd.edit(vim.fs.joinpath(dir, vim.api.nvim_get_current_line())) end,
-        { buffer = buf }
-      )
+      local function edit() vim.cmd.drop(vim.fs.joinpath(dir, vim.api.nvim_get_current_line())) end
+
+      vim.keymap.set('n', '<cr>', function() edit() end, { buffer = buf })
+      vim.keymap.set('n', '<2-LeftMouse>', function() edit() end, { buffer = buf })
       vim.keymap.set('n', '-', '<cmd>edit %:h<cr>', { buffer = buf })
       vim.keymap.set(
         'n',
@@ -1103,17 +1101,21 @@ function M.plugins()
       )
       vim.keymap.set('n', 'D', function()
         local file = vim.api.nvim_get_current_line()
+        if file == '' then return end
+
         vim.ui.select({ 'Yes', 'No' }, {
           prompt = string.format('Delete "%s"?: ', file),
         }, function(choice)
           if choice and choice == 'Yes' then
-            vim.fn.delete(vim.fs.joinpath(dir, file), 'rf')
+            vim.fs.rm(vim.fs.joinpath(dir, file), { force = true, recursive = true })
             vim.cmd.edit()
           end
         end)
       end)
       vim.keymap.set('n', 'R', function()
         local file = vim.api.nvim_get_current_line()
+        if file == '' then return end
+
         vim.ui.input({
           completion = 'file',
           default = file,
