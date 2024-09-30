@@ -1154,11 +1154,7 @@ local function main()
     },
   }
 
-  vim.iter(M):each(function(_, m)
-    --- @type boolean, string
-    local ok, msg = pcall(m)
-    if not ok then vim.notify(msg) end
-  end)
+  vim.iter(M):each(function(_, m) pcall(m) end)
 
   vim.cmd.aunmenu('PopUp.How-to\\ disable\\ mouse')
   vim.cmd.aunmenu('PopUp.-2-')
