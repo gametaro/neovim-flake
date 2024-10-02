@@ -1011,11 +1011,6 @@ function M.plugins()
     },
   })
 
-  require('mini.bracketed').setup({
-    comment = { suffix = '' },
-    diagnostic = { suffix = '' },
-  })
-
   require('mini.operators').setup({
     replace = { prefix = '_' },
     exchange = { prefix = '' },
