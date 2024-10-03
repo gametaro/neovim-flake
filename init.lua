@@ -1107,7 +1107,7 @@ function M.plugins()
             vim.cmd.edit()
           end
         end)
-      end)
+      end, { buffer = buf })
       vim.keymap.set('n', 'R', function()
         local file = vim.api.nvim_get_current_line()
         if file == '' then return end
@@ -1122,7 +1122,7 @@ function M.plugins()
             vim.cmd.edit()
           end
         end)
-      end)
+      end, { buffer = buf })
     end,
   })
 end
