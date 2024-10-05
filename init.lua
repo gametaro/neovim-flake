@@ -18,7 +18,7 @@ function M.highlight()
   vim.api.nvim_create_autocmd('ColorScheme', {
     desc = 'Tweak default colorscheme',
     group = vim.api.nvim_create_augroup('highlight', {}),
-    pattern = { 'default' },
+    pattern = 'default',
     callback = function()
       local bg = vim.o.background == 'dark' and 'NvimDark' or 'NvimLight'
       local fg = vim.o.background == 'dark' and 'NvimLight' or 'NvimDark'
