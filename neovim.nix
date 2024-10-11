@@ -53,6 +53,7 @@
           nvim-cmp
           nvim-treesitter.withAllGrammars
           telescope-nvim
+          tokyonight-nvim
           vim-repeat
         ]
         ++ plugins;
