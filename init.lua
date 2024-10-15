@@ -760,7 +760,6 @@ function M.lsp()
 
       vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = buf })
       vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = buf })
-      vim.keymap.set('n', 'g<C-I>', vim.lsp.buf.implementation, { buffer = buf })
       vim.keymap.set('n', 'grl', vim.lsp.codelens.run, { buffer = buf })
       vim.keymap.set(
         'n',
