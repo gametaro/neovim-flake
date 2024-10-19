@@ -1156,7 +1156,7 @@ local function main()
   vim.cmd.aunmenu('PopUp.How-to\\ disable\\ mouse')
   vim.cmd.aunmenu('PopUp.-2-')
 
-  vim.cmd.colorscheme('default')
+  vim.cmd.colorscheme('tokyonight-night')
 end
 
 main()
