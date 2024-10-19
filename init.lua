@@ -402,6 +402,29 @@ function M.autocmd()
         end)
     end,
   })
+
+  autocmd({ 'TermRequest' }, {
+    desc = 'Handles OSC 7 dir change requests',
+    callback = function(a)
+      if string.sub(vim.v.termrequest, 1, 4) == '\x1b]7;' then
+        local dir = string.gsub(vim.v.termrequest, '\x1b]7;file://[^/]*', '')
+        if vim.fn.isdirectory(dir) == 0 then
+          vim.notify('invalid dir: ' .. dir)
+          return
+        end
+        vim.api.nvim_buf_set_var(a.buf, 'osc7_dir', dir)
+        if vim.o.autochdir and vim.api.nvim_get_current_buf() == a.buf then vim.cmd.tcd(dir) end
+      end
+    end,
+  })
+
+  autocmd({ 'BufEnter', 'WinEnter', 'DirChanged' }, {
+    callback = function()
+      if vim.b.osc7_dir and vim.fn.isdirectory(vim.b.osc7_dir) == 1 then
+        vim.cmd.tcd(vim.b.osc7_dir)
+      end
+    end,
+  })
 end
 
 function M.lsp()
