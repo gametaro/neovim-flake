@@ -690,7 +690,7 @@ function M.lsp()
       if not client then return end
       local buf = a.buf --[[@as integer]]
 
-      client.server_capabilities.semanticTokensProvider = nil
+      -- client.server_capabilities.semanticTokensProvider = nil
 
       if client.name == 'typescript-language-server' then
         client.server_capabilities.documentFormattingProvider = false
