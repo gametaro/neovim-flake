@@ -37,27 +37,24 @@
   ];
 
   nvim = pkgs.wrapNeovimUnstable inputs.neovim.packages.${pkgs.system}.neovim {
+    neovimRcContent = "";
     luaRcContent = builtins.readFile ./init.lua;
-    packpathDirs.myNeovimPackages = {
-      start = with pkgs.vimPlugins;
-        [
-          SchemaStore-nvim
-          cmp-buffer
-          cmp-nvim-lsp
-          cmp-path
-          diffview-nvim
-          efmls-configs-nvim
-          flash-nvim
-          gitsigns-nvim
-          mini-nvim
-          nvim-cmp
-          nvim-treesitter.withAllGrammars
-          telescope-nvim
-          tokyonight-nvim
-          vim-repeat
-        ]
-        ++ plugins;
-    };
+    plugins = with pkgs.vimPlugins; [
+      SchemaStore-nvim
+      cmp-buffer
+      cmp-nvim-lsp
+      cmp-path
+      diffview-nvim
+      efmls-configs-nvim
+      flash-nvim
+      gitsigns-nvim
+      mini-nvim
+      nvim-cmp
+      nvim-treesitter.withAllGrammars
+      telescope-nvim
+      tokyonight-nvim
+      vim-repeat
+    ];
     withPython3 = false;
     wrapperArgs = ["--suffix" "PATH" ":" "${pkgs.lib.makeBinPath extraPackages}"];
   };
