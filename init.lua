@@ -741,7 +741,7 @@ function M.lsp()
         end, { buffer = buf })
       end
 
-      if client.supports_method(vim.lsp.protocol.Methods.textDocument_codeLens) then
+      if client:supports_method(vim.lsp.protocol.Methods.textDocument_codeLens) then
         vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave' }, {
           group = group,
           buffer = buf,
@@ -749,7 +749,7 @@ function M.lsp()
         })
       end
 
-      if client.supports_method(vim.lsp.protocol.Methods.textDocument_formatting) then
+      if client:supports_method(vim.lsp.protocol.Methods.textDocument_formatting) then
         vim.api.nvim_create_autocmd('BufWritePre', {
           group = group,
           buffer = buf,
@@ -757,16 +757,16 @@ function M.lsp()
         })
       end
 
-      if client.supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
+      if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
         vim.lsp.completion.enable(true, client.id, buf, { autotrigger = false })
       end
 
-      if client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+      if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
         vim.api.nvim_create_autocmd({ 'CursorHold' }, {
           group = group,
           buffer = buf,
           callback = function()
-            client.request(
+            client:request(
               vim.lsp.protocol.Methods.textDocument_documentHighlight,
               vim.lsp.util.make_position_params(0, client.offset_encoding),
               nil,
