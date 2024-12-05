@@ -361,12 +361,7 @@ function M.autocmd()
   autocmd('TermOpen', {
     desc = 'Start in Terminal mode',
     pattern = 'term://*',
-    callback = function()
-      vim.wo[0][0].list = false
-      vim.wo[0][0].signcolumn = 'no'
-
-      vim.cmd.startinsert()
-    end,
+    callback = function() vim.cmd.startinsert() end,
   })
 
   autocmd('FileType', {
