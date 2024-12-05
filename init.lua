@@ -188,8 +188,7 @@ function M.keymap()
   vim.keymap.set('n', 'dq', vim.diagnostic.setqflist)
   vim.keymap.set('n', 'dl', vim.diagnostic.setloclist)
 
-  vim.keymap.set('n', '<leader>i', '<cmd>Inspect<cr>')
-  vim.keymap.set('n', '<leader>I', '<cmd>Inspect!<cr>')
+  vim.keymap.set('n', 'zS', vim.show_pos)
 
   ---@type table<string, table<integer, integer>>
   local terminals = vim.defaulttable(function() return {} end)
