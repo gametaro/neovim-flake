@@ -751,6 +751,11 @@ function M.lsp()
         })
       end
 
+      if client:supports_method(vim.lsp.protocol.Methods.textDocument_foldingRange) then
+        vim.wo.foldmethod = 'expr'
+        vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
+      end
+
       if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
         vim.lsp.completion.enable(true, client.id, buf, { autotrigger = false })
       end
