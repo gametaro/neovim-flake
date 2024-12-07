@@ -735,7 +735,7 @@ function M.lsp()
         end, { buffer = buf })
       end
 
-      if client:supports_method(vim.lsp.protocol.Methods.textDocument_codeLens) then
+      if client:supports_method(vim.lsp.protocol.Methods.textDocument_codeLens, buf) then
         vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave' }, {
           group = group,
           buffer = buf,
@@ -743,7 +743,7 @@ function M.lsp()
         })
       end
 
-      if client:supports_method(vim.lsp.protocol.Methods.textDocument_formatting) then
+      if client:supports_method(vim.lsp.protocol.Methods.textDocument_formatting, buf) then
         vim.api.nvim_create_autocmd('BufWritePre', {
           group = group,
           buffer = buf,
@@ -751,16 +751,16 @@ function M.lsp()
         })
       end
 
-      if client:supports_method(vim.lsp.protocol.Methods.textDocument_foldingRange) then
+      if client:supports_method(vim.lsp.protocol.Methods.textDocument_foldingRange, buf) then
         vim.wo.foldmethod = 'expr'
         vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
       end
 
-      if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
+      if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion, buf) then
         vim.lsp.completion.enable(true, client.id, buf, { autotrigger = false })
       end
 
-      if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+      if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, buf) then
         vim.api.nvim_create_autocmd({ 'CursorHold' }, {
           group = group,
           buffer = buf,
