@@ -1,10 +1,5 @@
 local M = {}
 
----@param t table
-local function keys(t)
-  return vim.iter(t):map(function(k) return k end):totable()
-end
-
 ---@param lnum integer
 ---@param col integer
 ---@return string
@@ -451,15 +446,14 @@ function M.lsp()
       includeInlayVariableTypeHintsWhenTypeMatchesName = true,
     },
   }
-  ---@type vim.lsp.ClientConfig
-  local ts = {
-    init_options = { hostInfo = 'neovim' },
+
+  vim.lsp.config('ts', {
+    filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+    root_markers = { 'tsconfig.json', 'package.json' },
     cmd = { 'typescript-language-server', '--stdio' },
-    marker = { 'tsconfig.json', 'package.json' },
+    init_options = { hostInfo = 'neovim' },
     settings = {
-      completions = {
-        completeFunctionCalls = true,
-      },
+      completions = { completeFunctionCalls = true },
       javascript = ts_settings,
       typescript = ts_settings,
       javascriptreact = ts_settings,
@@ -467,12 +461,12 @@ function M.lsp()
       ['javascript.jsx'] = ts_settings,
       ['typescript.tsx'] = ts_settings,
     },
-  }
+  })
 
-  ---@type vim.lsp.ClientConfig
-  local eslint = {
+  vim.lsp.config('eslint', {
+    filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
     cmd = { 'vscode-eslint-language-server', '--stdio' },
-    marker = {
+    root_markers = {
       '.eslintrc',
       '.eslintrc.cjs',
       '.eslintrc.js',
@@ -483,223 +477,143 @@ function M.lsp()
     },
     settings = {
       codeAction = {
-        disableRuleComment = {
-          enable = true,
-          location = 'separateLine',
-        },
-        showDocumentation = {
-          enable = true,
-        },
+        disableRuleComment = { enable = true, location = 'separateLine' },
+        showDocumentation = { enable = true },
       },
-      codeActionOnSave = {
-        enable = false,
-        mode = 'all',
-      },
-      experimental = {
-        useFlatConfig = false,
-      },
+      codeActionOnSave = { enable = false, mode = 'all' },
+      experimental = { useFlatConfig = false },
       format = true,
       nodePath = '',
       onIgnoredFiles = 'off',
-      problems = {
-        shortenToSingleLine = false,
-      },
+      problems = { shortenToSingleLine = false },
       quiet = false,
       rulesCustomizations = {},
       run = 'onType',
       useESLintClass = false,
       validate = 'on',
-      workingDirectory = {
-        mode = 'location',
-      },
+      workingDirectory = { mode = 'location' },
     },
-  }
-
-  ---@type vim.lsp.ClientConfig
-  local css = {
-    cmd = { 'vscode-css-language-server', '--stdio' },
-    settings = {
-      css = { validate = true },
-      less = { validate = true },
-      scss = { validate = true },
-    },
-  }
-
-  ---@type vim.lsp.ClientConfig
-  local json = {
-    cmd = { 'vscode-json-language-server', '--stdio' },
-    init_options = {
-      provideFormatter = true,
-    },
-    settings = {
-      json = {
-        schemas = schemastore.json.schemas(),
-        validate = { enable = true },
-      },
-    },
-  }
-
-  ---@type vim.lsp.ClientConfig[]
-  local configs_ft = {
-    css = { css },
-    scss = { css },
-    javascript = { ts, eslint },
-    javascriptreact = { ts, eslint },
-    typescript = { ts, eslint },
-    typescriptreact = { ts, eslint },
-    json = { json },
-    jsonc = { json },
-    dockerfile = {
-      {
-        cmd = { 'docker-langserver', '--stdio' },
-        marker = { 'Dockerfile', 'Containerfile' },
-      },
-    },
-    html = {
-      { cmd = { 'vscode-html-language-server', '--stdio' } },
-    },
-    lua = {
-      { cmd = { 'lua-language-server' }, marker = { '.luarc.json' } },
-    },
-    -- markdown = {
-    --   { cmd = { 'vscode-markdown-language-server', '--stdio' } },
-    -- },
-    python = {
-      {
-        cmd = { 'pyright-langserver', '--stdio' },
-        settings = {
-          python = {
-            analysis = {
-              autoSearchPaths = true,
-              diagnosticMode = 'openFilesOnly',
-              useLibraryCodeForTypes = true,
-            },
-          },
-        },
-      },
-      {
-        cmd = { 'ruff', 'server' },
-      },
-    },
-    sh = {
-      { cmd = { 'bash-language-server', 'start' } },
-    },
-    nix = {
-      {
-        cmd = { 'nil' },
-        -- https://github.com/oxalica/nil/blob/main/docs/configuration.md
-        settings = {
-          ['nil'] = {
-            formatting = {
-              command = { 'alejandra' },
-            },
-            nix = {
-              flake = {
-                autoEvalInputs = true,
-              },
-            },
-          },
-        },
-        marker = { 'flake.nix' },
-      },
-    },
-    yaml = {
-      {
-        cmd = { 'yaml-language-server', '--stdio' },
-        settings = {
-          redhat = { telemetry = { enabled = false } },
-          yaml = {
-            format = true,
-            schemas = {
-              -- https://github.com/awslabs/goformation
-              -- https://github.com/redhat-developer/yaml-language-server#more-examples-of-schema-association
-              ['https://raw.githubusercontent.com/awslabs/goformation/master/schema/cloudformation.schema.json'] = {
-                'template.yaml',
-                '*-template.yaml',
-              },
-            },
-          },
-        },
-      },
-    },
-  }
-
-  local languages = {
-    javascript = { prettier_d },
-    javascriptreact = { prettier_d },
-    typescript = { prettier_d },
-    typescriptreact = { prettier_d },
-    lua = { stylua },
-    markdown = { markdownlint },
-    nix = { statix },
-    sh = { shfmt },
-    yaml = { actionlint },
-  }
-
-  ---@type vim.lsp.ClientConfig[]
-  local configs = vim.iter(languages):fold(configs_ft, function(acc, k)
-    if acc[k] then
-      acc[k][#acc[k] + 1] = {
-        cmd = { 'efm-langserver' },
-        settings = {
-          languages = languages,
-        },
-        init_options = {
-          documentFormatting = true,
-          documentRangeFormatting = true,
-          -- hover = true,
-          -- documentSymbol = true,
-          codeAction = true,
-          completion = true,
-        },
-      }
-    end
-    return acc
-  end)
-
-  local capabilities = vim.tbl_deep_extend(
-    'force',
-    vim.lsp.protocol.make_client_capabilities(),
-    cmp_nvim_lsp.default_capabilities()
-  )
-
-  ---@param config vim.lsp.ClientConfig
-  ---@return vim.lsp.ClientConfig
-  local function extend_config(config)
-    local conf = vim.deepcopy(config, true)
-
-    conf.name = conf.cmd[1]
-    conf.capabilities = capabilities
-
-    local exepath = vim.fn.exepath(conf.cmd[1])
-    if exepath ~= '' then conf.cmd[1] = exepath end
-
-    ---@diagnostic disable-next-line: undefined-field
-    local marker = vim.iter(conf.marker or {}):fold({ '.git' }, function(acc, k)
-      acc[#acc + 1] = k
-      return acc
-    end)
-    conf.root_dir = vim.fs.root(0, marker)
-
-    return conf
-  end
-
-  local group = vim.api.nvim_create_augroup('lsp', {})
-  vim.api.nvim_create_autocmd('FileType', {
-    desc = 'Start lsp server',
-    pattern = keys(configs_ft),
-    group = group,
-    callback = function(a)
-      if vim.bo.buftype ~= '' then return end
-      if vim.bo.bufhidden ~= '' then return end
-
-      vim.iter(configs[a.match]):map(extend_config):each(
-        ---@diagnostic disable-next-line: missing-fields
-        function(config) vim.lsp.start(config, { silent = true }) end
-      )
-    end,
   })
 
+  vim.lsp.config('json', {
+    filetypes = { 'json', 'jsonc' },
+    cmd = { 'vscode-json-language-server', '--stdio' },
+    init_options = { provideFormatter = true },
+    settings = { json = { schemas = schemastore.json.schemas(), validate = { enable = true } } },
+  })
+
+  vim.lsp.config('docker', {
+    filetypes = { 'dockerfile' },
+    cmd = { 'docker-langserver', '--stdio' },
+    root_markers = { 'Dockerfile', 'Containerfile' },
+  })
+
+  vim.lsp.config('html', {
+    filetypes = { 'html' },
+    cmd = { 'vscode-html-language-server', '--stdio' },
+  })
+
+  vim.lsp.config('lua', {
+    filetypes = { 'lua' },
+    cmd = { 'lua-language-server' },
+    root_markers = { '.luarc.json' },
+  })
+
+  vim.lsp.config('python', {
+    filetypes = { 'python' },
+    cmd = { 'pyright-langserver', '--stdio' },
+    settings = {
+      python = {
+        analysis = {
+          autoSearchPaths = true,
+          diagnosticMode = 'openFilesOnly',
+          useLibraryCodeForTypes = true,
+        },
+      },
+    },
+  })
+
+  vim.lsp.config('sh', {
+    filetypes = { 'sh' },
+    cmd = { 'bash-language-server', 'start' },
+  })
+
+  vim.lsp.config('nix', {
+    filetypes = { 'nix' },
+    cmd = { 'nil' },
+    root_markers = { 'flake.nix' },
+    settings = {
+      ['nil'] = {
+        formatting = { command = { 'alejandra' } },
+        nix = { flake = { autoEvalInputs = true } },
+      },
+    },
+  })
+
+  vim.lsp.config('yaml', {
+    filetypes = { 'yaml' },
+    cmd = { 'yaml-language-server', '--stdio' },
+    settings = {
+      redhat = { telemetry = { enabled = false } },
+      yaml = {
+        format = true,
+        schemas = {
+          ['https://raw.githubusercontent.com/awslabs/goformation/master/schema/cloudformation.schema.json'] = {
+            'template.yaml',
+            '*-template.yaml',
+          },
+        },
+      },
+    },
+  })
+
+  vim.lsp.config('efm', {
+    cmd = { 'efm-langserver' },
+    settings = {
+      languages = {
+        javascript = { prettier_d },
+        javascriptreact = { prettier_d },
+        typescript = { prettier_d },
+        typescriptreact = { prettier_d },
+        lua = { stylua },
+        markdown = { markdownlint },
+        nix = { statix },
+        sh = { shfmt },
+        yaml = { actionlint },
+      },
+    },
+    init_options = {
+      documentFormatting = true,
+      documentRangeFormatting = true,
+      codeAction = true,
+      completion = true,
+    },
+  })
+
+  vim.lsp.config('*', {
+    root_markers = { '.git' },
+    capabilities = vim.tbl_deep_extend(
+      'force',
+      lsp.protocol.make_client_capabilities(),
+      cmp_nvim_lsp.default_capabilities()
+    ),
+  })
+
+  vim.lsp.enable({
+    'ts',
+    'eslint',
+    'json',
+    'docker',
+    'html',
+    'lua',
+    'python',
+    'sh',
+    'nix',
+    'yaml',
+    'efm',
+  })
+
+  local group = vim.api.nvim_create_augroup('lsp', {})
   vim.api.nvim_create_autocmd('LspAttach', {
     desc = 'Attach to lsp server',
     group = group,
