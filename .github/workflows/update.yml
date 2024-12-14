@@ -22,6 +22,7 @@ jobs:
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
           token: ${{ secrets.PAT }}
       - name: Merge PR
+        if: ${{ env.PR_ID != '' }}
         shell: bash
         run: gh pr merge --auto --squash "$PR_ID"
         env:
