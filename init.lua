@@ -594,7 +594,7 @@ function M.lsp()
     root_markers = { '.git' },
     capabilities = vim.tbl_deep_extend(
       'force',
-      lsp.protocol.make_client_capabilities(),
+      vim.lsp.protocol.make_client_capabilities(),
       cmp_nvim_lsp.default_capabilities()
     ),
   })
