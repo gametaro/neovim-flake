@@ -427,6 +427,15 @@ function M.lsp()
   local stylua = require('efmls-configs.formatters.stylua')
   local shfmt = require('efmls-configs.formatters.shfmt')
 
+  vim.lsp.config('*', {
+    root_markers = { '.git' },
+    capabilities = vim.tbl_deep_extend(
+      'force',
+      vim.lsp.protocol.make_client_capabilities(),
+      cmp_nvim_lsp.default_capabilities()
+    ),
+  })
+
   local ts_settings = {
     implementationsCodeLens = {
       enabled = true,
@@ -590,27 +599,18 @@ function M.lsp()
     },
   })
 
-  vim.lsp.config('*', {
-    root_markers = { '.git' },
-    capabilities = vim.tbl_deep_extend(
-      'force',
-      vim.lsp.protocol.make_client_capabilities(),
-      cmp_nvim_lsp.default_capabilities()
-    ),
-  })
-
   vim.lsp.enable({
-    'ts',
-    'eslint',
-    'json',
     'docker',
+    'efm',
+    'eslint',
     'html',
+    'json',
     'lua',
+    'nix',
     'python',
     'sh',
-    'nix',
+    'ts',
     'yaml',
-    'efm',
   })
 
   local group = vim.api.nvim_create_augroup('lsp', {})
