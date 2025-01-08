@@ -520,6 +520,24 @@ function M.lsp()
   vim.lsp.config('html', {
     filetypes = { 'html' },
     cmd = { 'vscode-html-language-server', '--stdio' },
+    init_options = {
+      provideFormatter = true,
+      embeddedLanguages = { css = true, javascript = true },
+      configurationSection = { 'html', 'css', 'javascript' },
+    },
+  })
+
+  vim.lsp.config('css', {
+    filetypes = { 'css', 'scss', 'less' },
+    cmd = { 'vscode-css-language-server', '--stdio' },
+    settings = {
+      css = { validate = true },
+      scss = { validate = true },
+      less = { validate = true },
+    },
+    init_options = {
+      provideFormatter = true,
+    },
   })
 
   vim.lsp.config('lua', {
@@ -600,6 +618,7 @@ function M.lsp()
   })
 
   vim.lsp.enable({
+    'css',
     'docker',
     'efm',
     'eslint',
