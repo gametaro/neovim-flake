@@ -74,8 +74,6 @@ function M.option()
   vim.o.jumpoptions = 'view,clean'
   vim.o.mouse = 'ar'
   vim.o.mousemoveevent = true
-  -- vim.o.modeline = false
-  vim.o.updatetime = 300
   vim.o.sessionoptions = 'buffers,tabpages,folds'
   vim.o.shada = vim.o.shada .. ',r/tmp/,r/private/,r/nix/store/,rzipfile:,rterm:,rhealth:'
   vim.o.shortmess = 'atToOCFIWcs'
@@ -87,9 +85,10 @@ function M.option()
   vim.o.spelllang = 'en,cjk'
   vim.o.spelloptions = 'camel,noplainbuffer'
   vim.o.splitkeep = 'screen'
-  vim.o.termguicolors = true
   vim.o.tabclose = 'uselast'
+  vim.o.termguicolors = true
   vim.o.undofile = true
+  vim.o.updatetime = 300
   vim.o.virtualedit = 'all'
   vim.o.wildignorecase = true
   vim.o.wildoptions = 'fuzzy,pum,tagfile'
