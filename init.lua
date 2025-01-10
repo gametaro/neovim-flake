@@ -642,7 +642,7 @@ function M.lsp()
 
       -- client.server_capabilities.semanticTokensProvider = nil
 
-      if client.name == 'typescript-language-server' then
+      if client.name == 'ts' then
         client.server_capabilities.documentFormattingProvider = false
         client.server_capabilities.documentRangeFormattingProvider = false
         vim.keymap.set('n', 'grA', function()
