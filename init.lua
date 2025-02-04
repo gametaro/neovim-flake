@@ -76,6 +76,7 @@ function M.option()
   vim.o.mousemoveevent = true
   vim.o.sessionoptions = 'buffers,tabpages,folds'
   vim.o.shada = vim.o.shada .. ',r/tmp/,r/private/,r/nix/store/,rzipfile:,rterm:,rhealth:'
+  vim.o.shiftwidth = 2
   vim.o.shortmess = 'atToOCFIWcs'
   vim.o.showcmd = false
   vim.o.showmode = false
