@@ -672,13 +672,13 @@ function M.lsp()
         end, { buffer = buf })
       end
 
-      if client:supports_method(vim.lsp.protocol.Methods.textDocument_codeLens, buf) then
-        vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave' }, {
-          group = group,
-          buffer = buf,
-          callback = function() vim.lsp.codelens.refresh({ bufnr = buf }) end,
-        })
-      end
+      -- if client:supports_method(vim.lsp.protocol.Methods.textDocument_codeLens, buf) then
+      --   vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave' }, {
+      --     group = group,
+      --     buffer = buf,
+      --     callback = function() vim.lsp.codelens.refresh({ bufnr = buf }) end,
+      --   })
+      -- end
 
       if client:supports_method(vim.lsp.protocol.Methods.textDocument_formatting, buf) then
         vim.api.nvim_create_autocmd('BufWritePre', {
