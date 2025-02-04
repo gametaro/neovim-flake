@@ -87,6 +87,7 @@ function M.option()
   vim.o.spelloptions = 'camel,noplainbuffer'
   vim.o.splitkeep = 'screen'
   vim.o.tabclose = 'uselast'
+  vim.o.tabstop = 2
   vim.o.termguicolors = true
   vim.o.undofile = true
   vim.o.updatetime = 300
