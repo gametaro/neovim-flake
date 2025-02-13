@@ -681,13 +681,13 @@ function M.lsp()
       --   })
       -- end
 
-      if client:supports_method(vim.lsp.protocol.Methods.textDocument_formatting, buf) then
-        vim.api.nvim_create_autocmd('BufWritePre', {
-          group = group,
-          buffer = buf,
-          callback = function() vim.lsp.buf.format({ bufnr = buf, id = client.id }) end,
-        })
-      end
+      -- if client:supports_method(vim.lsp.protocol.Methods.textDocument_formatting, buf) then
+      --   vim.api.nvim_create_autocmd('BufWritePre', {
+      --     group = group,
+      --     buffer = buf,
+      --     callback = function() vim.lsp.buf.format({ bufnr = buf, id = client.id }) end,
+      --   })
+      -- end
 
       if client:supports_method(vim.lsp.protocol.Methods.textDocument_foldingRange, buf) then
         vim.wo.foldmethod = 'expr'
