@@ -62,8 +62,7 @@ function M.option()
   vim.o.cmdheight = 0
   vim.o.completeopt = 'menu,menuone,noselect,popup,fuzzy'
   vim.o.confirm = true
-  vim.o.diffopt =
-    'internal,filler,closeoff,algorithm:histogram,indent-heuristic,vertical,linematch:60'
+  vim.o.diffopt = 'internal,filler,closeoff,algorithm:patience,indent-heuristic,vertical'
   vim.o.exrc = true
   vim.o.fillchars = 'eob:·'
   vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
