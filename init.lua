@@ -847,7 +847,6 @@ function M.plugins()
     local ok = pcall(require('telescope.builtin').git_files)
     if not ok then require('telescope.builtin').find_files() end
   end)
-  vim.keymap.set('n', '<c-b>', '<cmd>Telescope buffers<cr>')
   vim.keymap.set('n', '<c-g>', '<cmd>Telescope live_grep<cr>')
   vim.keymap.set('n', '<c-h>', '<cmd>Telescope help_tags<cr>')
   vim.keymap.set('n', '<c-n>', '<cmd>Telescope oldfiles<cr>')
