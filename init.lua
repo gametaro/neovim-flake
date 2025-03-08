@@ -62,7 +62,6 @@ function M.option()
   vim.o.cmdheight = 0
   vim.o.completeopt = 'menu,menuone,noselect,popup,fuzzy'
   vim.o.confirm = true
-  vim.o.diffopt = 'internal,filler,closeoff,algorithm:patience,indent-heuristic,vertical'
   vim.o.exrc = true
   vim.o.fillchars = 'eob:·'
   vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
@@ -141,7 +140,7 @@ function M.keymap()
     function() return '<c-\\><c-n>"' .. vim.fn.nr2char(vim.fn.getchar()) .. 'pi' end,
     { expr = true }
   )
-  vim.keymap.set('n', 'x', '"_x')
+  vim.keymap.set({ 'n', 'x' }, 'x', '"_x')
   vim.keymap.set('n', '-', '<cmd>edit %:p:h<cr>')
   vim.keymap.set('n', 'cd', '<cmd>cd %:p:h<bar>pwd<cr>')
   vim.keymap.set('n', 'gm', '<cmd>message<cr>')
@@ -217,7 +216,6 @@ end
 
 function M.diagnostic()
   vim.diagnostic.config({
-    virtual_text = false,
     severity_sort = true,
     signs = {
       text = {
