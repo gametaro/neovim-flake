@@ -70,6 +70,7 @@ function M.option()
   vim.o.foldtext = ''
   vim.o.ignorecase = true
   vim.o.jumpoptions = 'view,clean'
+  vim.o.messagesopt = 'history:10000'
   vim.o.mousemoveevent = true
   vim.o.sessionoptions = 'buffers,tabpages,folds'
   vim.o.shada = vim.o.shada .. ',r/tmp/,r/private/,r/nix/store/,rzipfile:,rterm:,rhealth:'
@@ -91,6 +92,7 @@ function M.option()
   vim.o.virtualedit = 'all'
   vim.o.wildignorecase = true
   vim.o.wildoptions = 'fuzzy,pum,tagfile'
+  vim.o.winborder = 'single'
   vim.o.wrap = false
 end
 
