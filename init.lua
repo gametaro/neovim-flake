@@ -70,7 +70,7 @@ function M.option()
   vim.o.foldtext = ''
   vim.o.ignorecase = true
   vim.o.jumpoptions = 'view,clean'
-  vim.o.messagesopt = 'history:10000'
+  -- vim.o.messagesopt = 'history:10000'
   vim.o.mousemoveevent = true
   vim.o.sessionoptions = 'buffers,tabpages,folds'
   vim.o.shada = vim.o.shada .. ',r/tmp/,r/private/,r/nix/store/,rzipfile:,rterm:,rhealth:'
