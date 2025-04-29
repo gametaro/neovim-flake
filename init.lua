@@ -475,6 +475,12 @@ function M.lsp()
     },
   }
 
+  vim.lsp.config('rs', {
+    filetypes = { 'rust' },
+    root_markers = { 'Cargo.toml' },
+    cmd = { 'rust-analyzer' },
+  })
+
   vim.lsp.config('ts', {
     filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
     root_markers = { 'tsconfig.json', 'package.json' },
@@ -646,6 +652,7 @@ function M.lsp()
     'lua',
     'nix',
     'python',
+    'rs',
     'sh',
     'ts',
     'yaml',
