@@ -713,6 +713,10 @@ function M.lsp()
         vim.lsp.completion.enable(true, client.id, buf, { autotrigger = false })
       end
 
+      if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentColor) then
+        vim.lsp.document_color.enable(true, buf, { style = 'virtual' })
+      end
+
       if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, buf) then
         vim.api.nvim_create_autocmd({ 'CursorHold' }, {
           group = group,
