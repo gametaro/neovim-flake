@@ -1132,6 +1132,18 @@ local function main()
 
   vim.g.health = { style = 'float' }
 
+  require('vim._extui').enable({
+    enable = true, -- Whether to enable or disable the UI.
+    msg = { -- Options related to the message module.
+      ---@type 'box'|'cmd' Type of window used to place messages, either in the
+      ---cmdline or in a separate message box window with ephemeral messages.
+      pos = 'box',
+      box = { -- Options related to the message box window.
+        timeout = 4000, -- Time a message is visible.
+      },
+    },
+  })
+
   vim.iter(M):each(function(_, m) pcall(m) end)
 
   vim.cmd.aunmenu('PopUp.How-to\\ disable\\ mouse')
