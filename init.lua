@@ -1044,7 +1044,7 @@ function M.plugins()
   flash.setup({
     modes = {
       search = {
-        enabled = true,
+        enabled = false,
       },
       char = {
         keys = { 'f', 'F' },
