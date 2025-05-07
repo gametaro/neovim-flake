@@ -269,7 +269,7 @@ function M.autocmd()
 
   autocmd('FileType', {
     desc = 'Close current window',
-    pattern = { 'checkhealth', 'help', 'man', 'qf' },
+    pattern = { 'help', 'man', 'qf' },
     callback = function(a)
       vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = true, nowait = true })
       if a.match ~= 'help' then vim.wo[0][0].winfixbuf = true end
@@ -1129,6 +1129,8 @@ local function main()
   --     ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
   --   },
   -- }
+
+  vim.g.health = { style = 'float' }
 
   vim.iter(M):each(function(_, m) pcall(m) end)
 
