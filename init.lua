@@ -961,39 +961,46 @@ function M.plugins()
     end,
   })
 
-  local cmp = require('cmp')
-  cmp.setup({
-    confirmation = { default_behavior = 'replace' },
-    experimental = { ghost_text = true },
-    mapping = cmp.mapping.preset.insert({
-      ['<c-d>'] = cmp.mapping.scroll_docs(-4),
-      ['<c-f>'] = cmp.mapping.scroll_docs(4),
-      ['<c-Space>'] = cmp.mapping.complete(),
-      ['<cr>'] = cmp.mapping.confirm({ select = true }),
-    }),
-    sources = cmp.config.sources({
-      { name = 'nvim_lsp' },
-    }, {
-      {
-        name = 'buffer',
-        option = {
-          get_bufnrs = function()
-            return vim
-              .iter(vim.api.nvim_list_wins())
-              :map(vim.api.nvim_win_get_buf)
-              :filter(vim.api.nvim_buf_is_loaded)
-              :totable()
-          end,
-        },
-      },
-      { name = 'path' },
-    }),
-    sorting = {
-      comparators = {
-        function(...) return require('cmp_buffer'):compare_locality(...) end,
-      },
+  require('blink.cmp').setup({
+    keymap = { preset = 'default' },
+    completion = {
+      list = { selection = { preselect = true } },
     },
   })
+
+  -- local cmp = require('cmp')
+  -- cmp.setup({
+  --   confirmation = { default_behavior = 'replace' },
+  --   experimental = { ghost_text = true },
+  --   mapping = cmp.mapping.preset.insert({
+  --     ['<c-d>'] = cmp.mapping.scroll_docs(-4),
+  --     ['<c-f>'] = cmp.mapping.scroll_docs(4),
+  --     ['<c-Space>'] = cmp.mapping.complete(),
+  --     ['<cr>'] = cmp.mapping.confirm({ select = true }),
+  --   }),
+  --   sources = cmp.config.sources({
+  --     { name = 'nvim_lsp' },
+  --   }, {
+  --     {
+  --       name = 'buffer',
+  --       option = {
+  --         get_bufnrs = function()
+  --           return vim
+  --             .iter(vim.api.nvim_list_wins())
+  --             :map(vim.api.nvim_win_get_buf)
+  --             :filter(vim.api.nvim_buf_is_loaded)
+  --             :totable()
+  --         end,
+  --       },
+  --     },
+  --     { name = 'path' },
+  --   }),
+  --   sorting = {
+  --     comparators = {
+  --       function(...) return require('cmp_buffer'):compare_locality(...) end,
+  --     },
+  --   },
+  -- })
 
   require('mini.operators').setup({
     replace = { prefix = '_' },
