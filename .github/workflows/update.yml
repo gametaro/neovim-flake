@@ -11,7 +11,7 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Update flake.lock and Create PR
-        uses: DeterminateSystems/update-flake-lock@v23
+        uses: DeterminateSystems/update-flake-lock@v26
         id: update
         with:
           commit-msg: "chore(deps): update flake.lock"
