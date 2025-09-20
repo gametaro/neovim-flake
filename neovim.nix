@@ -9,13 +9,13 @@
       version = src.lastModifiedDate;
     }) {
     inherit (inputs) nvim-fx;
-    inherit (inputs) nvim-solo;
     inherit (inputs) nvim-quickview;
   });
 
   extraPackages = with pkgs; [
     actionlint
     alejandra
+    biome
     efm-langserver
     fd
     lua-language-server
@@ -33,6 +33,7 @@
     statix
     stylua
     vscode-langservers-extracted
+    vtsls
     yaml-language-server
   ];
 
@@ -41,20 +42,7 @@
     luaRcContent = builtins.readFile ./init.lua;
     plugins = with pkgs.vimPlugins;
       [
-        SchemaStore-nvim
-        cmp-buffer
-        cmp-nvim-lsp
-        cmp-path
-        diffview-nvim
-        efmls-configs-nvim
-        flash-nvim
-        gitsigns-nvim
-        mini-nvim
-        nvim-cmp
         nvim-treesitter.withAllGrammars
-        telescope-nvim
-        tokyonight-nvim
-        vim-repeat
       ]
       ++ plugins;
     withPython3 = false;

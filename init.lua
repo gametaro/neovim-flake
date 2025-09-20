@@ -21,19 +21,7 @@ function M.highlight()
       vim.api.nvim_set_hl(0, '@variable.member', { default = true, link = 'Identifier' })
       vim.api.nvim_set_hl(0, '@variable.parameter', { default = true, link = 'Identifier' })
       vim.api.nvim_set_hl(0, 'Constant', { fg = fg .. 'Yellow' })
-      vim.api.nvim_set_hl(0, 'Delimiter', { fg = fg .. 'Grey3' })
-      vim.api.nvim_set_hl(0, 'Operator', { fg = fg .. 'Grey3' })
-      vim.api.nvim_set_hl(0, 'WinSeparator', { fg = bg .. 'Grey4' })
-      vim.api.nvim_set_hl(
-        0,
-        'StatusLine',
-        { fg = fg .. 'Grey2', bg = bg .. 'Grey4', cterm = { reverse = true } }
-      )
-      vim.api.nvim_set_hl(0, 'PmenuSel', { bg = bg .. 'Grey4' })
       vim.api.nvim_set_hl(0, 'Underlined', { fg = fg .. 'Blue', underline = true })
-      vim.api.nvim_set_hl(0, 'FlashLabel', { bg = bg .. 'Blue' })
-      vim.api.nvim_set_hl(0, 'TelescopeNormal', { default = true, link = 'Pmenu' })
-      vim.api.nvim_set_hl(0, 'TelescopeSelection', { default = true, link = 'PmenuSel' })
 
       vim.g.terminal_color_0 = bg .. 'Grey2'
       vim.g.terminal_color_1 = fg .. 'Red'
@@ -89,10 +77,9 @@ function M.option()
   vim.o.termguicolors = true
   vim.o.undofile = true
   vim.o.updatetime = 300
-  vim.o.virtualedit = 'all'
   vim.o.wildignorecase = true
   vim.o.wildoptions = 'fuzzy,pum,tagfile'
-  vim.o.winborder = 'single'
+  vim.o.winborder = 'bold'
   vim.o.wrap = false
 end
 
@@ -109,8 +96,6 @@ function M.keymap()
   vim.keymap.set('n', '<c-t>l', '<cmd>tablast<cr>')
   vim.keymap.set('n', '<c-t>n', '<cmd>tabnew<cr>')
   vim.keymap.set('n', '<c-t>o', '<cmd>tabonly<cr>')
-  vim.keymap.set('n', 'qo', '<cmd>copen<cr>')
-  vim.keymap.set('n', 'qc', '<cmd>cclose<cr>')
   vim.keymap.set('n', 'cn', '*``cgn')
   vim.keymap.set('n', 'cN', '*``cgN')
   vim.keymap.set('x', 'p', 'P')
@@ -144,7 +129,6 @@ function M.keymap()
   vim.keymap.set({ 'n', 'x' }, 'x', '"_x')
   vim.keymap.set('n', '-', '<cmd>edit %:p:h<cr>')
   vim.keymap.set('n', 'cd', '<cmd>cd %:p:h<bar>pwd<cr>')
-  vim.keymap.set('n', 'gm', '<cmd>message<cr>')
   vim.keymap.set('s', '<bs>', '<bs>i')
   vim.keymap.set('s', '<c-h>', '<c-h>i')
   vim.keymap.set(
@@ -218,21 +202,7 @@ end
 function M.diagnostic()
   vim.diagnostic.config({
     severity_sort = true,
-    signs = {
-      text = {
-        [1] = '●',
-        [2] = '●',
-        [3] = '●',
-        [4] = '●',
-      },
-    },
-    float = {
-      header = '',
-      suffix = function(diag) return string.format(' (%s)', diag.code or ''), 'Comment' end,
-    },
-    jump = {
-      float = true,
-    },
+    jump = { float = true },
   })
 end
 
@@ -438,7 +408,6 @@ end
 
 function M.lsp()
   local schemastore = require('schemastore')
-  local cmp_nvim_lsp = require('cmp_nvim_lsp')
   local actionlint = require('efmls-configs.linters.actionlint')
   local markdownlint = require('efmls-configs.linters.markdownlint')
   local prettier_d = require('efmls-configs.formatters.prettier_d')
@@ -448,10 +417,8 @@ function M.lsp()
 
   vim.lsp.config('*', {
     root_markers = { '.git' },
-    capabilities = vim.tbl_deep_extend(
-      'force',
-      vim.lsp.protocol.make_client_capabilities(),
-      cmp_nvim_lsp.default_capabilities()
+    capabilities = require('blink.cmp').get_lsp_capabilities(
+      vim.lsp.protocol.make_client_capabilities()
     ),
   })
 
@@ -494,6 +461,45 @@ function M.lsp()
       typescriptreact = ts_settings,
       ['javascript.jsx'] = ts_settings,
       ['typescript.tsx'] = ts_settings,
+    },
+  })
+
+  vim.lsp.config('vtsls', {
+    cmd = { 'vtsls', '--stdio' },
+    filetypes = {
+      'javascript',
+      'javascriptreact',
+      'javascript.jsx',
+      'typescript',
+      'typescriptreact',
+      'typescript.tsx',
+    },
+    root_markers = { 'tsconfig.json', 'package.json', 'jsconfig.json', '.git' },
+    settings = {
+      complete_function_calls = true,
+      vtsls = {
+        enableMoveToFileCodeAction = true,
+        autoUseWorkspaceTsdk = true,
+        experimental = {
+          completion = { enableServerSideFuzzyMatch = true },
+        },
+      },
+      typescript = {
+        updateImportsOnFileMove = 'always',
+        suggest = { completeFunctionCalls = true },
+        inlayHints = {
+          enumMemberValues = { enabled = true },
+          functionLikeReturnTypes = { enabled = true },
+          parameterNames = { enabled = 'literals' },
+          parameterTypes = { enabled = true },
+          propertyDeclarationTypes = { enabled = true },
+          variableTypes = { enabled = false },
+        },
+      },
+      referencesCodeLens = {
+        showOnAllFunctions = true,
+        enabled = true,
+      },
     },
   })
 
@@ -561,7 +567,7 @@ function M.lsp()
       less = { validate = true },
     },
     init_options = {
-      provideFormatter = true,
+      provideFormatter = false,
     },
   })
 
@@ -619,14 +625,33 @@ function M.lsp()
     },
   })
 
+  vim.lsp.config('biome', {
+    cmd = { 'biome', 'lsp-proxy' },
+    root_markers = { 'biome.json', 'biome.jsonc' },
+    filetypes = {
+      'astro',
+      'css',
+      'graphql',
+      'javascript',
+      'javascriptreact',
+      'json',
+      'jsonc',
+      'svelte',
+      'typescript',
+      'typescript.tsx',
+      'typescriptreact',
+      'vue',
+    },
+  })
+
   vim.lsp.config('efm', {
     cmd = { 'efm-langserver' },
     settings = {
       languages = {
-        javascript = { prettier_d },
-        javascriptreact = { prettier_d },
-        typescript = { prettier_d },
-        typescriptreact = { prettier_d },
+        -- javascript = { prettier_d },
+        -- javascriptreact = { prettier_d },
+        -- typescript = { prettier_d },
+        -- typescriptreact = { prettier_d },
         lua = { stylua },
         markdown = { markdownlint },
         nix = { statix },
@@ -646,15 +671,17 @@ function M.lsp()
     'css',
     'docker',
     'efm',
-    'eslint',
+    -- 'eslint',
     'html',
     'json',
     'lua',
     'nix',
     'python',
-    'rs',
+    -- 'rs',
+    'biome',
     'sh',
-    'ts',
+    -- 'ts',
+    'vtsls',
     'yaml',
   })
 
@@ -669,7 +696,7 @@ function M.lsp()
 
       -- client.server_capabilities.semanticTokensProvider = nil
 
-      if client.name == 'ts' then
+      if client.name == 'vtsls' then
         client.server_capabilities.documentFormattingProvider = false
         client.server_capabilities.documentRangeFormattingProvider = false
         vim.keymap.set('n', 'grA', function()
@@ -712,8 +739,8 @@ function M.lsp()
       -- end
 
       if client:supports_method(vim.lsp.protocol.Methods.textDocument_foldingRange, buf) then
-        vim.wo.foldmethod = 'expr'
-        vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
+        local win = vim.api.nvim_get_current_win()
+        vim.wo[win][0].foldexpr = 'v:lua.vim.lsp.foldexpr()'
       end
 
       if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion, buf) then
@@ -753,6 +780,15 @@ function M.lsp()
         function() vim.lsp.buf.format({ async = true }) end,
         { buffer = buf }
       )
+    end,
+  })
+
+  vim.api.nvim_create_autocmd('LspNotify', {
+    group = group,
+    callback = function(args)
+      if args.data.method == 'textDocument/didOpen' then
+        vim.lsp.foldclose('imports', vim.fn.bufwinid(args.buf))
+      end
     end,
   })
 end
@@ -869,38 +905,23 @@ function M.edge()
 end
 
 function M.plugins()
-  vim.keymap.set('n', '<c-p>', function()
-    local ok = pcall(require('telescope.builtin').git_files)
-    if not ok then require('telescope.builtin').find_files() end
-  end)
-  vim.keymap.set('n', '<c-g>', '<cmd>Telescope live_grep<cr>')
-  vim.keymap.set('n', '<c-h>', '<cmd>Telescope help_tags<cr>')
-  vim.keymap.set('n', '<c-n>', '<cmd>Telescope oldfiles<cr>')
-
-  vim.keymap.set('n', '<leader>gC', '<cmd>Telescope git_bcommits<cr>')
-  vim.keymap.set('x', '<leader>gC', '<cmd>Telescope git_bcommits_range<cr>')
-  vim.keymap.set('n', '<leader>gc', '<cmd>Telescope git_commits<cr>')
-  vim.keymap.set('n', '<leader>gs', '<cmd>Telescope git_status<cr>')
-
-  require('telescope').setup({
-    pickers = {
-      buffers = {
-        ignore_current_buffer = true,
-        sort_lastused = true,
-        sort_mru = true,
-        only_cwd = true,
-      },
-      find_files = { hidden = true },
-      git_files = { show_untracked = true },
-      oldfiles = { only_cwd = true },
-    },
+  vim.pack.add({
+    'https://github.com/Saghen/blink.cmp',
+    'https://github.com/b0o/schemastore.nvim',
+    'https://github.com/creativenull/efmls-configs-nvim',
+    'https://github.com/echasnovski/mini.nvim',
+    'https://github.com/folke/flash.nvim',
+    'https://github.com/folke/tokyonight.nvim',
+    'https://github.com/lewis6991/gitsigns.nvim',
+    'https://github.com/sindrets/diffview.nvim',
+    'https://github.com/tpope/vim-repeat',
   })
 
+  require('diffview').setup()
   vim.keymap.set('n', '<leader>gd', '<cmd>DiffviewOpen<cr>')
   vim.keymap.set('n', '<leader>gf', '<cmd>DiffviewFileHistory %<cr>')
   vim.keymap.set('n', '<leader>gF', '<cmd>DiffviewFileHistory<cr>')
   vim.keymap.set('x', '<leader>gf', ":'<,'>DiffviewFileHistory<cr>")
-  require('diffview').setup()
 
   require('gitsigns').setup({
     on_attach = function(buf)
@@ -968,39 +989,16 @@ function M.plugins()
     },
   })
 
-  -- local cmp = require('cmp')
-  -- cmp.setup({
-  --   confirmation = { default_behavior = 'replace' },
-  --   experimental = { ghost_text = true },
-  --   mapping = cmp.mapping.preset.insert({
-  --     ['<c-d>'] = cmp.mapping.scroll_docs(-4),
-  --     ['<c-f>'] = cmp.mapping.scroll_docs(4),
-  --     ['<c-Space>'] = cmp.mapping.complete(),
-  --     ['<cr>'] = cmp.mapping.confirm({ select = true }),
-  --   }),
-  --   sources = cmp.config.sources({
-  --     { name = 'nvim_lsp' },
-  --   }, {
-  --     {
-  --       name = 'buffer',
-  --       option = {
-  --         get_bufnrs = function()
-  --           return vim
-  --             .iter(vim.api.nvim_list_wins())
-  --             :map(vim.api.nvim_win_get_buf)
-  --             :filter(vim.api.nvim_buf_is_loaded)
-  --             :totable()
-  --         end,
-  --       },
-  --     },
-  --     { name = 'path' },
-  --   }),
-  --   sorting = {
-  --     comparators = {
-  --       function(...) return require('cmp_buffer'):compare_locality(...) end,
-  --     },
-  --   },
-  -- })
+  require('mini.pick').setup({
+    options = {
+      use_cache = true,
+    },
+  })
+  vim.keymap.set('n', '<c-p>', '<cmd>Pick files<cr>')
+  vim.keymap.set('n', '<c-g>', '<cmd>Pick grep_live<cr>')
+  vim.keymap.set('n', '<c-h>', '<cmd>Pick help<cr>')
+  vim.keymap.set('n', '<c-b>', '<cmd>Pick buffers<cr>')
+  vim.keymap.set('n', '<c-f>', '<cmd>Pick resume<cr>')
 
   require('mini.operators').setup({
     replace = { prefix = '_' },
@@ -1125,28 +1123,38 @@ local function main()
   vim.g.loaded_rplugin = 1
   vim.g.loaded_tutor = 1
 
-  -- vim.g.clipboard = {
-  --   name = 'OSC 52',
-  --   copy = {
-  --     ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
-  --     ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
-  --   },
-  --   paste = {
-  --     ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
-  --     ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
-  --   },
-  -- }
+  function my_paste(reg)
+    return function(lines)
+      local content = vim.fn.getreg('"')
+      return vim.split(content, '\n')
+    end
+  end
+
+  if os.getenv('SSH_TTY') ~= nil then
+    vim.opt.clipboard:append('unnamedplus')
+    vim.g.clipboard = {
+      name = 'OSC 52',
+      copy = {
+        ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+        ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+      },
+      paste = {
+        ['+'] = my_paste('+'),
+        ['*'] = my_paste('*'),
+      },
+    }
+  end
 
   vim.g.health = { style = 'float' }
 
-  require('vim._extui').enable({ enable = true })
+  require('vim._extui').enable({})
 
   vim.iter(M):each(function(_, m) pcall(m) end)
 
   vim.cmd.aunmenu('PopUp.How-to\\ disable\\ mouse')
   vim.cmd.aunmenu('PopUp.-2-')
 
-  vim.cmd.colorscheme('tokyonight-night')
+  vim.cmd.colorscheme('default')
 end
 
 main()
