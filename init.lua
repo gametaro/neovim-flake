@@ -341,7 +341,7 @@ function M.autocmd()
     desc = 'Load .nvim.lua on startup',
     callback = function()
       local contents = vim.secure.read('.nvim.lua')
-      if contents then assert(loadstring(contents))() end
+      if contents and type(contents) == 'string' then assert(loadstring(contents))() end
     end,
   })
 
