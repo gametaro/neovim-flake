@@ -202,7 +202,11 @@ end
 function M.diagnostic()
   vim.diagnostic.config({
     severity_sort = true,
-    jump = { float = true },
+    jump = {
+      on_jump = function(_, bufnr)
+        vim.diagnostic.open_float({ bufnr = bufnr, scope = 'cursor', focus = false })
+      end,
+    },
   })
 end
 
@@ -748,7 +752,7 @@ function M.lsp()
       end
 
       if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentColor) then
-        vim.lsp.document_color.enable(true, buf, { style = 'virtual' })
+        vim.lsp.document_color.enable(true, { buf = buf, style = 'virtual' })
       end
 
       if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, buf) then
@@ -1147,7 +1151,7 @@ local function main()
 
   vim.g.health = { style = 'float' }
 
-  require('vim._extui').enable({})
+  require('vim._core.ui2').enable()
 
   vim.iter(M):each(function(_, m) pcall(m) end)
 
