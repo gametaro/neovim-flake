@@ -42,7 +42,7 @@
     packages = forEachSystem (pkgs: import ./neovim.nix {inherit pkgs inputs;});
     formatter = forEachSystem (pkgs: pkgs.alejandra);
     checks = forEachSystem (pkgs: {
-      pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.system}.run {
+      pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
         src = ./.;
         hooks = {
           actionlint.enable = true;

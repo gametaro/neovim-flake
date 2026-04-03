@@ -21,9 +21,9 @@
     lua-language-server
     markdownlint-cli
     nil
-    nodePackages.bash-language-server
-    nodePackages.dockerfile-language-server-nodejs
-    nodePackages.typescript-language-server
+    # nodePackages.bash-language-server
+    # nodePackages.dockerfile-language-server-nodejs
+    # nodePackages.typescript-language-server
     prettierd
     pyright
     ripgrep
@@ -37,7 +37,7 @@
     yaml-language-server
   ];
 
-  nvim = pkgs.wrapNeovimUnstable inputs.neovim.packages.${pkgs.system}.neovim {
+  nvim = pkgs.wrapNeovimUnstable inputs.neovim.packages.${pkgs.stdenv.hostPlatform.system}.neovim {
     neovimRcContent = "";
     luaRcContent = builtins.readFile ./init.lua;
     plugins = with pkgs.vimPlugins;
