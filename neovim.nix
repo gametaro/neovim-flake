@@ -50,7 +50,7 @@
   };
 
   nvim-clean = pkgs.writeShellScriptBin "nvim-clean" ''
-    ${inputs.neovim.packages.${pkgs.system}.neovim}/bin/nvim --clean "$@"
+    ${inputs.neovim.packages.${pkgs.stdenv.hostPlatform.system}.neovim}/bin/nvim --clean "$@"
   '';
 in {
   default = nvim;

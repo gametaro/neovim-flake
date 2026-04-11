@@ -64,8 +64,8 @@
     devShells = forEachSystem (
       pkgs: {
         default = pkgs.mkShellNoCC {
-          inherit (self.checks.${pkgs.system}.pre-commit-check) shellHook;
-          buildInputs = self.checks.${pkgs.system}.pre-commit-check.enabledPackages;
+          inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
+          buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
         };
       }
     );

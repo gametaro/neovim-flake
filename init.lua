@@ -358,8 +358,7 @@ function M.autocmd()
           path = vim.fs.joinpath(vim.fn.stdpath('config') --[[@as string]], 'spell'),
         }))
         :each(function(add_file)
-          local spell_file = add_file --[[@as string]]
-            .. '.spl'
+          local spell_file = add_file .. '.spl' --- @type string
           local spell_stat = vim.uv.fs_stat(spell_file)
           if not spell_stat then vim.cmd.mkspell(add_file) end
           local add_stat = vim.uv.fs_stat(add_file)
@@ -1126,6 +1125,10 @@ local function main()
   vim.g.loaded_netrwPlugin = 1
   vim.g.loaded_rplugin = 1
   vim.g.loaded_tutor = 1
+
+  -- vim.cmd.packadd('nvim.undotree')
+  -- vim.cmd.packadd('nvim.difftool')
+  -- vim.cmd.packadd('nvim.toml')
 
   function my_paste(reg)
     return function(lines)
